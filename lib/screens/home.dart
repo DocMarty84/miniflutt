@@ -7,23 +7,55 @@ import '../models/data.dart';
 import '../models/entry.dart';
 import '../models/nav.dart';
 
-class MyHome extends StatelessWidget {
-  // Filter entries based on the navigation info
-  List<Entry> _filterEntries(Data data, Nav nav) {
-    List<Entry> entries = [];
-    if (nav.currentCategoryId != null) {
-      entries = data.entries
-          .where((i) => i.feed.category.id == nav.currentCategoryId)
-          .toList();
-    } else if (nav.currentFeedId != null) {
-      entries =
-          data.entries.where((i) => i.feedId == nav.currentFeedId).toList();
-    } else {
-      entries = data.entries;
-    }
-    return entries;
+// Filter entries based on the navigation info
+List<Entry> _filterEntries(Data data, Nav nav) {
+  List<Entry> entries = [];
+  if (nav.currentCategoryId != null) {
+    entries = data.entries
+        .where((i) => i.feed.category.id == nav.currentCategoryId)
+        .toList();
+  } else if (nav.currentFeedId != null) {
+    entries = data.entries.where((i) => i.feedId == nav.currentFeedId).toList();
+  } else {
+    entries = data.entries;
   }
+  return entries;
+}
 
+// Implements the action buttons in a widget to display an 'Undo' action in a
+// snackbar.
+// See https://medium.com/@ksheremet/flutter-showing-snackbar-within-the-widget-that-builds-a-scaffold-3a817635aeb2
+class MyHomeMarkRead extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.done_all),
+      onPressed: () async {
+        final nav = Provider.of<Nav>(context, listen: false);
+        final data = Provider.of<Data>(context, listen: false);
+        final entryIds = _filterEntries(data, nav)
+            .where((entry) => entry.status == 'unread')
+            .map((entry) => entry.id)
+            .toList();
+        final snackBar = SnackBar(
+          content: Text('${entryIds.length} item(s) mark read'),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () {
+              data.unread(entryIds);
+            },
+          ),
+        );
+        final res = await data.read(entryIds);
+        if (res) {
+          Scaffold.of(context).showSnackBar(snackBar);
+        }
+      },
+    );
+  }
+}
+
+class MyHome extends StatelessWidget {
   Widget _buildEntryList(Data data, Nav nav, BuildContext context) {
     List<Entry> entries = _filterEntries(data, nav);
     return RefreshIndicator(
@@ -78,6 +110,10 @@ class MyHome extends StatelessWidget {
             return Text(nav.appBarTitle);
           },
         ),
+        // action button
+        actions: <Widget>[
+          MyHomeMarkRead(),
+        ],
       ),
       body: Center(
         child: Consumer2<Data, Nav>(

@@ -184,8 +184,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                   ),
                   new RaisedButton(
                     child: Text("Log Out"),
-                    focusColor: Colors.cyan,
-                    onPressed: () async {
+                    onPressed: () {
                       _clearPref();
                     },
                   ),

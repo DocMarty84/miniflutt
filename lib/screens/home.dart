@@ -71,7 +71,9 @@ class MyHome extends StatelessWidget {
             title: Text(
               '${entry.title}',
               style: TextStyle(
-                color: (entry.status == 'unread' ? Colors.black : Colors.grey),
+                color: (entry.status == 'unread'
+                    ? Theme.of(context).textTheme.title.color
+                    : Colors.grey),
                 fontStyle: (entry.status == 'unread'
                     ? FontStyle.normal
                     : FontStyle.italic),

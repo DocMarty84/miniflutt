@@ -16,20 +16,20 @@ class Data extends ChangeNotifier {
     refresh();
   }
 
-  void read(List<int> entryIds) {
+  Future<bool> read(List<int> entryIds) async {
     entries
         .where((entry) => entryIds.contains(entry.id))
         .forEach((entry) => entry.status = 'read');
     notifyListeners();
-    updateEntries(entryIds, 'read');
+    return await updateEntries(entryIds, 'read');
   }
 
-  void unread(List<int> entryIds) {
+  Future<bool> unread(List<int> entryIds) async {
     entries
         .where((entry) => entryIds.contains(entry.id))
         .forEach((entry) => entry.status = 'unread');
     notifyListeners();
-    updateEntries(entryIds, 'unread');
+    return await updateEntries(entryIds, 'unread');
   }
 
   void refresh() async {

@@ -33,14 +33,14 @@ class Data extends ChangeNotifier {
   }
 
   void refresh() async {
-    Set<int> feedIds = {};
-    Set<int> categoryIds = {};
+    final Set<int> feedIds = {};
+    final Set<int> categoryIds = {};
 
     // Trigger a progress indicator in the listeners
     isRefresh = true;
     notifyListeners();
 
-    Map<String, dynamic> json = await getEntries();
+    final Map<String, dynamic> json = await getEntries();
 
     // Clear the existing data
     entries.clear();
@@ -49,7 +49,7 @@ class Data extends ChangeNotifier {
 
     // Fill in entries, feeds and categories
     for (Map<String, dynamic> elem in (json['entries'] ?? [])) {
-      Entry entry = Entry.fromJson(elem);
+      final Entry entry = Entry.fromJson(elem);
       entries.add(entry);
       if (!feedIds.contains(entry.feedId)) {
         feeds.add(entry.feed);

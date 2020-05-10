@@ -57,7 +57,7 @@ class MyHomeMarkRead extends StatelessWidget {
 
 class MyHome extends StatelessWidget {
   Widget _buildEntryList(Data data, Nav nav, BuildContext context) {
-    List<Entry> entries = _filterEntries(data, nav);
+    final List<Entry> entries = _filterEntries(data, nav);
     return RefreshIndicator(
       onRefresh: () async {
         data.refresh();
@@ -66,7 +66,7 @@ class MyHome extends StatelessWidget {
         itemCount: entries.length * 2,
         itemBuilder: (context, i) {
           if (i.isOdd) return Divider();
-          Entry entry = entries[i ~/ 2];
+          final Entry entry = entries[i ~/ 2];
           return ListTile(
             title: Text(
               '${entry.title}',

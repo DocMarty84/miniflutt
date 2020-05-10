@@ -45,7 +45,7 @@ class MyDrawer extends StatelessWidget {
   }
 
   List<Widget> _buildCategoryList(Data data, BuildContext context) {
-    var nav = Provider.of<Nav>(context);
+    final nav = Provider.of<Nav>(context);
     // The First element is the 'Unread'
     List<Widget> categoryList = [
       ListTile(
@@ -65,7 +65,7 @@ class MyDrawer extends StatelessWidget {
       List<Widget> feedList = data.feeds
           .where((feed) => feed.category.id == category.id)
           .map<Widget>((feed) {
-        int count = data.entries.where((i) => i.feedId == feed.id).length;
+        final int count = data.entries.where((i) => i.feedId == feed.id).length;
         return ListTile(
           title: Text('    ${feed.title} ($count)'),
           onTap: () {
@@ -79,7 +79,7 @@ class MyDrawer extends StatelessWidget {
       }).toList();
 
       // Build the category ExpansionTile
-      int count =
+      final int count =
           data.entries.where((i) => i.feed.category.id == category.id).length;
       categoryList.add(
         ExpansionTile(

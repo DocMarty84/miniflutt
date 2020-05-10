@@ -79,7 +79,7 @@ class MySettingsFormState extends State<MySettingsForm> {
 
   // Load preferences
   void _loadPref() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _urlController.text = (prefs.getString('url') ?? 'http://');
       _apiKeyController.text = (prefs.getString('apiKey') ?? '');
@@ -89,7 +89,7 @@ class MySettingsFormState extends State<MySettingsForm> {
 
   // Save preferences
   void _savePref() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       prefs.setString('url', _urlController.text);
       prefs.setString('apiKey', _apiKeyController.text);
@@ -99,7 +99,7 @@ class MySettingsFormState extends State<MySettingsForm> {
 
   // Clear preferences
   void _clearPref() async {
-    final prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('url');
     prefs.remove('apiKey');
     setState(() {

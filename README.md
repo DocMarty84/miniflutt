@@ -1,16 +1,37 @@
-# miniflutt
+# Miniflutt
 
-Another Miniflux client.
+Miniflutt is an Android client for [Miniflux](https://miniflux.app/) feed reader. It is free and
+open source, without any advertisement or tracking whatsoever.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Miniflutt requires Miniflux version >= [2.0.21](https://miniflux.app/releases/2.0.21.html).
 
-A few resources to get you started if this is your first Flutter project:
+1. Install the latest APK from the
+   [releases page](https://github.com/DocMarty84/miniflutt/releases).
+2. In Miniflux, create an API key in Settings / API Keys.
+3. Open the app, go to the Settings page
+4. Add the server URL and the token (do **not** include the `/v1` part of the URL endpoint)
+5. Save and refresh!
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+The unread articles should appear in the app.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Features
+
+At the moment, Miniflutt is on an early development stage. Therefore, it implements a limited number
+of features. They will be developed in the coming weeks or months, depending on my free time.
+
+- Supports video playback.
+- Articles are grouped categories / feeds.
+- All articles from a category / feed can be marked as read.
+- The original article can be opened in an external browser.
+
+Limitations:
+
+- Being online is required (no fetching for offline reading).
+- Only unread articles are fetched, but read articles are kept until refresh.
+- No sorting.
+- No category, feed or user management.
+- No favorites.
+- No search.
+- No themes.

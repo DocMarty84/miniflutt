@@ -91,7 +91,7 @@ class MySettingsFormState extends State<MySettingsForm> {
   void _savePref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      prefs.setString('url', _urlController.text);
+      prefs.setString('url', _urlController.text.replaceAll(RegExp(r"/+$"), ''));
       prefs.setString('apiKey', _apiKeyController.text);
       prefs.setString('limit', _limitController.text);
     });

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'home.dart';
+import '../models/data.dart';
 import '../models/entry.dart';
+import '../models/nav.dart';
 
 class MyEntry extends StatelessWidget {
   void _launchURL(String url) async {
@@ -66,17 +70,44 @@ class MyEntry extends StatelessWidget {
           entry.feed.title,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _buildHeader(entry, context),
-            Html(
-              data: entry.content,
-              onLinkTap: (url) => _launchURL(url),
-              onImageTap: (url) => _launchURL(url),
-            ),
-          ],
+      body: GestureDetector(
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              _buildHeader(entry, context),
+              Html(
+                data: entry.content,
+                onLinkTap: (url) => _launchURL(url),
+                onImageTap: (url) => _launchURL(url),
+              ),
+            ],
+          ),
         ),
+        onHorizontalDragEnd: (details) {
+          // We need to filter entries from the complete list and not from the entries available in
+          // the ListView.builder since the builder usually has a subset of entries (the ones
+          // displayed).
+          Entry nextEntry;
+          final data = Provider.of<Data>(context, listen: false);
+          final nav = Provider.of<Nav>(context, listen: false);
+          final entries = filterEntries(data, nav);
+          final index = entries.indexOf(entry);
+          if (details.velocity.pixelsPerSecond.dx < 0 &&
+              index < entries.length - 1) {
+            nextEntry = entries[index + 1];
+          } else if (details.velocity.pixelsPerSecond.dx > 0 && index > 0) {
+            nextEntry = entries[index - 1];
+          }
+          if (nextEntry != null) {
+            Navigator.pushReplacementNamed(
+              context,
+              '/entry',
+              arguments: nextEntry,
+            );
+            final List<int> entryIds = [nextEntry.id];
+            data.read(entryIds);
+          }
+        },
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(

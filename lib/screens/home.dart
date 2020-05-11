@@ -8,7 +8,7 @@ import '../models/entry.dart';
 import '../models/nav.dart';
 
 // Filter entries based on the navigation info
-List<Entry> _filterEntries(Data data, Nav nav) {
+List<Entry> filterEntries(Data data, Nav nav) {
   List<Entry> entries = [];
   if (nav.currentCategoryId != null) {
     entries = data.entries
@@ -33,7 +33,7 @@ class MyHomeMarkRead extends StatelessWidget {
       onPressed: () async {
         final nav = Provider.of<Nav>(context, listen: false);
         final data = Provider.of<Data>(context, listen: false);
-        final entryIds = _filterEntries(data, nav)
+        final entryIds = filterEntries(data, nav)
             .where((entry) => entry.status == 'unread')
             .map((entry) => entry.id)
             .toList();
@@ -57,7 +57,7 @@ class MyHomeMarkRead extends StatelessWidget {
 
 class MyHome extends StatelessWidget {
   Widget _buildEntryList(Data data, Nav nav, BuildContext context) {
-    final List<Entry> entries = _filterEntries(data, nav);
+    final List<Entry> entries = filterEntries(data, nav);
     return RefreshIndicator(
       onRefresh: () async {
         data.refresh();

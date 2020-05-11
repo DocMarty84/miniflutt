@@ -95,7 +95,7 @@ class MyHome extends StatelessWidget {
             },
             onLongPress: () {
               final List<int> entryIds = [entry.id];
-              data.unread(entryIds);
+              entry.status == 'unread' ? data.read(entryIds) : data.unread(entryIds);
             },
           );
         },

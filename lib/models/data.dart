@@ -17,6 +17,9 @@ class Data extends ChangeNotifier {
   }
 
   Future<bool> read(List<int> entryIds) async {
+    if (entryIds.length == 0) {
+      return true;
+    }
     entries
         .where((entry) => entryIds.contains(entry.id))
         .forEach((entry) => entry.status = 'read');
@@ -25,6 +28,9 @@ class Data extends ChangeNotifier {
   }
 
   Future<bool> unread(List<int> entryIds) async {
+    if (entryIds.length == 0) {
+      return true;
+    }
     entries
         .where((entry) => entryIds.contains(entry.id))
         .forEach((entry) => entry.status = 'unread');

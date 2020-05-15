@@ -121,6 +121,16 @@ class MyEntry extends StatelessWidget {
                 );
               },
             ),
+            Consumer<Data>(
+              builder: (context, data, child) {
+                return IconButton(
+                  icon: Icon(entry.status == 'read'
+                      ? Icons.visibility
+                      : Icons.visibility_off),
+                  onPressed: () => data.toggleRead(entry.id),
+                );
+              },
+            ),
             IconButton(
               icon: Icon(Icons.open_in_browser),
               onPressed: () => _launchURL(entry.url),

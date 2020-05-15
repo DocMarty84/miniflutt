@@ -38,6 +38,15 @@ class Data extends ChangeNotifier {
     return await updateEntries(entryIds, 'unread');
   }
 
+  Future<bool> toggleRead(int entryId) async {
+    final Entry currentEntry =
+        entries.firstWhere((entry) => entry.id == entryId);
+    final String newStatus = currentEntry.status == 'read' ? 'unread' : 'read';
+    currentEntry.status = newStatus;
+    notifyListeners();
+    return await updateEntries([entryId], newStatus);
+  }
+
   Future<bool> toggleStar(int entryId) async {
     entries
         .where((entry) => entry.id == entryId)

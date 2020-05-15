@@ -1,4 +1,4 @@
-package com.example.miniflutt
+package be.martinelli.miniflutt
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

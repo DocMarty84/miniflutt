@@ -47,6 +47,11 @@ Future<bool> _put(String endpoint, Map<String, dynamic> body) async {
   }
 }
 
+Future<bool> refreshAllFeeds() async {
+  Map<String, dynamic> params = {};
+  return await _put('/v1/feeds/refresh', params);
+}
+
 Future<Map<String, dynamic>> getEntries() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final limit = (prefs.getString('limit') ?? '500');

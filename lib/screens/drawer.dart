@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../api/miniflux.dart';
 import '../models/category.dart';
 import '../models/data.dart';
 import '../models/nav.dart';
@@ -33,6 +34,17 @@ class MyDrawer extends StatelessWidget {
                     )),
               onTap: () {
                 data.refresh();
+              },
+              onLongPress: () async {
+                final snackBar = SnackBar(
+                  content: Text('All feeds are updated in the background. '
+                      'Refresh in a few seconds.'),
+                );
+                final res = await refreshAllFeeds();
+                if (res) {
+                  Navigator.pop(context);
+                  Scaffold.of(context).showSnackBar(snackBar);
+                }
               },
             ),
           ],

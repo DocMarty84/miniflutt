@@ -38,6 +38,14 @@ class Data extends ChangeNotifier {
     return await updateEntries(entryIds, 'unread');
   }
 
+  Future<bool> toggleStar(int entryId) async {
+    entries
+        .where((entry) => entry.id == entryId)
+        .forEach((entry) => entry.starred = !entry.starred);
+    notifyListeners();
+    return await toggleEntryBookmark(entryId);
+  }
+
   void refresh() async {
     final Set<int> feedIds = {};
     final Set<int> categoryIds = {};

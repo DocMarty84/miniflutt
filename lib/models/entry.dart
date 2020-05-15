@@ -10,7 +10,7 @@ class Entry {
   final int id;
   final String publishedAt;
   final String shareCode;
-  final bool starred;
+  bool starred;
   String status;
   final String title;
   final String url;

@@ -70,3 +70,8 @@ Future<bool> updateEntries(List<int> entryIds, String status) async {
   };
   return await _put('/v1/entries', params);
 }
+
+Future<bool> toggleEntryBookmark(int entryId) async {
+  Map<String, dynamic> params = {};
+  return await _put('/v1/entries/$entryId/bookmark', params);
+}

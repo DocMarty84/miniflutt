@@ -113,6 +113,14 @@ class MyEntry extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Spacer(),
+            Consumer<Data>(
+              builder: (context, data, child) {
+                return IconButton(
+                  icon: Icon(entry.starred ? Icons.star : Icons.star_border),
+                  onPressed: () => data.toggleStar(entry.id),
+                );
+              },
+            ),
             IconButton(
               icon: Icon(Icons.open_in_browser),
               onPressed: () => _launchURL(entry.url),

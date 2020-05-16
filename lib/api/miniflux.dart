@@ -52,14 +52,7 @@ Future<bool> refreshAllFeeds() async {
   return await _put('/v1/feeds/refresh', params);
 }
 
-Future<Map<String, dynamic>> getEntries() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final limit = (prefs.getString('limit') ?? '500');
-  Map<String, String> params = {
-    'status': 'unread',
-    'direction': 'desc',
-    'limit': limit,
-  };
+Future<Map<String, dynamic>> getEntries(Map<String, String> params) async {
   return await _get('/v1/entries', params);
 }
 

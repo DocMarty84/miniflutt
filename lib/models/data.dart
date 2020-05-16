@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'category.dart';
 import 'entry.dart';
@@ -63,7 +64,23 @@ class Data extends ChangeNotifier {
     isRefresh = true;
     notifyListeners();
 
-    final Map<String, dynamic> json = await getEntries();
+    // Get preferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final read = (prefs.getBool('read') ?? false);
+    final limit = (prefs.getString('limit') ?? '500');
+    final asc = (prefs.getBool('asc') ?? false);
+    final starred = (prefs.getBool('starred') ?? false);
+    Map<String, String> params = {
+      'status': read ? '' : 'unread',
+      'limit': limit,
+      'order': 'published_at',
+      'direction': asc ? 'asc' : 'desc',
+    };
+    if (starred) {
+      params['starred'] = '1';
+    }
+
+    final Map<String, dynamic> json = await getEntries(params);
 
     // Clear the existing data
     entries.clear();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'drawer.dart';
 import '../models/data.dart';
@@ -55,6 +56,92 @@ class MyHomeMarkRead extends StatelessWidget {
   }
 }
 
+class MyHomePopupMenu extends StatefulWidget {
+  @override
+  MyHomePopupMenuState createState() {
+    return MyHomePopupMenuState();
+  }
+}
+
+class MyHomePopupMenuState extends State<MyHomePopupMenu> {
+  bool _read;
+  bool _asc;
+  bool _starred;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPref();
+  }
+
+  // Load preferences
+  void _loadPref() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _read = (prefs.getBool('read') ?? false);
+      _asc = (prefs.getBool('asc') ?? false);
+      _starred = (prefs.getBool('starred') ?? false);
+    });
+  }
+
+  // Save preferences
+  void _savePref(String value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      if (value == 'read') {
+        prefs.setBool('read', !_read);
+        _read = !_read;
+      } else if (value == 'asc') {
+        prefs.setBool('asc', !_asc);
+        _asc = !_asc;
+      } else if (value == 'star') {
+        prefs.setBool('starred', !_starred);
+        _starred = !_starred;
+      }
+    });
+    final data = Provider.of<Data>(context, listen: false);
+    data.refresh();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(
+      onSelected: _savePref,
+      itemBuilder: (BuildContext context) {
+        var list = List<PopupMenuEntry<String>>();
+        list.add(
+          CheckedPopupMenuItem(
+            child: Text(
+              'Get read articles',
+            ),
+            value: 'read',
+            checked: _read,
+          ),
+        );
+        list.add(
+          CheckedPopupMenuItem(
+            child: Text(
+              'Oldest first',
+            ),
+            value: 'asc',
+            checked: _asc,
+          ),
+        );
+        list.add(
+          CheckedPopupMenuItem(
+            child: Text(
+              'Favorites',
+            ),
+            value: 'star',
+            checked: _starred,
+          ),
+        );
+        return list;
+      },
+    );
+  }
+}
+
 class MyHome extends StatelessWidget {
   Widget _buildEntryList(Data data, Nav nav, BuildContext context) {
     final List<Entry> entries = filterEntries(data, nav);
@@ -95,7 +182,9 @@ class MyHome extends StatelessWidget {
             },
             onLongPress: () {
               final List<int> entryIds = [entry.id];
-              entry.status == 'unread' ? data.read(entryIds) : data.unread(entryIds);
+              entry.status == 'unread'
+                  ? data.read(entryIds)
+                  : data.unread(entryIds);
             },
           );
         },
@@ -115,6 +204,7 @@ class MyHome extends StatelessWidget {
         // action button
         actions: <Widget>[
           MyHomeMarkRead(),
+          MyHomePopupMenu(),
         ],
       ),
       body: Center(

@@ -166,11 +166,19 @@ class MyHome extends StatelessWidget {
                     : FontStyle.italic),
               ),
             ),
-            subtitle: Text(
-                (nav.currentFeedId == null ? entry.feed.title + '\n' : '') +
-                    DateFormat.yMEd()
-                        .add_jm()
-                        .format(DateTime.parse(entry.publishedAt))),
+            subtitle: Row(children: <Widget>[
+              Text((nav.currentFeedId == null ? entry.feed.title + '\n' : '') +
+                  DateFormat.yMEd()
+                      .add_jm()
+                      .format(DateTime.parse(entry.publishedAt))),
+              Spacer(),
+              entry.starred
+                  ? Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    )
+                  : Text(''),
+            ]),
             onTap: () {
               Navigator.pushNamed(
                 context,

@@ -116,7 +116,12 @@ class MyEntry extends StatelessWidget {
             Consumer<Data>(
               builder: (context, data, child) {
                 return IconButton(
-                  icon: Icon(entry.starred ? Icons.star : Icons.star_border),
+                  icon: entry.starred
+                      ? Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        )
+                      : Icon(Icons.star_border),
                   onPressed: () => data.toggleStar(entry.id),
                 );
               },

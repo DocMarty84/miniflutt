@@ -59,13 +59,13 @@ class MyDrawer extends StatelessWidget {
   List<Widget> _buildCategoryList(Data data, BuildContext context) {
     final nav = Provider.of<Nav>(context);
     final unreadEntries = data.entries.where((i) => i.status == 'unread');
-    // The First element is the 'Unread'
+    // The First element is the 'All'
     List<Widget> categoryList = [
       ListTile(
-        title: Text('Unread (${unreadEntries.length})'),
+        title: Text('All (${unreadEntries.length})'),
         onTap: () {
           if (nav.currentFeedId != null || nav.currentCategoryId != null) {
-            nav.set(null, null, 'Unread');
+            nav.set(null, null, 'All');
           }
           // Close the drawer
           Navigator.pop(context);

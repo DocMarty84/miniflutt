@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Nav extends ChangeNotifier {
   int currentFeedId;
   int currentCategoryId;
-  String appBarTitle = 'Unread';
+  String appBarTitle = 'All';
 
   void set(int feedId, int categoryId, String title) {
     currentFeedId = feedId;

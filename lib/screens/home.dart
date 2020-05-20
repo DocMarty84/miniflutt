@@ -142,8 +142,14 @@ class MyHomePopupMenuState extends State<MyHomePopupMenu> {
   }
 }
 
-class MyHome extends StatelessWidget {
-  Widget _buildEntryList(Data data, Nav nav, BuildContext context) {
+class MyHomeEntryList extends StatelessWidget {
+  MyHomeEntryList({Key key, @required this.data, @required this.nav})
+      : super(key: key);
+  final Data data;
+  final Nav nav;
+
+  @override
+  Widget build(BuildContext context) {
     final List<Entry> entries = filterEntries(data, nav);
     return RefreshIndicator(
       onRefresh: () async {
@@ -199,7 +205,9 @@ class MyHome extends StatelessWidget {
       ),
     );
   }
+}
 
+class MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,7 +229,7 @@ class MyHome extends StatelessWidget {
               return CircularProgressIndicator();
             } else {
               // By default, show a loading spinner.
-              return _buildEntryList(data, nav, context);
+              return MyHomeEntryList(data: data, nav: nav);
             }
           },
         ),

@@ -6,8 +6,12 @@ import '../models/category.dart';
 import '../models/data.dart';
 import '../models/nav.dart';
 
-class MyDrawer extends StatelessWidget {
-  Widget _buildHeader(Data data, BuildContext context) {
+class MyDrawerHeader extends StatelessWidget {
+  MyDrawerHeader({Key key, @required this.data}) : super(key: key);
+  final Data data;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: 180.0,
       child: DrawerHeader(
@@ -55,7 +59,9 @@ class MyDrawer extends StatelessWidget {
       ),
     );
   }
+}
 
+class MyDrawer extends StatelessWidget {
   List<Widget> _buildCategoryList(Data data, BuildContext context) {
     final nav = Provider.of<Nav>(context);
     final unreadEntries = data.entries.where((i) => i.status == 'unread');
@@ -110,25 +116,19 @@ class MyDrawer extends StatelessWidget {
     return categoryList;
   }
 
-  Widget _buildMyDrawer(Data data, BuildContext context) {
-    List<Widget> categoryList = _buildCategoryList(data, context);
-
-    return ListView(
-      // Important: Remove any padding from the ListView.
-      padding: EdgeInsets.zero,
-      children: <Widget>[
-            _buildHeader(data, context),
-          ] +
-          categoryList,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: Consumer<Data>(
         builder: (context, data, child) {
-          return _buildMyDrawer(data, context);
+          return ListView(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+                  MyDrawerHeader(data: data),
+                ] +
+                _buildCategoryList(data, context),
+          );
         },
       ),
     );

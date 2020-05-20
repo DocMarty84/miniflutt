@@ -56,7 +56,7 @@ class Data extends ChangeNotifier {
     return await toggleEntryBookmark(entryId);
   }
 
-  void refresh() async {
+  void refresh({String search}) async {
     final Set<int> feedIds = {};
     final Set<int> categoryIds = {};
 
@@ -78,6 +78,9 @@ class Data extends ChangeNotifier {
     };
     if (starred) {
       params['starred'] = '1';
+    }
+    if (search != null) {
+      params['search'] = search;
     }
 
     final Map<String, dynamic> json = await getEntries(params);

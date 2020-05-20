@@ -6,6 +6,7 @@ import 'models/data.dart';
 import 'models/nav.dart';
 import 'screens/home.dart';
 import 'screens/entry.dart';
+import 'screens/search.dart';
 import 'screens/settings.dart';
 
 void main() {
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => MyHome(),
           '/settings': (context) => MySettings(),
           '/entry': (context) => MyEntry(),
+          '/search': (context) => MySearch(),
         },
       ),
     );

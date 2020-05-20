@@ -9,16 +9,12 @@ import '../models/data.dart';
 import '../models/entry.dart';
 import '../models/nav.dart';
 
-class MyEntry extends StatelessWidget {
-  void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+class MyEntryHeader extends StatelessWidget {
+  MyEntryHeader({Key key, @required this.entry}) : super(key: key);
+  final Entry entry;
 
-  Widget _buildHeader(Entry entry, BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Column(
@@ -60,6 +56,16 @@ class MyEntry extends StatelessWidget {
       ),
     );
   }
+}
+
+class MyEntry extends StatelessWidget {
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +80,7 @@ class MyEntry extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              _buildHeader(entry, context),
+              MyEntryHeader(entry: entry),
               Html(
                 data: entry.content,
                 onLinkTap: (url) => _launchURL(url),

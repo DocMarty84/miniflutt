@@ -211,7 +211,6 @@ class MyHome extends StatelessWidget {
         ),
         // action button
         actions: <Widget>[
-          MyHomeMarkRead(),
           MyHomePopupMenu(),
         ],
       ),
@@ -225,6 +224,14 @@ class MyHome extends StatelessWidget {
               return _buildEntryList(data, nav, context);
             }
           },
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: <Widget>[
+            Spacer(),
+            MyHomeMarkRead(),
+          ],
         ),
       ),
       drawer: MyDrawer(),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/data.dart';
+import '../models/nav.dart';
 
 class MySettings extends StatelessWidget {
   @override
@@ -89,6 +93,7 @@ class MySettingsFormState extends State<MySettingsForm> {
 
   // Save preferences
   void _savePref() async {
+    // First save preferences
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       prefs.setString(
@@ -96,17 +101,30 @@ class MySettingsFormState extends State<MySettingsForm> {
       prefs.setString('apiKey', _apiKeyController.text);
       prefs.setString('limit', _limitController.text);
     });
+
+    // Then refresh to populate the interface
+    final data = Provider.of<Data>(context, listen: false);
+    final nav = Provider.of<Nav>(context, listen: false);
+    data.refresh();
+    nav.set(null, null, 'All');
   }
 
   // Clear preferences
   void _clearPref() async {
+    // First remove preferences
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('url');
-    prefs.remove('apiKey');
+    prefs.clear();
     setState(() {
       _urlController.text = 'http://';
       _apiKeyController.text = '';
+      _limitController.text = '500';
     });
+
+    // Then refresh to clean-up the interface
+    final data = Provider.of<Data>(context, listen: false);
+    final nav = Provider.of<Nav>(context, listen: false);
+    data.refresh();
+    nav.set(null, null, 'All');
   }
 
   @override

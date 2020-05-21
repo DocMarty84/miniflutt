@@ -104,6 +104,11 @@ class MyDrawer extends StatelessWidget {
       categoryList.add(
         ExpansionTile(
           title: Text('${category.title} ($count)'),
+          initiallyExpanded: nav.currentCategoryId == category.id ||
+              data.feeds
+                  .where((feed) => feed.category.id == category.id)
+                  .map((feed) => feed.id)
+                  .contains(nav.currentFeedId),
           children: feedList,
           onExpansionChanged: (exp) {
             if (exp && nav.currentCategoryId != category.id) {

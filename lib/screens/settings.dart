@@ -91,7 +91,8 @@ class MySettingsFormState extends State<MySettingsForm> {
   void _savePref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      prefs.setString('url', _urlController.text.replaceAll(RegExp(r"/+$"), ''));
+      prefs.setString(
+          'url', _urlController.text.replaceAll(RegExp(r"/+$"), ''));
       prefs.setString('apiKey', _apiKeyController.text);
       prefs.setString('limit', _limitController.text);
     });
@@ -113,86 +114,89 @@ class MySettingsFormState extends State<MySettingsForm> {
     // Build a Form widget using the _formKey created above.
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            controller: _urlController,
-            decoration: InputDecoration(labelText: 'Server URL'),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter the URL';
-              } else if (!value
-                  .toLowerCase()
-                  .startsWith(new RegExp(r'^https?://'))) {
-                return 'The URL must start with \'http(s)://\'';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _apiKeyController,
-            decoration: InputDecoration(labelText: 'API Key'),
-            obscureText: true,
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter an API key';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _limitController,
-            decoration: InputDecoration(
-                labelText: 'Max Number Of Entries (0: Unlimited)'),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter a number';
-              }
-              try {
-                int.parse(value);
-              } catch (e) {
-                return 'Please enter a number';
-              }
-              return null;
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Container(
-              child: Row(
-                children: <Widget>[
-                  RaisedButton(
-                    child: Text('Save'),
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        final res = await _connectCheck(
-                            _urlController.text, _apiKeyController.text);
-                        if (res['code'] == 200) {
-                          _savePref();
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text('Connection successful!')));
-                        } else {
-                          Scaffold.of(context).showSnackBar(
-                              SnackBar(content: Text(res['error'])));
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextFormField(
+              controller: _urlController,
+              decoration: InputDecoration(labelText: 'Server URL'),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter the URL';
+                } else if (!value
+                    .toLowerCase()
+                    .startsWith(new RegExp(r'^https?://'))) {
+                  return 'The URL must start with \'http(s)://\'';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _apiKeyController,
+              decoration: InputDecoration(labelText: 'API Key'),
+              obscureText: true,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter an API key';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _limitController,
+              decoration: InputDecoration(
+                  labelText: 'Max Number Of Entries (0: Unlimited)'),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter a number';
+                }
+                try {
+                  int.parse(value);
+                } catch (e) {
+                  return 'Please enter a number';
+                }
+                return null;
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Container(
+                child: Row(
+                  children: <Widget>[
+                    RaisedButton(
+                      child: Text('Save'),
+                      onPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          final res = await _connectCheck(
+                              _urlController.text, _apiKeyController.text);
+                          if (res['code'] == 200) {
+                            _savePref();
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text('Connection successful!')));
+                          } else {
+                            Scaffold.of(context).showSnackBar(
+                                SnackBar(content: Text(res['error'])));
+                          }
                         }
-                      }
-                    },
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  new RaisedButton(
-                    child: Text("Log Out"),
-                    onPressed: () {
-                      _clearPref();
-                    },
-                  ),
-                ],
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    new RaisedButton(
+                      child: Text("Log Out"),
+                      onPressed: () {
+                        _clearPref();
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

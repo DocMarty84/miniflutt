@@ -121,6 +121,7 @@ class MyEntryBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
+      shape: CircularNotchedRectangle(),
       child: Row(
         children: <Widget>[
           Spacer(),
@@ -147,10 +148,7 @@ class MyEntryBottom extends StatelessWidget {
               );
             },
           ),
-          IconButton(
-            icon: Icon(Icons.open_in_browser),
-            onPressed: () => _launchURL(entry.url),
-          ),
+          Spacer(),
         ],
       ),
     );
@@ -169,6 +167,11 @@ class MyEntry extends StatelessWidget {
       ),
       body: MyEntryBody(entry: entry),
       bottomNavigationBar: MyEntryBottom(entry: entry),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.open_in_browser),
+        onPressed: () => _launchURL(entry.url),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 }

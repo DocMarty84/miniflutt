@@ -237,11 +237,11 @@ class MyHome extends StatelessWidget {
       bottomNavigationBar: BottomAppBar(
         child: Row(
           children: <Widget>[
+            Spacer(),
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () => Navigator.pushNamed(context, '/search'),
             ),
-            Spacer(),
             MyHomeMarkRead(),
           ],
         ),

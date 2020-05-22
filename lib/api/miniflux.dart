@@ -5,13 +5,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<Map<String, dynamic>> _get(
+Future<String> _get(
     String endpoint, Map<String, String> params) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final url = (prefs.getString('url') ?? '');
   final apiKey = (prefs.getString('apiKey') ?? '');
   if (url == '') {
-    return {};
+    return null;
   }
 
   final query =
@@ -20,7 +20,7 @@ Future<Map<String, dynamic>> _get(
       await http.get(url + query, headers: {'X-Auth-Token': apiKey});
 
   if (response.statusCode == 200) {
-    return json.decode(utf8.decode(response.bodyBytes));
+    return utf8.decode(response.bodyBytes);
   } else {
     throw Exception('Failed to load URL: ${url + query}');
   }
@@ -47,13 +47,23 @@ Future<bool> _put(String endpoint, Map<String, dynamic> body) async {
   }
 }
 
+Future<List<dynamic>> getFeeds() async {
+  final String res = await _get('/v1/feeds', <String, String>{});
+  return json.decode(res ?? '[]');
+}
+
+Future<bool> updateFeed(int feedId, Map<String, dynamic> params) async {
+  return await _put('/v1/feeds/$feedId', params);
+}
+
 Future<bool> refreshAllFeeds() async {
   Map<String, dynamic> params = {};
   return await _put('/v1/feeds/refresh', params);
 }
 
 Future<Map<String, dynamic>> getEntries(Map<String, String> params) async {
-  return await _get('/v1/entries', params);
+  final String res = await _get('/v1/entries', params);
+  return json.decode(res ?? '{}');
 }
 
 Future<bool> updateEntries(List<int> entryIds, String status) async {

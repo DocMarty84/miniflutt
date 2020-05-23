@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/data.dart';
+import '../models/data_all.dart';
 import '../models/nav.dart';
 
 class MySettings extends StatelessWidget {
@@ -137,6 +138,13 @@ class MySettingsFormState extends State<MySettingsForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            ListTile(
+              title: Text(
+                'Server',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              contentPadding: EdgeInsets.all(0.0),
+            ),
             TextFormField(
               controller: _urlController,
               decoration: InputDecoration(labelText: 'Server URL'),
@@ -212,6 +220,18 @@ class MySettingsFormState extends State<MySettingsForm> {
                   ],
                 ),
               ),
+            ),
+            ListTile(
+              title: Text(
+                'Categories and feeds',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              contentPadding: EdgeInsets.all(0.0),
+              onTap: () {
+                final dataAll = Provider.of<DataAll>(context, listen: false);
+                dataAll.refresh();
+                Navigator.pushNamed(context, '/feeds');
+              },
             ),
           ],
         ),

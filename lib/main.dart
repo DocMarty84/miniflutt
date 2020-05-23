@@ -3,9 +3,12 @@ import 'package:provider/provider.dart';
 
 import 'common/theme.dart';
 import 'models/data.dart';
+import 'models/data_all.dart';
 import 'models/nav.dart';
 import 'screens/home.dart';
 import 'screens/entry.dart';
+import 'screens/feed.dart';
+import 'screens/feeds.dart';
 import 'screens/search.dart';
 import 'screens/settings.dart';
 
@@ -19,6 +22,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => Data()),
+        ChangeNotifierProvider(create: (context) => DataAll()),
         ChangeNotifierProvider(create: (context) => Nav()),
       ],
       child: MaterialApp(
@@ -27,9 +31,11 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => MyHome(),
-          '/settings': (context) => MySettings(),
           '/entry': (context) => MyEntry(),
+          '/feed': (context) => MyFeed(),
+          '/feeds': (context) => MyFeeds(),
           '/search': (context) => MySearch(),
+          '/settings': (context) => MySettings(),
         },
       ),
     );

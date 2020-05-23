@@ -5,6 +5,26 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+Future<bool> _delete(String endpoint) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final url = (prefs.getString('url') ?? '');
+  final apiKey = (prefs.getString('apiKey') ?? '');
+  if (url == '') {
+    return null;
+  }
+
+  final query =
+      new Uri.http('', endpoint).toString().replaceFirst('http:', '');
+  final response =
+      await http.delete(url + query, headers: {'X-Auth-Token': apiKey});
+
+  if (response.statusCode <= 204) {
+    return true;
+  } else {
+    throw Exception('Failed to load URL: ${url + query}');
+  }
+}
+
 Future<String> _get(
     String endpoint, Map<String, String> params) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -59,6 +79,10 @@ Future<bool> updateFeed(int feedId, Map<String, dynamic> params) async {
 Future<bool> refreshAllFeeds() async {
   Map<String, dynamic> params = {};
   return await _put('/v1/feeds/refresh', params);
+}
+
+Future<bool> removeFeed(int feedId) async {
+  return await _delete('/v1/feeds/$feedId');
 }
 
 Future<Map<String, dynamic>> getEntries(Map<String, String> params) async {

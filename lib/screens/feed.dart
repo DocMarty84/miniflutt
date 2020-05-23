@@ -5,7 +5,7 @@ import '../api/miniflux.dart';
 import '../models/data_all.dart';
 import '../models/feed.dart';
 
-// Create a Form widget.
+// Create a Form widget for update and delete
 class MyFeedForm extends StatefulWidget {
   MyFeedForm({Key key, @required this.feed}) : super(key: key);
   final Feed feed;
@@ -202,6 +202,26 @@ class MyFeedFormState extends State<MyFeedForm> {
                               Scaffold.of(context).showSnackBar(
                                   SnackBar(content: Text('An error occured!')));
                             }
+                          }
+                        },
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      new RaisedButton(
+                        color: Colors.red,
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () async {
+                          final res = await removeFeed(feed.id);
+                          if (res) {
+                            dataAll.refresh();
+                            Navigator.pop(context);
+                          } else {
+                            Scaffold.of(context).showSnackBar(
+                                SnackBar(content: Text('An error occured!')));
                           }
                         },
                       ),

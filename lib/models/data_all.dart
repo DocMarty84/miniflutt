@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'category.dart';
@@ -18,7 +19,7 @@ class DataAll extends ChangeNotifier {
 
     List<dynamic> jsonFeeds = [];
     try {
-      jsonFeeds = await getFeeds();
+      jsonFeeds = json.decode(await getFeeds());
     } catch (e) {
       jsonFeeds = [];
     }

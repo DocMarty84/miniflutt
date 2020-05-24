@@ -58,19 +58,8 @@ class MySettingsFormState extends State<MySettingsForm> {
     super.dispose();
   }
 
-  Future<Map<String, dynamic>> _connectCheck(String url, String apiKey) async {
-    try {
-      final res =
-          await http.get(url + '/v1/me', headers: {'X-Auth-Token': apiKey});
-      return {
-        'code': res.statusCode,
-        'error': statusCodes.containsKey(res.statusCode)
-            ? statusCodes[res.statusCode]
-            : res.reasonPhrase
-      };
-    } catch (e) {
-      return {'code': 500, 'error': e.toString()};
-    }
+  Future<http.Response> _connectCheck(String url, String apiKey) async {
+    return await http.get(url + '/v1/me', headers: {'X-Auth-Token': apiKey});
   }
 
   // Load preferences
@@ -186,20 +175,15 @@ class MySettingsFormState extends State<MySettingsForm> {
                       child: Text('Save'),
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
-                          try {
-                            final res = await _connectCheck(
-                                _urlController.text, _apiKeyController.text);
-                            if (res['code'] == 200) {
-                              _savePref();
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text('Connection successful!')));
-                            } else {
-                              Scaffold.of(context).showSnackBar(
-                                  SnackBar(content: Text(res['error'])));
-                            }
-                          } catch (e) {
+                          final res = await _connectCheck(
+                              _urlController.text, _apiKeyController.text);
+                          if (res.statusCode == 200) {
+                            _savePref();
                             Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text('An error occured!\n$e')));
+                                content: Text('Connection successful!')));
+                          } else {
+                            throw Exception(makeError('Failed to connect!', res,
+                                '/v1/me', <String, dynamic>{}));
                           }
                         }
                       },

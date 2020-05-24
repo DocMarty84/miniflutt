@@ -15,7 +15,7 @@ final Map<int, String> statusCodes = {
   500: 'Internal server error',
 };
 
-String _makeError(String msg, http.Response res, String endpoint,
+String makeError(String msg, http.Response res, String endpoint,
     Map<String, dynamic> params) {
   final String error = statusCodes.containsKey(res.statusCode)
       ? statusCodes[res.statusCode]
@@ -42,7 +42,7 @@ Future<bool> _delete(String endpoint) async {
   if (response.statusCode <= 204) {
     return true;
   } else {
-    throw Exception(_makeError('Failed to delete data.', response,
+    throw Exception(makeError('Failed to delete data.', response,
         url + endpoint, <String, dynamic>{}));
   }
 }
@@ -63,7 +63,7 @@ Future<String> _get(String endpoint, Map<String, String> params) async {
   if (response.statusCode == 200) {
     return utf8.decode(response.bodyBytes);
   } else {
-    throw Exception(_makeError(
+    throw Exception(makeError(
         'Failed to load URL.', response, url + endpoint, <String, dynamic>{}));
   }
 }
@@ -85,7 +85,7 @@ Future<bool> _post(String endpoint, Map<String, dynamic> body) async {
     return true;
   } else {
     throw Exception(
-        _makeError('Failed to update data.', response, url + endpoint, body));
+        makeError('Failed to update data.', response, url + endpoint, body));
   }
 }
 
@@ -106,13 +106,12 @@ Future<bool> _put(String endpoint, Map<String, dynamic> body) async {
     return true;
   } else {
     throw Exception(
-        _makeError('Failed to update data.', response, url + endpoint, body));
+        makeError('Failed to update data.', response, url + endpoint, body));
   }
 }
 
-Future<List<dynamic>> getFeeds() async {
-  final String res = await _get('/v1/feeds', <String, String>{});
-  return json.decode(res ?? '[]');
+Future<String> getFeeds() async {
+  return await _get('/v1/feeds', <String, String>{});
 }
 
 Future<bool> createFeed(Map<String, dynamic> params) async {
@@ -132,9 +131,8 @@ Future<bool> removeFeed(int feedId) async {
   return await _delete('/v1/feeds/$feedId');
 }
 
-Future<Map<String, dynamic>> getEntries(Map<String, String> params) async {
-  final String res = await _get('/v1/entries', params);
-  return json.decode(res ?? '{}');
+Future<String> getEntries(Map<String, String> params) async {
+  return await _get('/v1/entries', params);
 }
 
 Future<bool> updateEntries(List<int> entryIds, String status) async {
@@ -148,4 +146,18 @@ Future<bool> updateEntries(List<int> entryIds, String status) async {
 Future<bool> toggleEntryBookmark(int entryId) async {
   Map<String, dynamic> params = {};
   return await _put('/v1/entries/$entryId/bookmark', params);
+}
+
+Future<String> getCurrentUser() async {
+  final Map<String, String> params = {};
+  return await _get('/v1/me', params);
+}
+
+Future<bool> connectCheck() async {
+  try {
+    await getCurrentUser();
+    return true;
+  } catch (e) {
+    return false;
+  }
 }

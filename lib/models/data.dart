@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -83,11 +84,11 @@ class Data extends ChangeNotifier {
       params['search'] = search;
     }
 
-    Map<String, dynamic> json = {};
+    Map<String, dynamic> jsonEntries = {};
     try {
-      json = await getEntries(params);
+      jsonEntries = json.decode(await getEntries(params));
     } catch (e) {
-      json = {};
+      jsonEntries = {};
     }
 
     // Clear the existing data
@@ -96,7 +97,7 @@ class Data extends ChangeNotifier {
     categories.clear();
 
     // Fill in entries, feeds and categories
-    for (Map<String, dynamic> elem in (json['entries'] ?? [])) {
+    for (Map<String, dynamic> elem in (jsonEntries['entries'] ?? [])) {
       final Entry entry = Entry.fromJson(elem);
       entries.add(entry);
       if (!feedIds.contains(entry.feedId)) {

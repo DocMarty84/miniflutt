@@ -3,56 +3,25 @@ import 'package:provider/provider.dart';
 
 import '../api/miniflux.dart';
 import '../models/data_all.dart';
-import '../models/feed.dart';
 
 // Create a Form widget for update and delete
-class MyFeedForm extends StatefulWidget {
-  MyFeedForm({Key key, @required this.feed}) : super(key: key);
-  final Feed feed;
-
+class MyFeedFormCreate extends StatefulWidget {
   @override
-  MyFeedFormState createState() {
-    return MyFeedFormState(feed: feed);
+  MyFeedFormCreateState createState() {
+    return MyFeedFormCreateState();
   }
 }
 
-class MyFeedFormState extends State<MyFeedForm> {
-  MyFeedFormState({Key key, @required this.feed});
-  final Feed feed;
-
+class MyFeedFormCreateState extends State<MyFeedFormCreate> {
   final _formKey = GlobalKey<FormState>();
   String _feedUrl;
-  String _siteUrl;
-  String _title;
   int _categoryId;
-  String _scraperRules;
-  String _rewriteRules;
-  bool _crawler;
   String _username;
   String _password;
+  bool _crawler;
   String _userAgent;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadValues();
-  }
-
-  // Load preferences
-  void _loadValues() async {
-    setState(() {
-      _feedUrl = feed.feedUrl;
-      _siteUrl = feed.siteUrl;
-      _title = feed.title;
-      _categoryId = feed.category.id;
-      _scraperRules = feed.scraperRules;
-      _rewriteRules = feed.rewriteRules;
-      _crawler = feed.crawler;
-      _username = feed.userName;
-      _password = feed.password;
-      _userAgent = feed.userAgent;
-    });
-  }
+  String _scraperRules;
+  String _rewriteRules;
 
   @override
   Widget build(BuildContext context) {
@@ -66,33 +35,6 @@ class MyFeedFormState extends State<MyFeedForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFormField(
-                initialValue: _title,
-                decoration: InputDecoration(labelText: 'Title'),
-                onSaved: (val) {
-                  setState(() => _title = val);
-                },
-                validator: (val) {
-                  if (val.isEmpty) {
-                    return 'Please enter the title';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                initialValue: _siteUrl,
-                decoration: InputDecoration(labelText: 'Site URL'),
-                onSaved: (val) {
-                  setState(() => _siteUrl = val);
-                },
-                validator: (val) {
-                  if (val.isEmpty) {
-                    return 'Please enter the site URL';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                initialValue: _feedUrl,
                 decoration: InputDecoration(labelText: 'Feed URL *'),
                 onSaved: (val) {
                   setState(() => _feedUrl = val);
@@ -106,42 +48,6 @@ class MyFeedFormState extends State<MyFeedForm> {
                     return 'The URL must start with \'http(s)://\'';
                   }
                   return null;
-                },
-              ),
-              TextFormField(
-                initialValue: _username,
-                decoration: InputDecoration(labelText: 'Feed Username'),
-                onSaved: (val) {
-                  setState(() => _username = val);
-                },
-              ),
-              TextFormField(
-                initialValue: _password,
-                decoration: InputDecoration(labelText: 'Feed Password'),
-                onSaved: (val) {
-                  setState(() => _password = val);
-                },
-              ),
-              TextFormField(
-                initialValue: _userAgent,
-                decoration:
-                    InputDecoration(labelText: 'Override Default User Agent'),
-                onSaved: (val) {
-                  setState(() => _userAgent = val);
-                },
-              ),
-              TextFormField(
-                initialValue: _scraperRules,
-                decoration: InputDecoration(labelText: 'Scraper Rules'),
-                onSaved: (val) {
-                  setState(() => _scraperRules = val);
-                },
-              ),
-              TextFormField(
-                initialValue: _rewriteRules,
-                decoration: InputDecoration(labelText: 'Rewrite Rules'),
-                onSaved: (val) {
-                  setState(() => _rewriteRules = val);
                 },
               ),
               DropdownButtonFormField(
@@ -163,8 +69,39 @@ class MyFeedFormState extends State<MyFeedForm> {
                   setState(() => _categoryId = value);
                 },
               ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Feed Username'),
+                onSaved: (val) {
+                  setState(() => _username = val);
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Feed Password'),
+                onSaved: (val) {
+                  setState(() => _password = val);
+                },
+              ),
+              TextFormField(
+                decoration:
+                    InputDecoration(labelText: 'Override Default User Agent'),
+                onSaved: (val) {
+                  setState(() => _userAgent = val);
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Scraper Rules'),
+                onSaved: (val) {
+                  setState(() => _scraperRules = val);
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Rewrite Rules'),
+                onSaved: (val) {
+                  setState(() => _rewriteRules = val);
+                },
+              ),
               DropdownButtonFormField(
-                value: _crawler,
+                value: (_crawler ?? false),
                 items: [
                   DropdownMenuItem(child: Text('Yes'), value: true),
                   DropdownMenuItem(child: Text('No'), value: false),
@@ -188,8 +125,6 @@ class MyFeedFormState extends State<MyFeedForm> {
                             form.save();
                             Map<String, dynamic> params = {
                               'feed_url': _feedUrl,
-                              'site_url': _siteUrl,
-                              'title': _title,
                               'category_id': _categoryId,
                               'scraper_rules': _scraperRules,
                               'rewrite_rules': _rewriteRules,
@@ -199,34 +134,15 @@ class MyFeedFormState extends State<MyFeedForm> {
                               'user_agent': _userAgent,
                             };
                             try {
-                              await updateFeed(feed.id, params);
-                              dataAll.refresh();
                               Scaffold.of(context).showSnackBar(
-                                  SnackBar(content: Text('Changes saved!')));
+                                  SnackBar(content: Text('Saving...')));
+                              await createFeed(params);
+                              dataAll.refresh();
+                              Navigator.pop(context);
                             } catch (e) {
                               Scaffold.of(context).showSnackBar(SnackBar(
                                   content: Text('An error occured!\n$e')));
                             }
-                          }
-                        },
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      new RaisedButton(
-                        color: Colors.red,
-                        child: Text(
-                          'Delete',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () async {
-                          try {
-                            await removeFeed(feed.id);
-                            dataAll.refresh();
-                            Navigator.pop(context);
-                          } catch (e) {
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text('An error occured!\n$e')));
                           }
                         },
                       ),
@@ -242,13 +158,12 @@ class MyFeedFormState extends State<MyFeedForm> {
   }
 }
 
-class MyFeed extends StatelessWidget {
+class MyFeedCreate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Feed feed = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      appBar: AppBar(title: Text(feed.title)),
-      body: MyFeedForm(feed: feed),
+      appBar: AppBar(title: Text('New feed')),
+      body: MyFeedFormCreate(),
     );
   }
 }

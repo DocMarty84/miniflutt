@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../api/miniflux.dart';
 import '../models/data.dart';
 import '../models/data_all.dart';
 import '../models/nav.dart';
@@ -58,23 +59,13 @@ class MySettingsFormState extends State<MySettingsForm> {
   }
 
   Future<Map<String, dynamic>> _connectCheck(String url, String apiKey) async {
-    final _statusCodes = {
-      200: 'Everything is OK',
-      201: 'Resource created/modified',
-      204: 'Resource removed/modified',
-      400: 'Bad request',
-      401: 'Unauthorized (bad username/password)',
-      403: 'Forbidden (access not allowed)',
-      500: 'Internal server error',
-    };
-
     try {
       final res =
           await http.get(url + '/v1/me', headers: {'X-Auth-Token': apiKey});
       return {
         'code': res.statusCode,
-        'error': _statusCodes.containsKey(res.statusCode)
-            ? _statusCodes[res.statusCode]
+        'error': statusCodes.containsKey(res.statusCode)
+            ? statusCodes[res.statusCode]
             : res.reasonPhrase
       };
     } catch (e) {
@@ -195,15 +186,20 @@ class MySettingsFormState extends State<MySettingsForm> {
                       child: Text('Save'),
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
-                          final res = await _connectCheck(
-                              _urlController.text, _apiKeyController.text);
-                          if (res['code'] == 200) {
-                            _savePref();
+                          try {
+                            final res = await _connectCheck(
+                                _urlController.text, _apiKeyController.text);
+                            if (res['code'] == 200) {
+                              _savePref();
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text('Connection successful!')));
+                            } else {
+                              Scaffold.of(context).showSnackBar(
+                                  SnackBar(content: Text(res['error'])));
+                            }
+                          } catch (e) {
                             Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text('Connection successful!')));
-                          } else {
-                            Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text(res['error'])));
+                                content: Text('An error occured!\n$e')));
                           }
                         }
                       },

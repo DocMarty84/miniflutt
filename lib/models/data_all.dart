@@ -16,8 +16,12 @@ class DataAll extends ChangeNotifier {
     isRefresh = true;
     notifyListeners();
 
-    final Future<List<dynamic>> jsonFeedsFut = getFeeds();
-    final List<dynamic> jsonFeeds = await jsonFeedsFut;
+    List<dynamic> jsonFeeds = [];
+    try {
+      jsonFeeds = await getFeeds();
+    } catch (e) {
+      jsonFeeds = [];
+    }
 
     // Clear the existing data
     feeds.clear();

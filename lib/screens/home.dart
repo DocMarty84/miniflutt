@@ -47,9 +47,12 @@ class MyHomeMarkRead extends StatelessWidget {
             },
           ),
         );
-        final res = await data.read(entryIds);
-        if (res) {
+        try {
+          await data.read(entryIds);
           Scaffold.of(context).showSnackBar(snackBar);
+        } catch (e) {
+          Scaffold.of(context)
+              .showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
         }
       },
     );

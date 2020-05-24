@@ -8,6 +8,7 @@ import 'models/nav.dart';
 import 'screens/home.dart';
 import 'screens/entry.dart';
 import 'screens/feed.dart';
+import 'screens/feed_create.dart';
 import 'screens/feeds.dart';
 import 'screens/search.dart';
 import 'screens/settings.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => MyHome(),
           '/entry': (context) => MyEntry(),
           '/feed': (context) => MyFeed(),
+          '/feed_create': (context) => MyFeedCreate(),
           '/feeds': (context) => MyFeeds(),
           '/search': (context) => MySearch(),
           '/settings': (context) => MySettings(),

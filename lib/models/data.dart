@@ -83,7 +83,12 @@ class Data extends ChangeNotifier {
       params['search'] = search;
     }
 
-    final Map<String, dynamic> json = await getEntries(params);
+    Map<String, dynamic> json = {};
+    try {
+      json = await getEntries(params);
+    } catch (e) {
+      json = {};
+    }
 
     // Clear the existing data
     entries.clear();

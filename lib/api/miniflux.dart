@@ -5,33 +5,54 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+final Map<int, String> statusCodes = {
+  200: 'Everything is OK',
+  201: 'Resource created/modified',
+  204: 'Resource removed/modified',
+  400: 'Bad request',
+  401: 'Unauthorized (bad username/password)',
+  403: 'Forbidden (access not allowed)',
+  500: 'Internal server error',
+};
+
+String _makeError(String msg, http.Response res, String endpoint,
+    Map<String, dynamic> params) {
+  final String error = statusCodes.containsKey(res.statusCode)
+      ? statusCodes[res.statusCode]
+      : res.reasonPhrase;
+  return '$msg\n'
+      'Status code: ${res.statusCode}\n'
+      'Error: $error\n'
+      'Endpoint: $endpoint\n'
+      'Body: $params';
+}
+
 Future<bool> _delete(String endpoint) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final url = (prefs.getString('url') ?? '');
   final apiKey = (prefs.getString('apiKey') ?? '');
   if (url == '') {
-    return null;
+    throw Exception('The server URL is not set.');
   }
 
-  final query =
-      new Uri.http('', endpoint).toString().replaceFirst('http:', '');
+  final query = new Uri.http('', endpoint).toString().replaceFirst('http:', '');
   final response =
       await http.delete(url + query, headers: {'X-Auth-Token': apiKey});
 
   if (response.statusCode <= 204) {
     return true;
   } else {
-    throw Exception('Failed to load URL: ${url + query}');
+    throw Exception(_makeError('Failed to delete data.', response,
+        url + endpoint, <String, dynamic>{}));
   }
 }
 
-Future<String> _get(
-    String endpoint, Map<String, String> params) async {
+Future<String> _get(String endpoint, Map<String, String> params) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final url = (prefs.getString('url') ?? '');
   final apiKey = (prefs.getString('apiKey') ?? '');
   if (url == '') {
-    return null;
+    throw Exception('The server URL is not set.');
   }
 
   final query =
@@ -42,7 +63,29 @@ Future<String> _get(
   if (response.statusCode == 200) {
     return utf8.decode(response.bodyBytes);
   } else {
-    throw Exception('Failed to load URL: ${url + query}');
+    throw Exception(_makeError(
+        'Failed to load URL.', response, url + endpoint, <String, dynamic>{}));
+  }
+}
+
+Future<bool> _post(String endpoint, Map<String, dynamic> body) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final url = (prefs.getString('url') ?? '');
+  final apiKey = (prefs.getString('apiKey') ?? '');
+  if (url == '') {
+    throw Exception('The server URL is not set.');
+  }
+
+  String bodyStr = jsonEncode(body);
+  final response = await http.post(url + endpoint,
+      body: bodyStr,
+      headers: {'X-Auth-Token': apiKey, 'Content-Type': 'application/json'});
+
+  if (response.statusCode <= 204) {
+    return true;
+  } else {
+    throw Exception(
+        _makeError('Failed to update data.', response, url + endpoint, body));
   }
 }
 
@@ -51,7 +94,7 @@ Future<bool> _put(String endpoint, Map<String, dynamic> body) async {
   final url = (prefs.getString('url') ?? '');
   final apiKey = (prefs.getString('apiKey') ?? '');
   if (url == '') {
-    return false;
+    throw Exception('The server URL is not set.');
   }
 
   String bodyStr = jsonEncode(body);
@@ -63,13 +106,17 @@ Future<bool> _put(String endpoint, Map<String, dynamic> body) async {
     return true;
   } else {
     throw Exception(
-        'Failed to update data:\nEndpoint: ${url + endpoint}\nBody: $body');
+        _makeError('Failed to update data.', response, url + endpoint, body));
   }
 }
 
 Future<List<dynamic>> getFeeds() async {
   final String res = await _get('/v1/feeds', <String, String>{});
   return json.decode(res ?? '[]');
+}
+
+Future<bool> createFeed(Map<String, dynamic> params) async {
+  return await _post('/v1/feeds', params);
 }
 
 Future<bool> updateFeed(int feedId, Map<String, dynamic> params) async {

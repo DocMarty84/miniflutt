@@ -44,10 +44,13 @@ class MyDrawerHeader extends StatelessWidget {
                   content: Text('All feeds are updated in the background. '
                       'Refresh in a few seconds.'),
                 );
-                final res = await refreshAllFeeds();
-                if (res) {
+                try {
+                  await refreshAllFeeds();
                   Navigator.pop(context);
                   Scaffold.of(context).showSnackBar(snackBar);
+                } catch (e) {
+                  Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text('An error occured!\n$e')));
                 }
               },
             ),

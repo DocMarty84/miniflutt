@@ -20,7 +20,11 @@ class MyFeedsList extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           onTap: () {
-            print(category.title);
+            Navigator.pushNamed(
+              context,
+              '/category',
+              arguments: category,
+            );
           },
         ),
       );
@@ -69,9 +73,25 @@ class MyFeeds extends StatelessWidget {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => Navigator.pushNamed(context, '/feed_create'),
+      floatingActionButton: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Spacer(),
+          Padding(
+            padding: EdgeInsets.only(left: 3.0),
+            child: FloatingActionButton(
+              child: Icon(Icons.category),
+              onPressed: () => Navigator.pushNamed(context, '/category'),
+              heroTag: null,
+              mini: true,
+            ),
+          ),
+          FloatingActionButton(
+            child: Icon(Icons.rss_feed),
+            onPressed: () => Navigator.pushNamed(context, '/feed_create'),
+            heroTag: null,
+          ),
+        ],
       ),
     );
   }

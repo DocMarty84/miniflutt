@@ -18,10 +18,15 @@ class DataAll extends ChangeNotifier {
     notifyListeners();
 
     List<dynamic> jsonFeeds = [];
+    List<dynamic> jsonCategories = [];
     try {
-      jsonFeeds = json.decode(await getFeeds());
+      final Future<String> jsonFeedsFut = getFeeds();
+      final Future<String> jsonCategoriesFut = getCategories();
+      jsonFeeds = json.decode(await jsonFeedsFut);
+      jsonCategories = json.decode(await jsonCategoriesFut);
     } catch (e) {
       jsonFeeds = [];
+      jsonCategories = [];
     }
 
     // Clear the existing data
@@ -36,6 +41,14 @@ class DataAll extends ChangeNotifier {
       if (!categoryIds.contains(feed.category.id)) {
         categories.add(feed.category);
         categoryIds.add(feed.category.id);
+      }
+    }
+
+    for (Map<String, dynamic> elem in (jsonCategories ?? [])) {
+      final Category category = Category.fromJson(elem);
+      if (!categoryIds.contains(category.id)) {
+        categories.add(category);
+        categoryIds.add(category.id);
       }
     }
 

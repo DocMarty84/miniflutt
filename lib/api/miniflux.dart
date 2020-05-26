@@ -148,6 +148,22 @@ Future<bool> toggleEntryBookmark(int entryId) async {
   return await _put('/v1/entries/$entryId/bookmark', params);
 }
 
+Future<String> getCategories() async {
+  return await _get('/v1/categories', <String, String>{});
+}
+
+Future<bool> createCategory(Map<String, dynamic> params) async {
+  return await _post('/v1/categories', params);
+}
+
+Future<bool> updateCategory(int categoryId, Map<String, dynamic> params) async {
+  return await _put('/v1/categories/$categoryId', params);
+}
+
+Future<bool> deleteCategory(int categoryId) async {
+  return await _delete('/v1/categories/$categoryId');
+}
+
 Future<String> getCurrentUser() async {
   final Map<String, String> params = {};
   return await _get('/v1/me', params);

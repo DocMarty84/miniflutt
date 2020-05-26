@@ -79,6 +79,7 @@ class Data extends ChangeNotifier {
     };
     if (starred) {
       params['starred'] = '1';
+      params['status'] = '';
     }
     if (search != null) {
       params['search'] = search;

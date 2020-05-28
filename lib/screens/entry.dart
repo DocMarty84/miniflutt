@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'home.dart';
@@ -125,6 +126,16 @@ class MyEntryBottom extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Spacer(),
+          IconButton(
+              icon: Icon(Icons.share),
+              onPressed: () {
+                // The box is necessary for iPads
+                final RenderBox box = context.findRenderObject();
+                Share.share(entry.url,
+                    subject: entry.title,
+                    sharePositionOrigin:
+                        box.localToGlobal(Offset.zero) & box.size);
+              }),
           Consumer<Data>(
             builder: (context, data, child) {
               return IconButton(

@@ -31,14 +31,12 @@ class MySettingsForm extends StatefulWidget {
 }
 
 // Create a corresponding State class.
-// This class holds data related to the form.
 class MySettingsFormState extends State<MySettingsForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MySettingsFormState>.
   final _formKey = GlobalKey<FormState>();
+
+  // Since the initial values are loaded asynchronously, setting the value in a
+  // String won't work. Indeed, the initState cannot be delayed with an async.
+  // The solution is to use a controller.
   final _urlController = TextEditingController();
   final _apiKeyController = TextEditingController();
   final _limitController = TextEditingController();
@@ -128,10 +126,10 @@ class MySettingsFormState extends State<MySettingsForm> {
             TextFormField(
               controller: _urlController,
               decoration: InputDecoration(labelText: 'Server URL'),
-              validator: (value) {
-                if (value.isEmpty) {
+              validator: (val) {
+                if (val.isEmpty) {
                   return 'Please enter the URL';
-                } else if (!value
+                } else if (!val
                     .toLowerCase()
                     .startsWith(new RegExp(r'^https?://'))) {
                   return 'The URL must start with \'http(s)://\'';
@@ -143,8 +141,8 @@ class MySettingsFormState extends State<MySettingsForm> {
               controller: _apiKeyController,
               decoration: InputDecoration(labelText: 'API Key'),
               obscureText: true,
-              validator: (value) {
-                if (value.isEmpty) {
+              validator: (val) {
+                if (val.isEmpty) {
                   return 'Please enter an API key';
                 }
                 return null;
@@ -154,12 +152,12 @@ class MySettingsFormState extends State<MySettingsForm> {
               controller: _limitController,
               decoration: InputDecoration(
                   labelText: 'Max Number Of Entries (0: Unlimited)'),
-              validator: (value) {
-                if (value.isEmpty) {
+              validator: (val) {
+                if (val.isEmpty) {
                   return 'Please enter a number';
                 }
                 try {
-                  int.parse(value);
+                  int.parse(val);
                 } catch (e) {
                   return 'Please enter a number';
                 }

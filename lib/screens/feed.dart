@@ -39,7 +39,7 @@ class MyFeedFormState extends State<MyFeedForm> {
   }
 
   // Load preferences
-  void _loadValues() async {
+  void _loadValues() {
     setState(() {
       _feedUrl = feed.feedUrl;
       _siteUrl = feed.siteUrl;

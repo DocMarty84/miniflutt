@@ -30,7 +30,7 @@ class MyCategoryFormState extends State<MyCategoryForm> {
   }
 
   // Load preferences
-  void _loadValues() async {
+  void _loadValues() {
     setState(() {
       _title = category == null ? '' : category.title;
     });

@@ -25,13 +25,14 @@ of features. They will be developed in the coming weeks or months, depending on 
 - Articles are grouped categories / feeds.
 - All articles from a category / feed can be marked as read.
 - The original article can be opened in an external browser.
+- Fetch read and/or unread articles
+- Sort by date
+- Set favorites
+- Search support
+- Feed and category management
 
 Limitations:
 
 - Being online is required (no fetching for offline reading).
-- Only unread articles are fetched, but read articles are kept until refresh.
-- No sorting.
-- No category, feed or user management.
-- No favorites.
-- No search.
+- No user management.
 - No themes.

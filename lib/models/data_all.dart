@@ -10,7 +10,7 @@ class DataAll extends ChangeNotifier {
   final List<Category> categories = [];
   bool isRefresh = false;
 
-  void refresh({String search}) async {
+  Future<void> refresh() async {
     final Set<int> categoryIds = {};
 
     // Trigger a progress indicator in the listeners

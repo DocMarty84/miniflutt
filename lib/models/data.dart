@@ -57,7 +57,7 @@ class Data extends ChangeNotifier {
     return await toggleEntryBookmark(entryId);
   }
 
-  void refresh({String search}) async {
+  Future<void> refresh({String search}) async {
     final Set<int> feedIds = {};
     final Set<int> categoryIds = {};
 

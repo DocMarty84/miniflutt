@@ -168,7 +168,7 @@ class MyHomeEntryList extends StatelessWidget {
               '${entry.title}',
               style: TextStyle(
                 color: (entry.status == 'unread'
-                    ? Theme.of(context).textTheme.title.color
+                    ? Theme.of(context).textTheme.headline6.color
                     : Colors.grey),
                 fontStyle: (entry.status == 'unread'
                     ? FontStyle.normal

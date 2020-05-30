@@ -1,6 +1,12 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,8 +20,89 @@ void _launchURL(String url) async {
   if (await canLaunch(url)) {
     await launch(url);
   } else {
-    throw 'Could not launch $url';
+    throw Exception('Could not launch $url');
   }
+}
+
+Future<bool> _checkPermission() async {
+  var status = await Permission.storage.status;
+  if (status.isUndetermined) {
+    await Permission.storage.request();
+    status = await Permission.storage.status;
+  }
+  if (status.isGranted) {
+    return true;
+  }
+  return false;
+}
+
+Future<String> _downloadURL(String url) async {
+  String fileName = url.split('/').last;
+  String downloadPath = '/storage/emulated/0/Download';
+
+  // Get permission and download file
+  final Future<bool> permissionReadyFut = _checkPermission();
+  final Future<http.Response> responseFut = http.get(url);
+
+  // Get download path
+  final bool permissionReady = await permissionReadyFut;
+  if (!permissionReady ||
+      FileSystemEntity.typeSync(downloadPath) ==
+          FileSystemEntityType.notFound) {
+    downloadPath = (await getExternalStorageDirectory()).path;
+  }
+
+  // Get absolute file path. If a file with the same name exists, prepend the date.
+  String filePath = '$downloadPath${Platform.pathSeparator}$fileName';
+  if (FileSystemEntity.typeSync(filePath) != FileSystemEntityType.notFound) {
+    final String now = '${DateTime.now().toString().substring(0, 19)}';
+    filePath = '$downloadPath${Platform.pathSeparator}$now - $fileName';
+  }
+  final File file = File(filePath);
+
+  // Save the file
+  final http.Response response = await responseFut;
+  await file.writeAsBytes(response.bodyBytes);
+  return filePath;
+}
+
+Future<void> _handleURL(String url, BuildContext context) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      // The dialogContext allows using a SnackBar without the 'Scaffold.of()
+      // called with a context that does not contain a Scaffold.' error.
+      final String fileName = url.split('/').last;
+      return AlertDialog(
+        content: SingleChildScrollView(
+          child: Text('Save on device or open in browser?\n\nFile: $fileName'),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Save'),
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text('Downloading file...'),
+                duration: Duration(seconds: 60),
+              ));
+              final String filePath = await _downloadURL(url);
+              Scaffold.of(context).hideCurrentSnackBar();
+              Scaffold.of(context).showSnackBar(
+                  SnackBar(content: Text('File saved in $filePath')));
+            },
+          ),
+          FlatButton(
+            child: Text('Open'),
+            onPressed: () {
+              _launchURL(url);
+              Navigator.of(dialogContext).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class MyEntryHeader extends StatelessWidget {
@@ -80,8 +167,23 @@ class MyEntryBody extends StatelessWidget {
             MyEntryHeader(entry: entry),
             Html(
               data: entry.content,
-              onLinkTap: (url) => _launchURL(url),
-              onImageTap: (url) => _launchURL(url),
+              onLinkTap: (url) async {
+                // Suggest to download most common files
+                final re = RegExp(r'\.('
+                    r'7z|apk|avi|csv|doc|docx|flv|gif|h264|jpeg|jpg|mkv|mov|'
+                    r'mp3|mp4|mpeg|mpg|odp|ods|odt|ogg|pdf|png|pps|ppt|pptx|'
+                    r'psd|rtf|svg|tex|txt|webm|webp|xls|xlsx|zip'
+                    r')$');
+                if (re.hasMatch(url.toLowerCase())) {
+                  return _handleURL(url, context);
+                } else {
+                  _launchURL(url);
+                }
+              },
+              onImageTap: (url) async {
+                // Suggest to download images
+                return _handleURL(url, context);
+              },
             ),
           ],
         ),

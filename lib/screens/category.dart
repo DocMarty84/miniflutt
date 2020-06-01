@@ -102,10 +102,14 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                       category == null
                           ? SizedBox.shrink()
                           : RaisedButton(
-                              color: Colors.red,
+                              color: Theme.of(context).errorColor,
                               child: Text(
                                 'Delete',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .primaryTextTheme
+                                        .headline6
+                                        .color),
                               ),
                               onPressed: () async {
                                 try {

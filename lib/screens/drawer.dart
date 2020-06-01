@@ -18,23 +18,29 @@ class MyDrawerHeader extends StatelessWidget {
         child: ListView(
           children: <Widget>[
             ListTile(
-              title: Text('Settings', style: TextStyle(color: Colors.white)),
+              title: Text('Settings',
+                  style: TextStyle(
+                      color:
+                          Theme.of(context).primaryTextTheme.headline6.color)),
               trailing: Icon(
                 Icons.settings,
-                color: Colors.white,
+                color: Theme.of(context).primaryTextTheme.headline6.color,
               ),
               onTap: () => Navigator.pushNamed(context, '/settings'),
             ),
             ListTile(
-              title: Text('Refresh', style: TextStyle(color: Colors.white)),
+              title: Text('Refresh',
+                  style: TextStyle(
+                      color:
+                          Theme.of(context).primaryTextTheme.headline6.color)),
               trailing: (!data.isRefresh
                   ? Icon(
                       Icons.refresh,
-                      color: Colors.white,
+                      color: Theme.of(context).primaryTextTheme.headline6.color,
                     )
                   : Icon(
                       Icons.file_download,
-                      color: Colors.white,
+                      color: Theme.of(context).primaryTextTheme.headline6.color,
                     )),
               onTap: () {
                 data.refresh();

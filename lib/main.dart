@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Miniflutt',
         theme: appTheme,
+        darkTheme: appThemeDark,
         initialRoute: '/',
         routes: {
           '/': (context) => MyHome(),

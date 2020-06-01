@@ -214,10 +214,14 @@ class MyFeedFormState extends State<MyFeedForm> {
                         width: 10,
                       ),
                       new RaisedButton(
-                        color: Colors.red,
+                        color: Theme.of(context).errorColor,
                         child: Text(
                           'Delete',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .primaryTextTheme
+                                  .headline6
+                                  .color),
                         ),
                         onPressed: () async {
                           try {

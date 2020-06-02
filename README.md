@@ -18,21 +18,23 @@ The unread articles should appear in the app.
 
 ## Features
 
-At the moment, Miniflutt is on an early development stage. Therefore, it implements a limited number
-of features. They will be developed in the coming weeks or months, depending on my free time.
+Miniflutt is still in development but implements the most common features for an RSS reader. Keep in
+mind that this is a personal project which is moving forward depending on my free time. At the
+moment, the following is supported:
 
+- Dark theme available on night mode
 - Supports video playback.
-- Articles are grouped categories / feeds.
+- Download most common files (documents, images and videos)
+- Articles are grouped by categories / feeds.
 - All articles from a category / feed can be marked as read.
 - The original article can be opened in an external browser.
 - Fetch read and/or unread articles
 - Sort by date
 - Set favorites
-- Search support
+- Search articles
 - Feed and category management
 
 Limitations:
 
 - Being online is required (no fetching for offline reading).
 - No user management.
-- No themes.

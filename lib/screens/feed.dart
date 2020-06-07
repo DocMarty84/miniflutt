@@ -81,6 +81,7 @@ class MyFeedFormState extends State<MyFeedForm> {
               TextFormField(
                 initialValue: _siteUrl,
                 decoration: InputDecoration(labelText: 'Site URL'),
+                keyboardType: TextInputType.url,
                 onSaved: (val) {
                   setState(() => _siteUrl = val);
                 },
@@ -94,6 +95,7 @@ class MyFeedFormState extends State<MyFeedForm> {
               TextFormField(
                 initialValue: _feedUrl,
                 decoration: InputDecoration(labelText: 'Feed URL *'),
+                keyboardType: TextInputType.url,
                 onSaved: (val) {
                   setState(() => _feedUrl = val);
                 },
@@ -118,6 +120,7 @@ class MyFeedFormState extends State<MyFeedForm> {
               TextFormField(
                 initialValue: _password,
                 decoration: InputDecoration(labelText: 'Feed Password'),
+                obscureText: true,
                 onSaved: (val) {
                   setState(() => _password = val);
                 },

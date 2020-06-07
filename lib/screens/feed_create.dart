@@ -36,6 +36,7 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
             children: <Widget>[
               TextFormField(
                 decoration: InputDecoration(labelText: 'Feed URL *'),
+                keyboardType: TextInputType.url,
                 onSaved: (val) {
                   setState(() => _feedUrl = val);
                 },
@@ -77,6 +78,7 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Feed Password'),
+                obscureText: true,
                 onSaved: (val) {
                   setState(() => _password = val);
                 },

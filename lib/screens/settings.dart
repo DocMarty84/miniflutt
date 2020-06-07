@@ -126,6 +126,7 @@ class MySettingsFormState extends State<MySettingsForm> {
             TextFormField(
               controller: _urlController,
               decoration: InputDecoration(labelText: 'Server URL'),
+              keyboardType: TextInputType.url,
               validator: (val) {
                 if (val.isEmpty) {
                   return 'Please enter the URL';
@@ -152,6 +153,7 @@ class MySettingsFormState extends State<MySettingsForm> {
               controller: _limitController,
               decoration: InputDecoration(
                   labelText: 'Max Number Of Entries (0: Unlimited)'),
+              keyboardType: TextInputType.number,
               validator: (val) {
                 if (val.isEmpty) {
                   return 'Please enter a number';

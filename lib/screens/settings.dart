@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/miniflux.dart';
-import '../models/data.dart';
 import '../models/data_all.dart';
-import '../models/nav.dart';
+import '../models/settings.dart';
 
 class MySettings extends StatelessWidget {
   @override
@@ -17,93 +15,39 @@ class MySettings extends StatelessWidget {
           'Settings',
         ),
       ),
-      body: MySettingsForm(),
+      body: Consumer<Settings>(
+        builder: (context, settings, child) {
+          if (settings.isLoad) {
+            return CircularProgressIndicator();
+          } else {
+            return MySettingsForm(settings: settings);
+          }
+        },
+      ),
     );
   }
 }
 
 // Create a Form widget.
 class MySettingsForm extends StatefulWidget {
+  MySettingsForm({Key key, @required this.settings}) : super(key: key);
+  final Settings settings;
+
   @override
   MySettingsFormState createState() {
-    return MySettingsFormState();
+    return MySettingsFormState(settings: settings);
   }
 }
 
 // Create a corresponding State class.
 class MySettingsFormState extends State<MySettingsForm> {
+  MySettingsFormState({Key key, @required this.settings});
+  final Settings settings;
+
   final _formKey = GlobalKey<FormState>();
-
-  // Since the initial values are loaded asynchronously, setting the value in a
-  // String won't work. Indeed, the initState cannot be delayed with an async.
-  // The solution is to use a controller.
-  final _urlController = TextEditingController();
-  final _apiKeyController = TextEditingController();
-  final _limitController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPref();
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    _urlController.dispose();
-    _apiKeyController.dispose();
-    _limitController.dispose();
-    super.dispose();
-  }
 
   Future<http.Response> _connectCheck(String url, String apiKey) async {
     return await http.get(url + '/v1/me', headers: {'X-Auth-Token': apiKey});
-  }
-
-  // Load preferences
-  void _loadPref() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _urlController.text = (prefs.getString('url') ?? 'http://');
-      _apiKeyController.text = (prefs.getString('apiKey') ?? '');
-      _limitController.text = (prefs.getString('limit') ?? '500');
-    });
-  }
-
-  // Save preferences
-  void _savePref() async {
-    // First save preferences
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      prefs.setString(
-          'url', _urlController.text.replaceAll(RegExp(r"/+$"), ''));
-      prefs.setString('apiKey', _apiKeyController.text);
-      prefs.setString('limit', _limitController.text);
-    });
-
-    // Then refresh to populate the interface
-    final data = Provider.of<Data>(context, listen: false);
-    final nav = Provider.of<Nav>(context, listen: false);
-    data.refresh();
-    nav.set(null, null, 'All');
-  }
-
-  // Clear preferences
-  void _clearPref() async {
-    // First remove preferences
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    setState(() {
-      _urlController.text = 'http://';
-      _apiKeyController.text = '';
-      _limitController.text = '500';
-    });
-
-    // Then refresh to clean-up the interface
-    final data = Provider.of<Data>(context, listen: false);
-    final nav = Provider.of<Nav>(context, listen: false);
-    data.refresh();
-    nav.set(null, null, 'All');
   }
 
   @override
@@ -124,9 +68,12 @@ class MySettingsFormState extends State<MySettingsForm> {
               contentPadding: EdgeInsets.all(0.0),
             ),
             TextFormField(
-              controller: _urlController,
+              initialValue: settings.url,
               decoration: InputDecoration(labelText: 'Server URL'),
               keyboardType: TextInputType.url,
+              onSaved: (val) {
+                setState(() => settings.url = val);
+              },
               validator: (val) {
                 if (val.isEmpty) {
                   return 'Please enter the URL';
@@ -139,9 +86,12 @@ class MySettingsFormState extends State<MySettingsForm> {
               },
             ),
             TextFormField(
-              controller: _apiKeyController,
+              initialValue: settings.apiKey,
               decoration: InputDecoration(labelText: 'API Key'),
               obscureText: true,
+              onSaved: (val) {
+                setState(() => settings.apiKey = val);
+              },
               validator: (val) {
                 if (val.isEmpty) {
                   return 'Please enter an API key';
@@ -150,10 +100,13 @@ class MySettingsFormState extends State<MySettingsForm> {
               },
             ),
             TextFormField(
-              controller: _limitController,
+              initialValue: settings.limit,
               decoration: InputDecoration(
                   labelText: 'Max Number Of Entries (0: Unlimited)'),
               keyboardType: TextInputType.number,
+              onSaved: (val) {
+                setState(() => settings.limit = val);
+              },
               validator: (val) {
                 if (val.isEmpty) {
                   return 'Please enter a number';
@@ -174,12 +127,14 @@ class MySettingsFormState extends State<MySettingsForm> {
                     RaisedButton(
                       child: Text('Save'),
                       onPressed: () async {
-                        if (_formKey.currentState.validate()) {
+                        final FormState form = _formKey.currentState;
+                        if (form.validate()) {
+                          form.save();
                           try {
                             final res = await _connectCheck(
-                                _urlController.text, _apiKeyController.text);
+                                settings.url, settings.apiKey);
                             if (res.statusCode == 200) {
-                              _savePref();
+                              settings.save(context);
                               Scaffold.of(context).showSnackBar(SnackBar(
                                   content: Text('Connection successful!')));
                             } else {
@@ -198,9 +153,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                     ),
                     new RaisedButton(
                       child: Text("Log Out"),
-                      onPressed: () {
-                        _clearPref();
-                      },
+                      onPressed: () => settings.clear(context),
                     ),
                   ],
                 ),

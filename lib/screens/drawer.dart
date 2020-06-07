@@ -5,6 +5,7 @@ import '../api/miniflux.dart';
 import '../models/category.dart';
 import '../models/data.dart';
 import '../models/nav.dart';
+import '../models/settings.dart';
 
 class MyDrawerHeader extends StatelessWidget {
   MyDrawerHeader({Key key, @required this.data}) : super(key: key);
@@ -26,7 +27,11 @@ class MyDrawerHeader extends StatelessWidget {
                 Icons.settings,
                 color: Theme.of(context).primaryTextTheme.headline6.color,
               ),
-              onTap: () => Navigator.pushNamed(context, '/settings'),
+              onTap: () {
+                final settings = Provider.of<Settings>(context, listen: false);
+                settings.load();
+                Navigator.pushNamed(context, '/settings');
+              },
             ),
             ListTile(
               title: Text('Refresh',

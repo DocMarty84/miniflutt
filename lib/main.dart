@@ -5,6 +5,7 @@ import 'common/theme.dart';
 import 'models/data.dart';
 import 'models/data_all.dart';
 import 'models/nav.dart';
+import 'models/settings.dart';
 import 'screens/home.dart';
 import 'screens/category.dart';
 import 'screens/entry.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => Data()),
         ChangeNotifierProvider(create: (context) => DataAll()),
         ChangeNotifierProvider(create: (context) => Nav()),
+        ChangeNotifierProvider(create: (context) => Settings()),
       ],
       child: MaterialApp(
         title: 'Miniflutt',

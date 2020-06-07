@@ -173,15 +173,20 @@ class MySettingsFormState extends State<MySettingsForm> {
                       child: Text('Save'),
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
-                          final res = await _connectCheck(
-                              _urlController.text, _apiKeyController.text);
-                          if (res.statusCode == 200) {
-                            _savePref();
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text('Connection successful!')));
-                          } else {
-                            throw Exception(makeError('Failed to connect!', res,
-                                '/v1/me', <String, dynamic>{}));
+                          try {
+                            final res = await _connectCheck(
+                                _urlController.text, _apiKeyController.text);
+                            if (res.statusCode == 200) {
+                              _savePref();
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text('Connection successful!')));
+                            } else {
+                              throw Exception(makeError('Failed to connect!',
+                                  res, '/v1/me', <String, dynamic>{}));
+                            }
+                          } catch (e) {
+                            Scaffold.of(context).showSnackBar(
+                                SnackBar(content: Text('Failed to connect!')));
                           }
                         }
                       },

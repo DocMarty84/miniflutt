@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/miniflux.dart';
 import '../models/data_all.dart';
@@ -45,6 +46,20 @@ class MySettingsFormState extends State<MySettingsForm> {
   final Settings settings;
 
   final _formKey = GlobalKey<FormState>();
+  final _actionsEntry = <DropdownMenuItem>[
+    DropdownMenuItem(
+      child: Text('Do nothing'),
+      value: 'no',
+    ),
+    DropdownMenuItem(
+      child: Text('Mark as read/unread'),
+      value: 'read',
+    ),
+    DropdownMenuItem(
+      child: Text('Mark as favorite'),
+      value: 'favorite',
+    ),
+  ];
 
   Future<http.Response> _connectCheck(String url, String apiKey) async {
     return await http.get(url + '/v1/me', headers: {'X-Auth-Token': apiKey});
@@ -158,6 +173,46 @@ class MySettingsFormState extends State<MySettingsForm> {
                   ],
                 ),
               ),
+            ),
+            ListTile(
+              title: Text(
+                'User Actions in Lists',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              contentPadding: EdgeInsets.all(0.0),
+            ),
+            DropdownButtonFormField(
+              value: settings.entryOnLongPress,
+              items: _actionsEntry,
+              decoration: InputDecoration(labelText: 'Long press on article'),
+              onChanged: (val) async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                prefs.setString('entryOnLongPress', val);
+                setState(() => settings.entryOnLongPress = val);
+              },
+            ),
+            DropdownButtonFormField(
+              value: settings.entrySwipeLeft,
+              items: _actionsEntry,
+              decoration: InputDecoration(labelText: 'Swipe left on article'),
+              onChanged: (val) async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                prefs.setString('entrySwipeLeft', val);
+                setState(() => settings.entrySwipeRight = val);
+              },
+            ),
+            DropdownButtonFormField(
+              value: settings.entrySwipeRight,
+              items: _actionsEntry,
+              decoration: InputDecoration(labelText: 'Swipe right on article'),
+              onChanged: (val) async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                prefs.setString('entrySwipeRight', val);
+                setState(() => settings.entrySwipeRight = val);
+              },
             ),
             ListTile(
               title: Text(

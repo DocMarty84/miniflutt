@@ -9,6 +9,9 @@ class Settings extends ChangeNotifier {
   String url;
   String apiKey;
   String limit;
+  String entryOnLongPress;
+  String entrySwipeLeft;
+  String entrySwipeRight;
   bool isLoad;
 
   Future<void> load() async {
@@ -19,6 +22,9 @@ class Settings extends ChangeNotifier {
     url = (prefs.getString('url') ?? 'http://');
     apiKey = (prefs.getString('apiKey') ?? '');
     limit = (prefs.getString('limit') ?? '500');
+    entryOnLongPress = (prefs.getString('entryOnLongPress') ?? 'read');
+    entrySwipeLeft = (prefs.getString('entrySwipeLeft') ?? 'no');
+    entrySwipeRight = (prefs.getString('entrySwipeRight') ?? 'no');
     isLoad = false;
     notifyListeners();
   }

@@ -163,45 +163,76 @@ class MyHomeEntryList extends StatelessWidget {
         itemBuilder: (context, i) {
           if (i.isOdd) return Divider();
           final Entry entry = entries[i ~/ 2];
-          return ListTile(
-            title: Text(
-              '${entry.title}',
-              style: TextStyle(
-                color: (entry.status == 'unread'
-                    ? null
-                    : Theme.of(context).disabledColor),
-                fontStyle: (entry.status == 'unread'
-                    ? FontStyle.normal
-                    : FontStyle.italic),
+          return GestureDetector(
+            child: ListTile(
+              title: Text(
+                '${entry.title}',
+                style: TextStyle(
+                  color: (entry.status == 'unread'
+                      ? null
+                      : Theme.of(context).disabledColor),
+                  fontStyle: (entry.status == 'unread'
+                      ? FontStyle.normal
+                      : FontStyle.italic),
+                ),
               ),
+              subtitle: Row(children: <Widget>[
+                Text(
+                    (nav.currentFeedId == null ? entry.feed.title + '\n' : '') +
+                        DateFormat.yMEd()
+                            .add_jm()
+                            .format(DateTime.parse(entry.publishedAt))),
+                Spacer(),
+                entry.starred
+                    ? Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      )
+                    : Text(''),
+              ]),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/entry',
+                  arguments: entry,
+                );
+                final List<int> entryIds = [entry.id];
+                data.read(entryIds);
+              },
+              onLongPress: () async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                final String entryOnLongPress =
+                    (prefs.getString('entryOnLongPress') ?? 'read');
+                if (entryOnLongPress == 'read') {
+                  final List<int> entryIds = [entry.id];
+                  entry.status == 'unread'
+                      ? data.read(entryIds)
+                      : data.unread(entryIds);
+                } else if (entryOnLongPress == 'favorite') {
+                  data.toggleStar(entry.id);
+                }
+              },
             ),
-            subtitle: Row(children: <Widget>[
-              Text((nav.currentFeedId == null ? entry.feed.title + '\n' : '') +
-                  DateFormat.yMEd()
-                      .add_jm()
-                      .format(DateTime.parse(entry.publishedAt))),
-              Spacer(),
-              entry.starred
-                  ? Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    )
-                  : Text(''),
-            ]),
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                '/entry',
-                arguments: entry,
-              );
-              final List<int> entryIds = [entry.id];
-              data.read(entryIds);
-            },
-            onLongPress: () {
-              final List<int> entryIds = [entry.id];
-              entry.status == 'unread'
-                  ? data.read(entryIds)
-                  : data.unread(entryIds);
+            onHorizontalDragEnd: (details) async {
+              final SharedPreferences prefs =
+                  await SharedPreferences.getInstance();
+
+              String entrySwipe;
+              if (details.velocity.pixelsPerSecond.dx < 0) {
+                entrySwipe = (prefs.getString('entrySwipeLeft') ?? 'no');
+              } else if (details.velocity.pixelsPerSecond.dx > 0) {
+                entrySwipe = (prefs.getString('entrySwipeRight') ?? 'no');
+              }
+
+              if (entrySwipe == 'read') {
+                final List<int> entryIds = [entry.id];
+                entry.status == 'unread'
+                    ? data.read(entryIds)
+                    : data.unread(entryIds);
+              } else if (entrySwipe == 'favorite') {
+                data.toggleStar(entry.id);
+              }
             },
           );
         },

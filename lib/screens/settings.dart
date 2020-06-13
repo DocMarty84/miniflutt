@@ -60,6 +60,16 @@ class MySettingsFormState extends State<MySettingsForm> {
       value: 'favorite',
     ),
   ];
+    final _actionsFeed = <DropdownMenuItem>[
+    DropdownMenuItem(
+      child: Text('Do nothing'),
+      value: 'no',
+    ),
+    DropdownMenuItem(
+      child: Text('Mark as read/unread'),
+      value: 'read',
+    ),
+  ];
 
   Future<http.Response> _connectCheck(String url, String apiKey) async {
     return await http.get(url + '/v1/me', headers: {'X-Auth-Token': apiKey});
@@ -212,6 +222,17 @@ class MySettingsFormState extends State<MySettingsForm> {
                     await SharedPreferences.getInstance();
                 prefs.setString('entrySwipeRight', val);
                 setState(() => settings.entrySwipeRight = val);
+              },
+            ),
+            DropdownButtonFormField(
+              value: settings.feedOnLongPress,
+              items: _actionsFeed,
+              decoration: InputDecoration(labelText: 'Long press on feed'),
+              onChanged: (val) async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                prefs.setString('feedOnLongPress', val);
+                setState(() => settings.feedOnLongPress = val);
               },
             ),
             ListTile(

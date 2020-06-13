@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/miniflux.dart';
 import '../models/category.dart';
@@ -76,6 +77,26 @@ class MyDrawerHeader extends StatelessWidget {
 }
 
 class MyDrawer extends StatelessWidget {
+  Future<void> _actionRead(
+      List<int> entryIds, Data data, BuildContext context) async {
+    final snackBar = SnackBar(
+      content: Text('${entryIds.length} item(s) mark read'),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          data.unread(entryIds);
+        },
+      ),
+    );
+    try {
+      await data.read(entryIds);
+      Scaffold.of(context).showSnackBar(snackBar);
+    } catch (e) {
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
+    }
+  }
+
   List<Widget> _buildCategoryList(Data data, BuildContext context) {
     final nav = Provider.of<Nav>(context);
     final unreadEntries = data.entries.where((i) => i.status == 'unread');
@@ -89,6 +110,18 @@ class MyDrawer extends StatelessWidget {
           }
           // Close the drawer
           Navigator.pop(context);
+        },
+        onLongPress: () async {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          final String feedOnLongPress =
+              (prefs.getString('feedOnLongPress') ?? 'no');
+          if (feedOnLongPress == 'read') {
+            final List<int> entryIds = data.entries
+                .where((i) => i.status == 'unread')
+                .map((entry) => entry.id)
+                .toList();
+            _actionRead(entryIds, data, context);
+          }
         },
       )
     ];
@@ -108,6 +141,19 @@ class MyDrawer extends StatelessWidget {
             }
             // Close the drawer
             Navigator.pop(context);
+          },
+          onLongPress: () async {
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            final String feedOnLongPress =
+                (prefs.getString('feedOnLongPress') ?? 'no');
+            if (feedOnLongPress == 'read') {
+              final List<int> entryIds = data.entries
+                  .where((i) => i.feedId == feed.id && i.status == 'unread')
+                  .map((entry) => entry.id)
+                  .toList();
+              _actionRead(entryIds, data, context);
+            }
           },
         );
       }).toList();

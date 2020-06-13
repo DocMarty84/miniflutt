@@ -12,6 +12,7 @@ class Settings extends ChangeNotifier {
   String entryOnLongPress;
   String entrySwipeLeft;
   String entrySwipeRight;
+  String feedOnLongPress;
   bool isLoad;
 
   Future<void> load() async {
@@ -25,6 +26,7 @@ class Settings extends ChangeNotifier {
     entryOnLongPress = (prefs.getString('entryOnLongPress') ?? 'read');
     entrySwipeLeft = (prefs.getString('entrySwipeLeft') ?? 'no');
     entrySwipeRight = (prefs.getString('entrySwipeRight') ?? 'no');
+    feedOnLongPress = (prefs.getString('feedOnLongPress') ?? 'no');
     isLoad = false;
     notifyListeners();
   }

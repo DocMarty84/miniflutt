@@ -60,7 +60,7 @@ class MySettingsFormState extends State<MySettingsForm> {
       value: 'favorite',
     ),
   ];
-    final _actionsFeed = <DropdownMenuItem>[
+  final _actionsFeed = <DropdownMenuItem>[
     DropdownMenuItem(
       child: Text('Do nothing'),
       value: 'no',
@@ -82,172 +82,175 @@ class MySettingsFormState extends State<MySettingsForm> {
       key: _formKey,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            ListTile(
-              title: Text(
-                'Server',
-                style: TextStyle(fontWeight: FontWeight.bold),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              ListTile(
+                title: Text(
+                  'Server',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                contentPadding: EdgeInsets.all(0.0),
               ),
-              contentPadding: EdgeInsets.all(0.0),
-            ),
-            TextFormField(
-              initialValue: settings.url,
-              decoration: InputDecoration(labelText: 'Server URL'),
-              keyboardType: TextInputType.url,
-              onSaved: (val) {
-                setState(() => settings.url = val);
-              },
-              validator: (val) {
-                if (val.isEmpty) {
-                  return 'Please enter the URL';
-                } else if (!val
-                    .toLowerCase()
-                    .startsWith(new RegExp(r'^https?://'))) {
-                  return 'The URL must start with \'http(s)://\'';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-              initialValue: settings.apiKey,
-              decoration: InputDecoration(labelText: 'API Key'),
-              obscureText: true,
-              onSaved: (val) {
-                setState(() => settings.apiKey = val);
-              },
-              validator: (val) {
-                if (val.isEmpty) {
-                  return 'Please enter an API key';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-              initialValue: settings.limit,
-              decoration: InputDecoration(
-                  labelText: 'Max Number Of Entries (0: Unlimited)'),
-              keyboardType: TextInputType.number,
-              onSaved: (val) {
-                setState(() => settings.limit = val);
-              },
-              validator: (val) {
-                if (val.isEmpty) {
-                  return 'Please enter a number';
-                }
-                try {
-                  int.parse(val);
-                } catch (e) {
-                  return 'Please enter a number';
-                }
-                return null;
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Container(
-                child: Row(
-                  children: <Widget>[
-                    RaisedButton(
-                      child: Text('Save'),
-                      onPressed: () async {
-                        final FormState form = _formKey.currentState;
-                        if (form.validate()) {
-                          form.save();
-                          try {
-                            final res = await _connectCheck(
-                                settings.url, settings.apiKey);
-                            if (res.statusCode == 200) {
-                              settings.save(context);
+              TextFormField(
+                initialValue: settings.url,
+                decoration: InputDecoration(labelText: 'Server URL'),
+                keyboardType: TextInputType.url,
+                onSaved: (val) {
+                  setState(() => settings.url = val);
+                },
+                validator: (val) {
+                  if (val.isEmpty) {
+                    return 'Please enter the URL';
+                  } else if (!val
+                      .toLowerCase()
+                      .startsWith(new RegExp(r'^https?://'))) {
+                    return 'The URL must start with \'http(s)://\'';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                initialValue: settings.apiKey,
+                decoration: InputDecoration(labelText: 'API Key'),
+                obscureText: true,
+                onSaved: (val) {
+                  setState(() => settings.apiKey = val);
+                },
+                validator: (val) {
+                  if (val.isEmpty) {
+                    return 'Please enter an API key';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                initialValue: settings.limit,
+                decoration: InputDecoration(
+                    labelText: 'Max Number Of Entries (0: Unlimited)'),
+                keyboardType: TextInputType.number,
+                onSaved: (val) {
+                  setState(() => settings.limit = val);
+                },
+                validator: (val) {
+                  if (val.isEmpty) {
+                    return 'Please enter a number';
+                  }
+                  try {
+                    int.parse(val);
+                  } catch (e) {
+                    return 'Please enter a number';
+                  }
+                  return null;
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Container(
+                  child: Row(
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text('Save'),
+                        onPressed: () async {
+                          final FormState form = _formKey.currentState;
+                          if (form.validate()) {
+                            form.save();
+                            try {
+                              final res = await _connectCheck(
+                                  settings.url, settings.apiKey);
+                              if (res.statusCode == 200) {
+                                settings.save(context);
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: Text('Connection successful!')));
+                              } else {
+                                throw Exception(makeError('Failed to connect!',
+                                    res, '/v1/me', <String, dynamic>{}));
+                              }
+                            } catch (e) {
                               Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text('Connection successful!')));
-                            } else {
-                              throw Exception(makeError('Failed to connect!',
-                                  res, '/v1/me', <String, dynamic>{}));
+                                  content: Text('Failed to connect!')));
                             }
-                          } catch (e) {
-                            Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text('Failed to connect!')));
                           }
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    new RaisedButton(
-                      child: Text("Log Out"),
-                      onPressed: () => settings.clear(context),
-                    ),
-                  ],
+                        },
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      new RaisedButton(
+                        child: Text("Log Out"),
+                        onPressed: () => settings.clear(context),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            ListTile(
-              title: Text(
-                'User Actions in Lists',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              ListTile(
+                title: Text(
+                  'User Actions in Lists',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                contentPadding: EdgeInsets.all(0.0),
               ),
-              contentPadding: EdgeInsets.all(0.0),
-            ),
-            DropdownButtonFormField(
-              value: settings.entryOnLongPress,
-              items: _actionsEntry,
-              decoration: InputDecoration(labelText: 'Long press on article'),
-              onChanged: (val) async {
-                final SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
-                prefs.setString('entryOnLongPress', val);
-                setState(() => settings.entryOnLongPress = val);
-              },
-            ),
-            DropdownButtonFormField(
-              value: settings.entrySwipeLeft,
-              items: _actionsEntry,
-              decoration: InputDecoration(labelText: 'Swipe left on article'),
-              onChanged: (val) async {
-                final SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
-                prefs.setString('entrySwipeLeft', val);
-                setState(() => settings.entrySwipeRight = val);
-              },
-            ),
-            DropdownButtonFormField(
-              value: settings.entrySwipeRight,
-              items: _actionsEntry,
-              decoration: InputDecoration(labelText: 'Swipe right on article'),
-              onChanged: (val) async {
-                final SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
-                prefs.setString('entrySwipeRight', val);
-                setState(() => settings.entrySwipeRight = val);
-              },
-            ),
-            DropdownButtonFormField(
-              value: settings.feedOnLongPress,
-              items: _actionsFeed,
-              decoration: InputDecoration(labelText: 'Long press on feed'),
-              onChanged: (val) async {
-                final SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
-                prefs.setString('feedOnLongPress', val);
-                setState(() => settings.feedOnLongPress = val);
-              },
-            ),
-            ListTile(
-              title: Text(
-                'Categories and feeds',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              DropdownButtonFormField(
+                value: settings.entryOnLongPress,
+                items: _actionsEntry,
+                decoration: InputDecoration(labelText: 'Long press on article'),
+                onChanged: (val) async {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setString('entryOnLongPress', val);
+                  setState(() => settings.entryOnLongPress = val);
+                },
               ),
-              contentPadding: EdgeInsets.all(0.0),
-              onTap: () {
-                final dataAll = Provider.of<DataAll>(context, listen: false);
-                dataAll.refresh();
-                Navigator.pushNamed(context, '/feeds');
-              },
-            ),
-          ],
+              DropdownButtonFormField(
+                value: settings.entrySwipeLeft,
+                items: _actionsEntry,
+                decoration: InputDecoration(labelText: 'Swipe left on article'),
+                onChanged: (val) async {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setString('entrySwipeLeft', val);
+                  setState(() => settings.entrySwipeRight = val);
+                },
+              ),
+              DropdownButtonFormField(
+                value: settings.entrySwipeRight,
+                items: _actionsEntry,
+                decoration:
+                    InputDecoration(labelText: 'Swipe right on article'),
+                onChanged: (val) async {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setString('entrySwipeRight', val);
+                  setState(() => settings.entrySwipeRight = val);
+                },
+              ),
+              DropdownButtonFormField(
+                value: settings.feedOnLongPress,
+                items: _actionsFeed,
+                decoration: InputDecoration(labelText: 'Long press on feed'),
+                onChanged: (val) async {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setString('feedOnLongPress', val);
+                  setState(() => settings.feedOnLongPress = val);
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Categories and feeds',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                contentPadding: EdgeInsets.all(0.0),
+                onTap: () {
+                  final dataAll = Provider.of<DataAll>(context, listen: false);
+                  dataAll.refresh();
+                  Navigator.pushNamed(context, '/feeds');
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

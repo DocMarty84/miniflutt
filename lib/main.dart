@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'common/theme.dart';
 import 'models/data.dart';
 import 'models/data_all.dart';
+import 'models/entry_style.dart';
 import 'models/nav.dart';
 import 'models/settings.dart';
 import 'screens/home.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => Data()),
         ChangeNotifierProvider(create: (context) => DataAll()),
+        ChangeNotifierProvider(create: (context) => EntryStyle()),
         ChangeNotifierProvider(create: (context) => Nav()),
         ChangeNotifierProvider(create: (context) => Settings()),
       ],

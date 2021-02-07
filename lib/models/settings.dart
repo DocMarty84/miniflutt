@@ -13,6 +13,7 @@ class Settings extends ChangeNotifier {
   String entrySwipeLeft;
   String entrySwipeRight;
   String feedOnLongPress;
+  String fontSize;
   bool isLoad;
 
   Future<void> load() async {
@@ -27,6 +28,7 @@ class Settings extends ChangeNotifier {
     entrySwipeLeft = (prefs.getString('entrySwipeLeft') ?? 'no');
     entrySwipeRight = (prefs.getString('entrySwipeRight') ?? 'no');
     feedOnLongPress = (prefs.getString('feedOnLongPress') ?? 'no');
+    fontSize = (prefs.getString('fontSize') ?? 'medium');
     isLoad = false;
     notifyListeners();
   }

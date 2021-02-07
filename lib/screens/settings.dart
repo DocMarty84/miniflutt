@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/miniflux.dart';
+import '../models/entry_style.dart';
 import '../models/data_all.dart';
 import '../models/settings.dart';
 
@@ -68,6 +69,24 @@ class MySettingsFormState extends State<MySettingsForm> {
     DropdownMenuItem(
       child: Text('Mark as read/unread'),
       value: 'read',
+    ),
+  ];
+  final _fontSize = <DropdownMenuItem>[
+    DropdownMenuItem(
+      child: Text('Small'),
+      value: 'small',
+    ),
+    DropdownMenuItem(
+      child: Text('Medium'),
+      value: 'medium',
+    ),
+    DropdownMenuItem(
+      child: Text('Large'),
+      value: 'large',
+    ),
+    DropdownMenuItem(
+      child: Text('XLarge'),
+      value: 'xlarge',
     ),
   ];
 
@@ -235,6 +254,26 @@ class MySettingsFormState extends State<MySettingsForm> {
                       await SharedPreferences.getInstance();
                   prefs.setString('feedOnLongPress', val);
                   setState(() => settings.feedOnLongPress = val);
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Article Style',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                contentPadding: EdgeInsets.all(0.0),
+              ),
+              DropdownButtonFormField(
+                value: settings.fontSize,
+                items: _fontSize,
+                decoration: InputDecoration(labelText: 'Font size'),
+                onChanged: (val) async {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setString('fontSize', val);
+                  final entryStyle = Provider.of<EntryStyle>(context, listen: false);
+                  entryStyle.refresh();
+                  setState(() => settings.fontSize = val);
                 },
               ),
               ListTile(

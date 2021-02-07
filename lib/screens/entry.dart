@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -9,6 +10,7 @@ import 'home.dart';
 import '../common/tools.dart';
 import '../models/data.dart';
 import '../models/entry.dart';
+import '../models/entry_style.dart';
 import '../models/nav.dart';
 
 class MyEntryHeader extends StatelessWidget {
@@ -106,6 +108,7 @@ class MyEntryBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final entryStyle = Provider.of<EntryStyle>(context, listen: false);
     return GestureDetector(
       child: SingleChildScrollView(
         child: Column(
@@ -113,6 +116,11 @@ class MyEntryBody extends StatelessWidget {
             MyEntryHeader(entry: entry),
             Html(
               data: entry.content,
+              style: {
+                'html': Style(
+                  fontSize: entryStyle.fontSize,
+                ),
+              },
               onLinkTap: (url) async {
                 // Suggest to download most common files
                 final re = RegExp(r'\.('

@@ -9,6 +9,7 @@ class Settings extends ChangeNotifier {
   String url;
   String apiKey;
   String limit;
+  bool markReadOnScroll;
   String entryOnLongPress;
   String entrySwipeLeft;
   String entrySwipeRight;
@@ -24,6 +25,7 @@ class Settings extends ChangeNotifier {
     url = (prefs.getString('url') ?? 'http://');
     apiKey = (prefs.getString('apiKey') ?? '');
     limit = (prefs.getString('limit') ?? '500');
+    markReadOnScroll = (prefs.getBool('markReadOnScroll') ?? false);
     entryOnLongPress = (prefs.getString('entryOnLongPress') ?? 'read');
     entrySwipeLeft = (prefs.getString('entrySwipeLeft') ?? 'no');
     entrySwipeRight = (prefs.getString('entrySwipeRight') ?? 'no');

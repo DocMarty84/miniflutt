@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'drawer.dart';
 import '../models/data.dart';
@@ -150,16 +151,32 @@ class MyHomeEntryList extends StatelessWidget {
       : super(key: key);
   final Data data;
   final Nav nav;
+  final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
 
   @override
   Widget build(BuildContext context) {
     final List<Entry> entries = filterEntries(data, nav);
+
+    itemPositionsListener.itemPositions.addListener(() async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      bool markReadOnScroll = (prefs.getBool("markReadOnScroll") ?? false);
+      if (!markReadOnScroll) return;
+      int topItemIndex = itemPositionsListener.itemPositions.value.first.index;
+      if (topItemIndex > 1) {
+        List<Entry> scrolledPastEntries = entries.sublist(
+            0, topItemIndex ~/ 2);
+        List<int> entryIds = scrolledPastEntries.map((e) => e.id).toList();
+        data.read(entryIds);
+      }
+    });
+
     return RefreshIndicator(
       onRefresh: () async {
         data.refresh();
       },
-      child: ListView.builder(
+      child: ScrollablePositionedList.builder(
         itemCount: entries.length * 2,
+        itemPositionsListener: itemPositionsListener,
         itemBuilder: (context, i) {
           if (i.isOdd) return Divider();
           final Entry entry = entries[i ~/ 2];

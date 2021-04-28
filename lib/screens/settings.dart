@@ -211,6 +211,19 @@ class MySettingsFormState extends State<MySettingsForm> {
                 ),
                 contentPadding: EdgeInsets.all(0.0),
               ),
+              Row(children: <Widget>[
+                Expanded(
+                    child: Text('Mark entries read on scroll', textAlign: TextAlign.left)
+                ),
+                Switch(
+                  value: settings.markReadOnScroll,
+                  onChanged: (val) async {
+                    final SharedPreferences prefs = await SharedPreferences.getInstance();
+                    prefs.setBool("markReadOnScroll", val);
+                    setState(() => settings.markReadOnScroll = val);
+                    },
+                ),
+              ]),
               DropdownButtonFormField(
                 value: settings.entryOnLongPress,
                 items: _actionsEntry,

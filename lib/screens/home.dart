@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'drawer.dart';
@@ -150,16 +151,42 @@ class MyHomeEntryList extends StatelessWidget {
       : super(key: key);
   final Data data;
   final Nav nav;
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
+
+  // Mark entries as read when scrolling
+  void _markReadOnScroll(List<Entry> entries) {
+    int topItemIndex = itemPositionsListener.itemPositions.value.first.index;
+    if (topItemIndex > 1) {
+      List<Entry> scrolledPastEntries = entries.sublist(0, topItemIndex ~/ 2);
+      List<int> entryIds = scrolledPastEntries
+          .where((entry) => entry.status == 'unread')
+          .map((entry) => entry.id)
+          .toList();
+      data.read(entryIds);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final List<Entry> entries = filterEntries(data, nav);
+    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+    // Listener for marking entries as read on scroll
+    itemPositionsListener.itemPositions.addListener(() async {
+      final SharedPreferences prefs = await _prefs;
+      if (prefs.getBool("markReadOnScroll") ?? false) {
+        _markReadOnScroll(entries);
+      }
+    });
+
     return RefreshIndicator(
       onRefresh: () async {
         data.refresh();
       },
-      child: ListView.builder(
+      child: ScrollablePositionedList.builder(
         itemCount: entries.length * 2,
+        itemPositionsListener: itemPositionsListener,
         itemBuilder: (context, i) {
           if (i.isOdd) return Divider();
           final Entry entry = entries[i ~/ 2];

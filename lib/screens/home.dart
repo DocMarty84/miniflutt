@@ -165,7 +165,7 @@ class MyHomeEntryList extends StatelessWidget {
       if (topItemIndex > 1) {
         List<Entry> scrolledPastEntries = entries.sublist(
             0, topItemIndex ~/ 2);
-        List<int> entryIds = scrolledPastEntries.map((e) => e.id).toList();
+        List<int> entryIds = scrolledPastEntries.where((e) => e.status == 'unread').map((e) => e.id).toList();
         data.read(entryIds);
       }
     });

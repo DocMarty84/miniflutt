@@ -36,8 +36,8 @@ Future<bool> _delete(String endpoint) async {
   }
 
   final query = new Uri.http('', endpoint).toString().replaceFirst('http:', '');
-  final response =
-      await http.delete(url + query, headers: {'X-Auth-Token': apiKey});
+  final response = await http
+      .delete(Uri.parse(url + query), headers: {'X-Auth-Token': apiKey});
 
   if (response.statusCode <= 204) {
     return true;
@@ -58,7 +58,7 @@ Future<String> _get(String endpoint, Map<String, String> params) async {
   final query =
       new Uri.http('', endpoint, params).toString().replaceFirst('http:', '');
   final response =
-      await http.get(url + query, headers: {'X-Auth-Token': apiKey});
+      await http.get(Uri.parse(url + query), headers: {'X-Auth-Token': apiKey});
 
   if (response.statusCode == 200) {
     return utf8.decode(response.bodyBytes);
@@ -77,7 +77,7 @@ Future<bool> _post(String endpoint, Map<String, dynamic> body) async {
   }
 
   String bodyStr = jsonEncode(body);
-  final response = await http.post(url + endpoint,
+  final response = await http.post(Uri.parse(url + endpoint),
       body: bodyStr,
       headers: {'X-Auth-Token': apiKey, 'Content-Type': 'application/json'});
 
@@ -98,7 +98,7 @@ Future<bool> _put(String endpoint, Map<String, dynamic> body) async {
   }
 
   String bodyStr = jsonEncode(body);
-  final response = await http.put(url + endpoint,
+  final response = await http.put(Uri.parse(url + endpoint),
       body: bodyStr,
       headers: {'X-Auth-Token': apiKey, 'Content-Type': 'application/json'});
 

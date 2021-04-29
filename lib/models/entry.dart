@@ -16,21 +16,22 @@ class Entry {
   final String url;
   final int userId;
 
-  Entry(
-      {this.author,
-        this.commentsUrl,
-        this.content,
-        this.feed,
-        this.feedId,
-        this.hash,
-        this.id,
-        this.publishedAt,
-        this.shareCode,
-        this.starred,
-        this.status,
-        this.title,
-        this.url,
-        this.userId});
+  Entry({
+    this.author,
+    this.commentsUrl,
+    this.content,
+    this.feed,
+    this.feedId,
+    this.hash,
+    this.id,
+    this.publishedAt,
+    this.shareCode,
+    this.starred,
+    this.status,
+    this.title,
+    this.url,
+    this.userId,
+  });
 
   factory Entry.fromJson(Map<String, dynamic> json) {
     return Entry(

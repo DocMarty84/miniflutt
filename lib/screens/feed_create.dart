@@ -119,7 +119,7 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
                 child: Container(
                   child: Row(
                     children: <Widget>[
-                      RaisedButton(
+                      ElevatedButton(
                         child: Text('Save'),
                         onPressed: () async {
                           final FormState form = _formKey.currentState;
@@ -136,14 +136,15 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
                               'user_agent': _userAgent,
                             };
                             try {
-                              Scaffold.of(context).showSnackBar(
+                              ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('Saving...')));
                               await createFeed(params);
                               dataAll.refresh();
                               Navigator.pop(context);
                             } catch (e) {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text('An error occured!\n$e')));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text('An error occured!\n$e')));
                             }
                           }
                         },

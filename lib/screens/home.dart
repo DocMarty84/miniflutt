@@ -50,9 +50,9 @@ class MyHomeMarkRead extends StatelessWidget {
         );
         try {
           await data.read(entryIds);
-          Scaffold.of(context).showSnackBar(snackBar);
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } catch (e) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
         }
       },
@@ -112,7 +112,7 @@ class MyHomePopupMenuState extends State<MyHomePopupMenu> {
     return PopupMenuButton(
       onSelected: _savePref,
       itemBuilder: (BuildContext context) {
-        var list = List<PopupMenuEntry<String>>();
+        List<PopupMenuEntry<String>> list = [];
         list.add(
           CheckedPopupMenuItem(
             child: Text(

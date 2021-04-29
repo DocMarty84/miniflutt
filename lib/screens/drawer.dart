@@ -59,9 +59,9 @@ class MyDrawerHeader extends StatelessWidget {
                 try {
                   await refreshAllFeeds();
                   Navigator.pop(context);
-                  Scaffold.of(context).showSnackBar(snackBar);
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 } catch (e) {
-                  Scaffold.of(context).showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('An error occured!\n$e')));
                 }
               },
@@ -90,10 +90,9 @@ class MyDrawer extends StatelessWidget {
     );
     try {
       await data.read(entryIds);
-      Scaffold.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } catch (e) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
     }
   }
 

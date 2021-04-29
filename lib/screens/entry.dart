@@ -79,21 +79,21 @@ class MyEntryBody extends StatelessWidget {
                 Text('Save on device or open in browser?\n\nFile: $fileName'),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text('Save'),
               onPressed: () async {
                 Navigator.of(dialogContext).pop();
-                Scaffold.of(context).showSnackBar(SnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text('Downloading file...'),
                   duration: Duration(seconds: 60),
                 ));
                 final String filePath = await downloadURL(url);
-                Scaffold.of(context).hideCurrentSnackBar();
-                Scaffold.of(context).showSnackBar(
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('File saved in $filePath')));
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text('Open'),
               onPressed: () {
                 launchURL(url);
@@ -121,7 +121,7 @@ class MyEntryBody extends StatelessWidget {
                   fontSize: entryStyle.fontSize,
                 ),
               },
-              onLinkTap: (url) async {
+              onLinkTap: (url, renderContext, attributes, element) async {
                 // Suggest to download most common files
                 final re = RegExp(r'\.('
                     r'7z|apk|avi|csv|doc|docx|flv|gif|h264|jpeg|jpg|mkv|mov|'
@@ -134,7 +134,7 @@ class MyEntryBody extends StatelessWidget {
                   launchURL(url);
                 }
               },
-              onImageTap: (url) async {
+              onImageTap: (url, renderContext, attributes, element) async {
                 // Suggest to download images
                 return _handleURL(url, context);
               },

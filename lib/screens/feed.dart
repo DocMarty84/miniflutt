@@ -183,7 +183,7 @@ class MyFeedFormState extends State<MyFeedForm> {
                 child: Container(
                   child: Row(
                     children: <Widget>[
-                      RaisedButton(
+                      ElevatedButton(
                         child: Text('Save'),
                         onPressed: () async {
                           final FormState form = _formKey.currentState;
@@ -204,11 +204,12 @@ class MyFeedFormState extends State<MyFeedForm> {
                             try {
                               await updateFeed(feed.id, params);
                               dataAll.refresh();
-                              Scaffold.of(context).showSnackBar(
+                              ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('Changes saved!')));
                             } catch (e) {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text('An error occured!\n$e')));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text('An error occured!\n$e')));
                             }
                           }
                         },
@@ -216,8 +217,11 @@ class MyFeedFormState extends State<MyFeedForm> {
                       SizedBox(
                         width: 10,
                       ),
-                      new RaisedButton(
-                        color: Theme.of(context).errorColor,
+                      new ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).errorColor),
+                        ),
                         child: Text(
                           'Delete',
                           style: TextStyle(
@@ -232,7 +236,7 @@ class MyFeedFormState extends State<MyFeedForm> {
                             dataAll.refresh();
                             Navigator.pop(context);
                           } catch (e) {
-                            Scaffold.of(context).showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text('An error occured!\n$e')));
                           }
                         },

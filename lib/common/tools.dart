@@ -15,7 +15,7 @@ void launchURL(String url) async {
 
 Future<bool> _checkPermission() async {
   var status = await Permission.storage.status;
-  if (status.isUndetermined) {
+  if (status.isDenied) {
     await Permission.storage.request();
     status = await Permission.storage.status;
   }
@@ -31,7 +31,7 @@ Future<String> downloadURL(String url) async {
 
   // Get permission and download file
   final Future<bool> permissionReadyFut = _checkPermission();
-  final Future<http.Response> responseFut = http.get(url);
+  final Future<http.Response> responseFut = http.get(Uri.parse(url));
 
   // Get download path
   final bool permissionReady = await permissionReadyFut;

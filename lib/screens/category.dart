@@ -65,7 +65,7 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                 child: Container(
                   child: Row(
                     children: <Widget>[
-                      RaisedButton(
+                      ElevatedButton(
                         child: Text('Save'),
                         onPressed: () async {
                           final FormState form = _formKey.currentState;
@@ -78,18 +78,19 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                               if (category != null) {
                                 await updateCategory(category.id, params);
                                 dataAll.refresh();
-                                Scaffold.of(context).showSnackBar(
+                                ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text('Changes saved!')));
                               } else {
-                                Scaffold.of(context).showSnackBar(
+                                ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text('Saving...')));
                                 await createCategory(params);
                                 dataAll.refresh();
                                 Navigator.pop(context);
                               }
                             } catch (e) {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text('An error occured!\n$e')));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text('An error occured!\n$e')));
                             }
                           }
                         },
@@ -101,8 +102,12 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                             ),
                       category == null
                           ? SizedBox.shrink()
-                          : RaisedButton(
-                              color: Theme.of(context).errorColor,
+                          : ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Theme.of(context).errorColor),
+                              ),
                               child: Text(
                                 'Delete',
                                 style: TextStyle(
@@ -117,8 +122,10 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                                   dataAll.refresh();
                                   Navigator.pop(context);
                                 } catch (e) {
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text('An error occured!\n$e')));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('An error occured!\n$e')));
                                 }
                               },
                             ),

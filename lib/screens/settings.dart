@@ -91,7 +91,8 @@ class MySettingsFormState extends State<MySettingsForm> {
   ];
 
   Future<http.Response> _connectCheck(String url, String apiKey) async {
-    return await http.get(url + '/v1/me', headers: {'X-Auth-Token': apiKey});
+    return await http
+        .get(Uri.parse(url + '/v1/me'), headers: {'X-Auth-Token': apiKey});
   }
 
   @override
@@ -169,7 +170,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                 child: Container(
                   child: Row(
                     children: <Widget>[
-                      RaisedButton(
+                      ElevatedButton(
                         child: Text('Save'),
                         onPressed: () async {
                           final FormState form = _formKey.currentState;
@@ -180,15 +181,18 @@ class MySettingsFormState extends State<MySettingsForm> {
                                   settings.url, settings.apiKey);
                               if (res.statusCode == 200) {
                                 settings.save(context);
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text('Connection successful!')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content:
+                                            Text('Connection successful!')));
                               } else {
                                 throw Exception(makeError('Failed to connect!',
                                     res, '/v1/me', <String, dynamic>{}));
                               }
                             } catch (e) {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text('Failed to connect!')));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text('Failed to connect!')));
                             }
                           }
                         },
@@ -196,7 +200,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                       SizedBox(
                         width: 10,
                       ),
-                      new RaisedButton(
+                      new ElevatedButton(
                         child: Text("Log Out"),
                         onPressed: () => settings.clear(context),
                       ),
@@ -285,7 +289,8 @@ class MySettingsFormState extends State<MySettingsForm> {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   prefs.setString('fontSize', val);
-                  final entryStyle = Provider.of<EntryStyle>(context, listen: false);
+                  final entryStyle =
+                      Provider.of<EntryStyle>(context, listen: false);
                   entryStyle.refresh();
                   setState(() => settings.fontSize = val);
                 },

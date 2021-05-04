@@ -163,7 +163,14 @@ class MyHomeEntryList extends StatelessWidget {
           .where((entry) => entry.status == 'unread')
           .map((entry) => entry.id)
           .toList();
-      data.read(entryIds);
+
+      // Workaround for the following behavior:
+      // - Go to feed A, scroll a few items
+      // - Go to feed B
+      // => feed B is already scrolled and items are set to read.
+      if (entryIds.length == 1) {
+        data.read(entryIds);
+      }
     }
   }
 

@@ -216,6 +216,15 @@ class MyEntryBottom extends StatelessWidget {
               );
             },
           ),
+          if (entry.commentsUrl != null && entry.commentsUrl != "")
+            Consumer<Data>(
+              builder: (context, data, child) {
+                return IconButton(
+                  icon: Icon(Icons.comment),
+                  onPressed: () => launchURL(entry.commentsUrl),
+                );
+              },
+            ),
           Spacer(),
         ],
       ),

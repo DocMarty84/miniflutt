@@ -14,7 +14,7 @@ description: Another Miniflux client.
 version: 1.6.1+2726739 # Commit 79069152
 
 environment:
-  sdk: ">=2.2.0 <3.0.0"
+  sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
   flutter:

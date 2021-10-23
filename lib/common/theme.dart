@@ -5,10 +5,10 @@ final appTheme = ThemeData(
 );
 
 final appThemeDark = ThemeData(
-  brightness: Brightness.dark,
-  primarySwatch: Colors.indigo,
-  accentColor: Colors.indigo,
-  // toggleableActiveColor: Colors.indigo,
-  // textSelectionColor: Colors.indigo,
-  // indicatorColor: Colors.indigo,
+  colorScheme: ColorScheme.fromSwatch(
+    brightness: Brightness.dark,
+    primarySwatch: Colors.indigo,
+  ).copyWith(
+    secondary: Colors.indigo,
+  ),
 );

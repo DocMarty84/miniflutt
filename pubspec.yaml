@@ -20,16 +20,16 @@ dependencies:
   flutter:
     sdk: flutter
 
-  http: ^0.13.2
-  flutter_html: ^2.0.0-nullsafety.1
+  http: ^0.13.4
+  flutter_html: ^2.2.1
   intl: ^0.17.0
-  path_provider: ^2.0.1
-  permission_handler: ^8.0.0+1
+  path_provider: ^2.0.8
+  permission_handler: ^8.3.0
   provider: ^6.0.1
-  scrollable_positioned_list: ^0.2.0-nullsafety.0
-  share: ^2.0.1
-  shared_preferences: ^2.0.5
-  url_launcher: ^6.0.3
+  scrollable_positioned_list: ^0.2.3
+  share: ^2.0.4
+  shared_preferences: ^2.0.11
+  url_launcher: ^6.0.17
 
 dev_dependencies:
   flutter_test:

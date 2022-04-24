@@ -141,31 +141,6 @@ class MyEntryBody extends StatelessWidget {
           ],
         ),
       ),
-      onHorizontalDragEnd: (details) {
-        // We need to filter entries from the complete list and not from the entries available in
-        // the ListView.builder since the builder usually has a subset of entries (the ones
-        // displayed).
-        Entry nextEntry;
-        final data = Provider.of<Data>(context, listen: false);
-        final nav = Provider.of<Nav>(context, listen: false);
-        final entries = filterEntries(data, nav);
-        final index = entries.indexOf(entry);
-        if (details.velocity.pixelsPerSecond.dx < 0 &&
-            index < entries.length - 1) {
-          nextEntry = entries[index + 1];
-        } else if (details.velocity.pixelsPerSecond.dx > 0 && index > 0) {
-          nextEntry = entries[index - 1];
-        }
-        if (nextEntry != null) {
-          Navigator.pushReplacementNamed(
-            context,
-            '/entry',
-            arguments: nextEntry,
-          );
-          final List<int> entryIds = [nextEntry.id];
-          data.read(entryIds);
-        }
-      },
     );
   }
 }
@@ -234,19 +209,45 @@ class MyEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Entry entry = ModalRoute.of(context).settings.arguments;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          entry.feed.title,
-        ),
-      ),
-      body: MyEntryBody(entry: entry),
-      bottomNavigationBar: MyEntryBottom(entry: entry),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.open_in_browser),
-        onPressed: () => launchURL(entry.url),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-    );
+    return GestureDetector(
+        onHorizontalDragEnd: (details) {
+          // We need to filter entries from the complete list and not from the entries available in
+          // the ListView.builder since the builder usually has a subset of entries (the ones
+          // displayed).
+          Entry nextEntry;
+          final data = Provider.of<Data>(context, listen: false);
+          final nav = Provider.of<Nav>(context, listen: false);
+          final entries = filterEntries(data, nav);
+          final index = entries.indexOf(entry);
+          if (details.velocity.pixelsPerSecond.dx < 0 &&
+              index < entries.length - 1) {
+            nextEntry = entries[index + 1];
+          } else if (details.velocity.pixelsPerSecond.dx > 0 && index > 0) {
+            nextEntry = entries[index - 1];
+          }
+          if (nextEntry != null) {
+            Navigator.pushReplacementNamed(
+              context,
+              '/entry',
+              arguments: nextEntry,
+            );
+            final List<int> entryIds = [nextEntry.id];
+            data.read(entryIds);
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              entry.feed.title,
+            ),
+          ),
+          body: MyEntryBody(entry: entry),
+          bottomNavigationBar: MyEntryBottom(entry: entry),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.open_in_browser),
+            onPressed: () => launchURL(entry.url),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        ));
   }
 }

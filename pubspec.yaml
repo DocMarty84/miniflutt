@@ -11,7 +11,7 @@ description: Another Miniflux client.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.7.3+2726743 # Commit 78f04044
+version: 1.8.0+2726744 # Commit 6733cb1b
 
 environment:
   sdk: ">=2.3.0 <3.0.0"

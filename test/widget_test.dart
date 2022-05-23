@@ -9,11 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:miniflutt/main.dart';
+import 'package:miniflutt/models/theme_settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final themeSettings = await ThemeSettings.createAndLoad();
+
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(MyApp(themeSettings));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

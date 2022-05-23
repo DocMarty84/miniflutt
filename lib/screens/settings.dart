@@ -4,9 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/miniflux.dart';
-import '../models/entry_style.dart';
 import '../models/data_all.dart';
+import '../models/entry_style.dart';
 import '../models/settings.dart';
+import '../models/theme_mode_item.dart';
+import '../models/theme_settings.dart';
 
 class MySettings extends StatelessWidget {
   @override
@@ -17,12 +19,12 @@ class MySettings extends StatelessWidget {
           'Settings',
         ),
       ),
-      body: Consumer<Settings>(
-        builder: (context, settings, child) {
+      body: Consumer2<Settings, ThemeSettings>(
+        builder: (context, settings, themeSettings, child) {
           if (settings.isLoad) {
             return CircularProgressIndicator();
           } else {
-            return MySettingsForm(settings: settings);
+            return MySettingsForm(settings: settings, themeSettings: themeSettings);
           }
         },
       ),
@@ -32,19 +34,22 @@ class MySettings extends StatelessWidget {
 
 // Create a Form widget.
 class MySettingsForm extends StatefulWidget {
-  MySettingsForm({Key key, @required this.settings}) : super(key: key);
+  MySettingsForm({Key key, @required this.settings, @required this.themeSettings}) : super(key: key);
   final Settings settings;
+  final ThemeSettings themeSettings;
 
   @override
   MySettingsFormState createState() {
-    return MySettingsFormState(settings: settings);
+    return MySettingsFormState(settings: settings, themeSettings: themeSettings);
   }
 }
 
 // Create a corresponding State class.
 class MySettingsFormState extends State<MySettingsForm> {
-  MySettingsFormState({Key key, @required this.settings});
+  MySettingsFormState({Key key, @required this.settings, @required this.themeSettings});
+
   final Settings settings;
+  final ThemeSettings themeSettings;
 
   final _formKey = GlobalKey<FormState>();
   final _actionsEntry = <DropdownMenuItem>[
@@ -208,13 +213,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                   ),
                 ),
               ),
-              ListTile(
-                title: Text(
-                  'User Actions in Lists',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                contentPadding: EdgeInsets.all(0.0),
-              ),
+              _createSectionHeader('User Actions in Lists'),
               Row(children: <Widget>[
                 Expanded(
                     child: Text('Mark entries read on scroll',
@@ -274,13 +273,9 @@ class MySettingsFormState extends State<MySettingsForm> {
                   setState(() => settings.feedOnLongPress = val);
                 },
               ),
-              ListTile(
-                title: Text(
-                  'Article Style',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                contentPadding: EdgeInsets.all(0.0),
-              ),
+              _createSectionHeader('App Style'),
+              _createThemeModeSelectorWidget(),
+              _createSectionHeader('Article Style'),
               DropdownButtonFormField(
                 value: settings.fontSize,
                 items: _fontSize,
@@ -295,22 +290,46 @@ class MySettingsFormState extends State<MySettingsForm> {
                   setState(() => settings.fontSize = val);
                 },
               ),
-              ListTile(
-                title: Text(
-                  'Categories and feeds',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                contentPadding: EdgeInsets.all(0.0),
-                onTap: () {
-                  final dataAll = Provider.of<DataAll>(context, listen: false);
-                  dataAll.refresh();
-                  Navigator.pushNamed(context, '/feeds');
-                },
-              ),
+              _createSectionHeader('Categories and feeds', onTap: () {
+                final dataAll = Provider.of<DataAll>(context, listen: false);
+                dataAll.refresh();
+                Navigator.pushNamed(context, '/feeds');
+              }),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _createSectionHeader(final String title,
+          {final GestureTapCallback onTap}) =>
+      ListTile(
+        title: Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        contentPadding: EdgeInsets.all(0.0),
+        onTap: onTap,
+      );
+
+  Widget _createThemeModeSelectorWidget() {
+    DropdownMenuItem<ThemeMode> _asDropdownMenuItem(final ThemeModeItem item) =>
+        DropdownMenuItem(child: Text(item.displayName), value: item.themeMode);
+
+    final options = availableThemeModeItems()
+        .map((item) => _asDropdownMenuItem(item))
+        .toList(growable: false);
+
+    final selection = themeSettings.themeMode;
+
+    return DropdownButtonFormField(
+      items: options,
+      value: selection,
+      decoration: InputDecoration(labelText: 'Theme Mode'),
+      onChanged: (themeMode) async {
+        setState(() => themeSettings.registerThemeModePreference(themeMode));
+      },
     );
   }
 }

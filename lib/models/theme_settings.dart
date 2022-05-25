@@ -32,6 +32,10 @@ class ThemeSettings extends ChangeNotifier {
   }
 
   void registerThemeModePreference(final ThemeMode themeMode) {
+    if(_themeMode == themeMode) {
+      return;
+    }
+
     _saveThemeModePreference(themeMode);
     _setThemeModePreference(themeMode);
   }

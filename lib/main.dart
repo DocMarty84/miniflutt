@@ -41,27 +41,26 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => Settings()),
         ChangeNotifierProvider(create: (context) => themeSettings)
       ],
-      builder: (context, widget) {
-        final themeSettings = context.watch<ThemeSettings>();
-
-        return MaterialApp(
-          title: 'Miniflutt',
-          theme: appTheme,
-          darkTheme: appThemeDark,
-          themeMode: themeSettings.themeMode,
-          initialRoute: '/',
-          routes: {
-            '/': (context) => MyHome(),
-            '/category': (context) => MyCategory(),
-            '/entry': (context) => MyEntry(),
-            '/feed': (context) => MyFeed(),
-            '/feed_create': (context) => MyFeedCreate(),
-            '/feeds': (context) => MyFeeds(),
-            '/search': (context) => MySearch(),
-            '/settings': (context) => MySettings(),
-          },
-        );
-      }
+      child: AnimatedBuilder(
+        animation: themeSettings,
+        builder: (context, child) => MaterialApp(
+            title: 'Miniflutt',
+            theme: appTheme,
+            darkTheme: appThemeDark,
+            themeMode: themeSettings.themeMode,
+            initialRoute: '/',
+            routes: {
+              '/': (context) => MyHome(),
+              '/category': (context) => MyCategory(),
+              '/entry': (context) => MyEntry(),
+              '/feed': (context) => MyFeed(),
+              '/feed_create': (context) => MyFeedCreate(),
+              '/feeds': (context) => MyFeeds(),
+              '/search': (context) => MySearch(),
+              '/settings': (context) => MySettings(),
+            },
+          ),
+      ),
     );
   }
 }

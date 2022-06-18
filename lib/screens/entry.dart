@@ -4,12 +4,12 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'home.dart';
 import '../common/tools.dart';
 import '../models/data.dart';
 import '../models/entry.dart';
 import '../models/entry_style.dart';
 import '../models/nav.dart';
+import 'home.dart';
 
 class MyEntryHeader extends StatelessWidget {
   MyEntryHeader({Key key, @required this.entry}) : super(key: key);
@@ -209,33 +209,17 @@ class MyEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Entry entry = ModalRoute.of(context).settings.arguments;
-    return GestureDetector(
-        onHorizontalDragEnd: (details) {
-          // We need to filter entries from the complete list and not from the entries available in
-          // the ListView.builder since the builder usually has a subset of entries (the ones
-          // displayed).
-          Entry nextEntry;
-          final data = Provider.of<Data>(context, listen: false);
-          final nav = Provider.of<Nav>(context, listen: false);
-          final entries = filterEntries(data, nav);
-          final index = entries.indexOf(entry);
-          if (details.velocity.pixelsPerSecond.dx < 0 &&
-              index < entries.length - 1) {
-            nextEntry = entries[index + 1];
-          } else if (details.velocity.pixelsPerSecond.dx > 0 && index > 0) {
-            nextEntry = entries[index - 1];
-          }
-          if (nextEntry != null) {
-            Navigator.pushReplacementNamed(
-              context,
-              '/entry',
-              arguments: nextEntry,
-            );
-            final List<int> entryIds = [nextEntry.id];
-            data.read(entryIds);
-          }
-        },
-        child: Scaffold(
+    final data = Provider.of<Data>(context, listen: false);
+    final nav = Provider.of<Nav>(context, listen: false);
+    final entries = filterEntries(data, nav);
+    final PageController controller = PageController(
+      initialPage: entries.indexOf(entry),
+    );
+    return PageView.builder(
+      controller: controller,
+      itemBuilder: (context, index) {
+        final entry = entries[index];
+        return Scaffold(
           appBar: AppBar(
             title: Text(
               entry.feed.title,
@@ -248,6 +232,13 @@ class MyEntry extends StatelessWidget {
             onPressed: () => launchURL(entry.url),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        ));
+        );
+      },
+      itemCount: entries.length,
+      onPageChanged: (index) {
+        final entry = entries[index];
+        data.read([entry.id]);
+      },
+    );
   }
 }

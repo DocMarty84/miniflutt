@@ -112,6 +112,17 @@ class MyEntryBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final entryStyle = Provider.of<EntryStyle>(context, listen: false);
+    Map<String, CustomRender> customRender = {};
+    if (entryStyle.scaleImages) {
+      customRender = {
+      "img": (RenderContext context, Widget child) {
+        final attrs = context.tree.element?.attributes;
+        if (attrs != null) {
+          return Image.network(attrs['src'], fit: BoxFit.contain);
+        }
+      },
+    };
+    }
     return GestureDetector(
       child: SingleChildScrollView(
         child: Column(
@@ -152,6 +163,11 @@ class MyEntryBody extends StatelessWidget {
                   launchURL(url);
                 }
               },
+              onImageTap: (url, renderContext, attributes, element) async {
+                // Suggest to download images
+                return _handleURL(url, context);
+              },
+              customRender: customRender,
             ),
           ],
         ),

@@ -213,8 +213,7 @@ class MyHomeEntryList extends StatelessWidget {
               subtitle: Row(children: <Widget>[
                 Text(
                     (nav.currentFeedId == null ? entry.feed.title + '\n' : '') +
-                        DateFormat.yMEd()
-                            .add_jm()
+                        DateFormat('yyy-MM-dd HH:mm')
                             .format(DateTime.parse(entry.publishedAt))),
                 Spacer(),
                 entry.starred

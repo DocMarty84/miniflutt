@@ -49,8 +49,7 @@ class MyEntryHeader extends StatelessWidget {
             ),
           ),
           Text(
-            DateFormat.yMEd()
-                .add_jm()
+            DateFormat('yyy-MM-dd HH:mm')
                 .format(DateTime.parse(entry.publishedAt)),
             textScaleFactor: 0.75,
           ),

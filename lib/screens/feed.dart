@@ -7,7 +7,7 @@ import '../models/feed.dart';
 
 // Create a Form widget for update and delete
 class MyFeedForm extends StatefulWidget {
-  MyFeedForm({Key key, @required this.feed}) : super(key: key);
+  MyFeedForm({Key? key, required this.feed}) : super(key: key);
   final Feed feed;
 
   @override
@@ -17,20 +17,20 @@ class MyFeedForm extends StatefulWidget {
 }
 
 class MyFeedFormState extends State<MyFeedForm> {
-  MyFeedFormState({Key key, @required this.feed});
+  MyFeedFormState({Key? key, required this.feed});
   final Feed feed;
 
   final _formKey = GlobalKey<FormState>();
-  String _feedUrl;
-  String _siteUrl;
-  String _title;
-  int _categoryId;
-  String _scraperRules;
-  String _rewriteRules;
-  bool _crawler;
-  String _username;
-  String _password;
-  String _userAgent;
+  String? _feedUrl;
+  String? _siteUrl;
+  String? _title;
+  int? _categoryId;
+  String? _scraperRules;
+  String? _rewriteRules;
+  bool? _crawler;
+  String? _username;
+  String? _password;
+  String? _userAgent;
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class MyFeedFormState extends State<MyFeedForm> {
       _feedUrl = feed.feedUrl;
       _siteUrl = feed.siteUrl;
       _title = feed.title;
-      _categoryId = feed.category.id;
+      _categoryId = feed.category!.id;
       _scraperRules = feed.scraperRules;
       _rewriteRules = feed.rewriteRules;
       _crawler = feed.crawler;
@@ -72,7 +72,7 @@ class MyFeedFormState extends State<MyFeedForm> {
                   setState(() => _title = val);
                 },
                 validator: (val) {
-                  if (val.isEmpty) {
+                  if (val!.isEmpty) {
                     return 'Please enter the title';
                   }
                   return null;
@@ -86,7 +86,7 @@ class MyFeedFormState extends State<MyFeedForm> {
                   setState(() => _siteUrl = val);
                 },
                 validator: (val) {
-                  if (val.isEmpty) {
+                  if (val!.isEmpty) {
                     return 'Please enter the site URL';
                   }
                   return null;
@@ -100,7 +100,7 @@ class MyFeedFormState extends State<MyFeedForm> {
                   setState(() => _feedUrl = val);
                 },
                 validator: (val) {
-                  if (val.isEmpty) {
+                  if (val!.isEmpty) {
                     return 'The feed URL is mandatory';
                   } else if (!val
                       .toLowerCase()
@@ -151,18 +151,18 @@ class MyFeedFormState extends State<MyFeedForm> {
                 value: _categoryId,
                 items: dataAll.categories
                     .map((category) => DropdownMenuItem(
-                          child: Text(category.title),
+                          child: Text(category!.title!),
                           value: category.id,
                         ))
                     .toList(),
                 decoration: InputDecoration(labelText: 'Category *'),
-                validator: (val) {
+                validator: (dynamic val) {
                   if (val == null) {
                     return 'The category is mandatory';
                   }
                   return null;
                 },
-                onChanged: (value) {
+                onChanged: (dynamic value) {
                   setState(() => _categoryId = value);
                 },
               ),
@@ -174,7 +174,7 @@ class MyFeedFormState extends State<MyFeedForm> {
                 ],
                 decoration:
                     InputDecoration(labelText: 'Fetch original content'),
-                onChanged: (value) {
+                onChanged: (dynamic value) {
                   setState(() => _crawler = value);
                 },
               ),
@@ -186,7 +186,7 @@ class MyFeedFormState extends State<MyFeedForm> {
                       ElevatedButton(
                         child: Text('Save'),
                         onPressed: () async {
-                          final FormState form = _formKey.currentState;
+                          final FormState form = _formKey.currentState!;
                           if (form.validate()) {
                             form.save();
                             Map<String, dynamic> params = {
@@ -227,7 +227,7 @@ class MyFeedFormState extends State<MyFeedForm> {
                           style: TextStyle(
                               color: Theme.of(context)
                                   .primaryTextTheme
-                                  .titleLarge
+                                  .titleLarge!
                                   .color),
                         ),
                         onPressed: () async {
@@ -256,9 +256,9 @@ class MyFeedFormState extends State<MyFeedForm> {
 class MyFeed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Feed feed = ModalRoute.of(context).settings.arguments;
+    final Feed feed = ModalRoute.of(context)!.settings.arguments as Feed;
     return Scaffold(
-      appBar: AppBar(title: Text(feed.title)),
+      appBar: AppBar(title: Text(feed.title!)),
       body: MyFeedForm(feed: feed),
     );
   }

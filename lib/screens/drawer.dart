@@ -9,7 +9,7 @@ import '../models/nav.dart';
 import '../models/settings.dart';
 
 class MyDrawerHeader extends StatelessWidget {
-  MyDrawerHeader({Key key, @required this.data}) : super(key: key);
+  MyDrawerHeader({Key? key, required this.data}) : super(key: key);
   final Data data;
 
   @override
@@ -23,10 +23,10 @@ class MyDrawerHeader extends StatelessWidget {
               title: Text('Settings',
                   style: TextStyle(
                       color:
-                          Theme.of(context).primaryTextTheme.titleLarge.color)),
+                          Theme.of(context).primaryTextTheme.titleLarge!.color)),
               trailing: Icon(
                 Icons.settings,
-                color: Theme.of(context).primaryTextTheme.titleLarge.color,
+                color: Theme.of(context).primaryTextTheme.titleLarge!.color,
               ),
               onTap: () {
                 final settings = Provider.of<Settings>(context, listen: false);
@@ -38,17 +38,17 @@ class MyDrawerHeader extends StatelessWidget {
               title: Text('Refresh',
                   style: TextStyle(
                       color:
-                          Theme.of(context).primaryTextTheme.titleLarge.color)),
+                          Theme.of(context).primaryTextTheme.titleLarge!.color)),
               trailing: (!data.isRefresh
                   ? Icon(
                       Icons.refresh,
                       color:
-                          Theme.of(context).primaryTextTheme.titleLarge.color,
+                          Theme.of(context).primaryTextTheme.titleLarge!.color,
                     )
                   : Icon(
                       Icons.file_download,
                       color:
-                          Theme.of(context).primaryTextTheme.titleLarge.color,
+                          Theme.of(context).primaryTextTheme.titleLarge!.color,
                     )),
               onTap: () {
                 data.refresh();
@@ -80,7 +80,7 @@ class MyDrawerHeader extends StatelessWidget {
 
 class MyDrawer extends StatelessWidget {
   Future<void> _actionRead(
-      List<int> entryIds, Data data, BuildContext context) async {
+      List<int?> entryIds, Data data, BuildContext context) async {
     final snackBar = SnackBar(
       content: Text('${entryIds.length} item(s) mark read'),
       action: SnackBarAction(
@@ -101,7 +101,7 @@ class MyDrawer extends StatelessWidget {
 
   List<Widget> _buildCategoryList(Data data, BuildContext context) {
     final nav = Provider.of<Nav>(context);
-    final unreadEntries = data.entries.where((i) => i.status == 'unread');
+    final unreadEntries = data.entries.where((i) => i!.status == 'unread');
     // The First element is the 'All'
     List<Widget> categoryList = [
       ListTile(
@@ -118,9 +118,9 @@ class MyDrawer extends StatelessWidget {
           final String feedOnLongPress =
               (prefs.getString('feedOnLongPress') ?? 'no');
           if (feedOnLongPress == 'read') {
-            final List<int> entryIds = data.entries
-                .where((i) => i.status == 'unread')
-                .map((entry) => entry.id)
+            final List<int?> entryIds = data.entries
+                .where((i) => i!.status == 'unread')
+                .map((entry) => entry!.id)
                 .toList();
             _actionRead(entryIds, data, context);
           }
@@ -128,15 +128,15 @@ class MyDrawer extends StatelessWidget {
       )
     ];
 
-    for (Category category in data.categories) {
+    for (Category? category in data.categories) {
       // Build the feed ListTile, by category
       List<Widget> feedList = data.feeds
-          .where((feed) => feed.category.id == category.id)
+          .where((feed) => feed!.category!.id == category!.id)
           .map<Widget>((feed) {
         final int count =
-            unreadEntries.where((i) => i.feedId == feed.id).length;
+            unreadEntries.where((i) => i!.feedId == feed!.id).length;
         return ListTile(
-          title: Text('    ${feed.title} ($count)'),
+          title: Text('    ${feed!.title} ($count)'),
           onTap: () {
             if (nav.currentFeedId != feed.id) {
               nav.set(feed.id, null, feed.title);
@@ -150,9 +150,9 @@ class MyDrawer extends StatelessWidget {
             final String feedOnLongPress =
                 (prefs.getString('feedOnLongPress') ?? 'no');
             if (feedOnLongPress == 'read') {
-              final List<int> entryIds = data.entries
-                  .where((i) => i.feedId == feed.id && i.status == 'unread')
-                  .map((entry) => entry.id)
+              final List<int?> entryIds = data.entries
+                  .where((i) => i!.feedId == feed.id && i.status == 'unread')
+                  .map((entry) => entry!.id)
                   .toList();
               _actionRead(entryIds, data, context);
             }
@@ -162,14 +162,14 @@ class MyDrawer extends StatelessWidget {
 
       // Build the category ExpansionTile
       final int count =
-          unreadEntries.where((i) => i.feed.category.id == category.id).length;
+          unreadEntries.where((i) => i!.feed!.category!.id == category!.id).length;
       categoryList.add(
         ExpansionTile(
-          title: Text('${category.title} ($count)'),
+          title: Text('${category!.title} ($count)'),
           initiallyExpanded: nav.currentCategoryId == category.id ||
               data.feeds
-                  .where((feed) => feed.category.id == category.id)
-                  .map((feed) => feed.id)
+                  .where((feed) => feed!.category!.id == category.id)
+                  .map((feed) => feed!.id)
                   .contains(nav.currentFeedId),
           children: feedList,
           onExpansionChanged: (exp) {

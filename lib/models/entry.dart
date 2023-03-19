@@ -1,20 +1,20 @@
 import 'feed.dart';
 
 class Entry {
-  final String author;
-  final String commentsUrl;
-  final String content;
-  final Feed feed;
-  final int feedId;
-  final String hash;
-  final int id;
-  final String publishedAt;
-  final String shareCode;
-  bool starred;
-  String status;
-  final String title;
-  final String url;
-  final int userId;
+  final String? author;
+  final String? commentsUrl;
+  final String? content;
+  final Feed? feed;
+  final int? feedId;
+  final String? hash;
+  final int? id;
+  final String? publishedAt;
+  final String? shareCode;
+  bool? starred;
+  String? status;
+  final String? title;
+  final String? url;
+  final int? userId;
 
   Entry({
     this.author,

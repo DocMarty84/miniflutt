@@ -41,7 +41,7 @@ Future<String> downloadURL(String url) async {
   if (!permissionReady ||
       FileSystemEntity.typeSync(downloadPath) ==
           FileSystemEntityType.notFound) {
-    downloadPath = (await getExternalStorageDirectory()).path;
+    downloadPath = (await getExternalStorageDirectory())!.path;
   }
 
   // Get absolute file path. If a file with the same name exists, prepend the date.

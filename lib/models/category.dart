@@ -1,7 +1,7 @@
 class Category {
-  final int id;
-  final String title;
-  final int userId;
+  final int? id;
+  final String? title;
+  final int? userId;
 
   Category({
     this.id,

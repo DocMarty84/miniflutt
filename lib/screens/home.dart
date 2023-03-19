@@ -10,14 +10,14 @@ import '../models/entry.dart';
 import '../models/nav.dart';
 
 // Filter entries based on the navigation info
-List<Entry> filterEntries(Data data, Nav nav) {
-  List<Entry> entries = [];
+List<Entry?> filterEntries(Data data, Nav nav) {
+  List<Entry?> entries = [];
   if (nav.currentCategoryId != null) {
     entries = data.entries
-        .where((i) => i.feed.category.id == nav.currentCategoryId)
+        .where((i) => i!.feed!.category!.id == nav.currentCategoryId)
         .toList();
   } else if (nav.currentFeedId != null) {
-    entries = data.entries.where((i) => i.feedId == nav.currentFeedId).toList();
+    entries = data.entries.where((i) => i!.feedId == nav.currentFeedId).toList();
   } else {
     entries = data.entries;
   }
@@ -36,8 +36,8 @@ class MyHomeMarkRead extends StatelessWidget {
         final nav = Provider.of<Nav>(context, listen: false);
         final data = Provider.of<Data>(context, listen: false);
         final entryIds = filterEntries(data, nav)
-            .where((entry) => entry.status == 'unread')
-            .map((entry) => entry.id)
+            .where((entry) => entry!.status == 'unread')
+            .map((entry) => entry!.id)
             .toList();
         final snackBar = SnackBar(
           content: Text('${entryIds.length} item(s) mark read'),
@@ -68,9 +68,9 @@ class MyHomePopupMenu extends StatefulWidget {
 }
 
 class MyHomePopupMenuState extends State<MyHomePopupMenu> {
-  bool _read;
-  bool _asc;
-  bool _starred;
+  late bool _read;
+  late bool _asc;
+  late bool _starred;
 
   @override
   void initState() {
@@ -147,7 +147,7 @@ class MyHomePopupMenuState extends State<MyHomePopupMenu> {
 }
 
 class MyHomeEntryList extends StatelessWidget {
-  MyHomeEntryList({Key key, @required this.data, @required this.nav})
+  MyHomeEntryList({Key? key, required this.data, required this.nav})
       : super(key: key);
   final Data data;
   final Nav nav;
@@ -155,13 +155,13 @@ class MyHomeEntryList extends StatelessWidget {
       ItemPositionsListener.create();
 
   // Mark entries as read when scrolling
-  void _markReadOnScroll(List<Entry> entries) {
+  void _markReadOnScroll(List<Entry?> entries) {
     int topItemIndex = itemPositionsListener.itemPositions.value.first.index;
     if (topItemIndex > 1) {
-      List<Entry> scrolledPastEntries = entries.sublist(0, topItemIndex ~/ 2);
-      List<int> entryIds = scrolledPastEntries
-          .where((entry) => entry.status == 'unread')
-          .map((entry) => entry.id)
+      List<Entry?> scrolledPastEntries = entries.sublist(0, topItemIndex ~/ 2);
+      List<int?> entryIds = scrolledPastEntries
+          .where((entry) => entry!.status == 'unread')
+          .map((entry) => entry!.id)
           .toList();
 
       // Workaround for the following behavior:
@@ -176,7 +176,7 @@ class MyHomeEntryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Entry> entries = filterEntries(data, nav);
+    final List<Entry?> entries = filterEntries(data, nav);
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
     // Listener for marking entries as read on scroll
@@ -196,7 +196,7 @@ class MyHomeEntryList extends StatelessWidget {
         itemPositionsListener: itemPositionsListener,
         itemBuilder: (context, i) {
           if (i.isOdd) return Divider();
-          final Entry entry = entries[i ~/ 2];
+          final Entry entry = entries[i ~/ 2]!;
           return GestureDetector(
             child: ListTile(
               title: Text(
@@ -212,11 +212,11 @@ class MyHomeEntryList extends StatelessWidget {
               ),
               subtitle: Row(children: <Widget>[
                 Text(
-                    (nav.currentFeedId == null ? entry.feed.title + '\n' : '') +
+                    (nav.currentFeedId == null ? entry.feed!.title! + '\n' : '') +
                         DateFormat('yyy-MM-dd HH:mm')
-                            .format(DateTime.parse(entry.publishedAt))),
+                            .format(DateTime.parse(entry.publishedAt!))),
                 Spacer(),
-                entry.starred
+                entry.starred!
                     ? Icon(
                         Icons.star,
                         color: Colors.amber,
@@ -229,7 +229,7 @@ class MyHomeEntryList extends StatelessWidget {
                   '/entry',
                   arguments: entry,
                 );
-                final List<int> entryIds = [entry.id];
+                final List<int?> entryIds = [entry.id];
                 data.read(entryIds);
               },
               onLongPress: () async {
@@ -238,7 +238,7 @@ class MyHomeEntryList extends StatelessWidget {
                 final String entryOnLongPress =
                     (prefs.getString('entryOnLongPress') ?? 'read');
                 if (entryOnLongPress == 'read') {
-                  final List<int> entryIds = [entry.id];
+                  final List<int?> entryIds = [entry.id];
                   entry.status == 'unread'
                       ? data.read(entryIds)
                       : data.unread(entryIds);
@@ -251,7 +251,7 @@ class MyHomeEntryList extends StatelessWidget {
               final SharedPreferences prefs =
                   await SharedPreferences.getInstance();
 
-              String entrySwipe;
+              String? entrySwipe;
               if (details.velocity.pixelsPerSecond.dx < 0) {
                 entrySwipe = (prefs.getString('entrySwipeLeft') ?? 'no');
               } else if (details.velocity.pixelsPerSecond.dx > 0) {
@@ -259,7 +259,7 @@ class MyHomeEntryList extends StatelessWidget {
               }
 
               if (entrySwipe == 'read') {
-                final List<int> entryIds = [entry.id];
+                final List<int?> entryIds = [entry.id];
                 entry.status == 'unread'
                     ? data.read(entryIds)
                     : data.unread(entryIds);
@@ -281,7 +281,7 @@ class MyHome extends StatelessWidget {
       appBar: AppBar(
         title: Consumer<Nav>(
           builder: (context, nav, child) {
-            return Text(nav.appBarTitle);
+            return Text(nav.appBarTitle!);
           },
         ),
         // action button

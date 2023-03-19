@@ -32,7 +32,7 @@ class MySettings extends StatelessWidget {
 
 // Create a Form widget.
 class MySettingsForm extends StatefulWidget {
-  MySettingsForm({Key key, @required this.settings}) : super(key: key);
+  MySettingsForm({Key? key, required this.settings}) : super(key: key);
   final Settings settings;
 
   @override
@@ -43,7 +43,7 @@ class MySettingsForm extends StatefulWidget {
 
 // Create a corresponding State class.
 class MySettingsFormState extends State<MySettingsForm> {
-  MySettingsFormState({Key key, @required this.settings});
+  MySettingsFormState({Key? key, required this.settings});
   final Settings settings;
 
   final _formKey = GlobalKey<FormState>();
@@ -121,7 +121,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                   setState(() => settings.url = val);
                 },
                 validator: (val) {
-                  if (val.isEmpty) {
+                  if (val!.isEmpty) {
                     return 'Please enter the URL';
                   } else if (!val
                       .toLowerCase()
@@ -139,7 +139,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                   setState(() => settings.apiKey = val);
                 },
                 validator: (val) {
-                  if (val.isEmpty) {
+                  if (val!.isEmpty) {
                     return 'Please enter an API key';
                   }
                   return null;
@@ -154,7 +154,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                   setState(() => settings.limit = val);
                 },
                 validator: (val) {
-                  if (val.isEmpty) {
+                  if (val!.isEmpty) {
                     return 'Please enter a number';
                   }
                   try {
@@ -173,12 +173,12 @@ class MySettingsFormState extends State<MySettingsForm> {
                       ElevatedButton(
                         child: Text('Save'),
                         onPressed: () async {
-                          final FormState form = _formKey.currentState;
+                          final FormState form = _formKey.currentState!;
                           if (form.validate()) {
                             form.save();
                             try {
                               final res = await _connectCheck(
-                                  settings.url, settings.apiKey);
+                                  settings.url!, settings.apiKey!);
                               if (res.statusCode == 200) {
                                 settings.save(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -233,7 +233,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                 value: settings.entryOnLongPress,
                 items: _actionsEntry,
                 decoration: InputDecoration(labelText: 'Long press on article'),
-                onChanged: (val) async {
+                onChanged: (dynamic val) async {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   prefs.setString('entryOnLongPress', val);
@@ -244,7 +244,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                 value: settings.entrySwipeLeft,
                 items: _actionsEntry,
                 decoration: InputDecoration(labelText: 'Swipe left on article'),
-                onChanged: (val) async {
+                onChanged: (dynamic val) async {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   prefs.setString('entrySwipeLeft', val);
@@ -256,7 +256,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                 items: _actionsEntry,
                 decoration:
                     InputDecoration(labelText: 'Swipe right on article'),
-                onChanged: (val) async {
+                onChanged: (dynamic val) async {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   prefs.setString('entrySwipeRight', val);
@@ -267,7 +267,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                 value: settings.feedOnLongPress,
                 items: _actionsFeed,
                 decoration: InputDecoration(labelText: 'Long press on feed'),
-                onChanged: (val) async {
+                onChanged: (dynamic val) async {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   prefs.setString('feedOnLongPress', val);
@@ -285,7 +285,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                 value: settings.fontSize,
                 items: _fontSize,
                 decoration: InputDecoration(labelText: 'Font size'),
-                onChanged: (val) async {
+                onChanged: (dynamic val) async {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   prefs.setString('fontSize', val);

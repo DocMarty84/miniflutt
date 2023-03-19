@@ -7,8 +7,8 @@ import '../models/data_all.dart';
 
 // Create a Form widget for update and delete
 class MyCategoryForm extends StatefulWidget {
-  MyCategoryForm({Key key, @required this.category}) : super(key: key);
-  final Category category;
+  MyCategoryForm({Key? key, required this.category}) : super(key: key);
+  final Category? category;
 
   @override
   MyCategoryFormState createState() {
@@ -17,11 +17,11 @@ class MyCategoryForm extends StatefulWidget {
 }
 
 class MyCategoryFormState extends State<MyCategoryForm> {
-  MyCategoryFormState({Key key, @required this.category});
-  final Category category;
+  MyCategoryFormState({Key? key, required this.category});
+  final Category? category;
 
   final _formKey = GlobalKey<FormState>();
-  String _title;
+  String? _title;
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class MyCategoryFormState extends State<MyCategoryForm> {
   // Load preferences
   void _loadValues() {
     setState(() {
-      _title = category == null ? '' : category.title;
+      _title = category == null ? '' : category!.title;
     });
   }
 
@@ -54,7 +54,7 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                   setState(() => _title = val);
                 },
                 validator: (val) {
-                  if (val.isEmpty) {
+                  if (val!.isEmpty) {
                     return 'Please enter the title';
                   }
                   return null;
@@ -68,7 +68,7 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                       ElevatedButton(
                         child: Text('Save'),
                         onPressed: () async {
-                          final FormState form = _formKey.currentState;
+                          final FormState form = _formKey.currentState!;
                           if (form.validate()) {
                             form.save();
                             Map<String, dynamic> params = {
@@ -76,7 +76,7 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                             };
                             try {
                               if (category != null) {
-                                await updateCategory(category.id, params);
+                                await updateCategory(category!.id, params);
                                 dataAll.refresh();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text('Changes saved!')));
@@ -113,12 +113,12 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                                 style: TextStyle(
                                     color: Theme.of(context)
                                         .primaryTextTheme
-                                        .titleLarge
+                                        .titleLarge!
                                         .color),
                               ),
                               onPressed: () async {
                                 try {
-                                  await deleteCategory(category.id);
+                                  await deleteCategory(category!.id);
                                   dataAll.refresh();
                                   Navigator.pop(context);
                                 } catch (e) {
@@ -144,10 +144,10 @@ class MyCategoryFormState extends State<MyCategoryForm> {
 class MyCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Category category = ModalRoute.of(context).settings.arguments;
+    final Category? category = ModalRoute.of(context)!.settings.arguments as Category?;
     return Scaffold(
       appBar: AppBar(
-          title: Text(category == null ? 'New category' : category.title)),
+          title: Text(category == null ? 'New category' : category.title!)),
       body: MyCategoryForm(category: category),
     );
   }

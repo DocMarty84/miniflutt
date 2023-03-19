@@ -14,14 +14,14 @@ class MyFeedFormCreate extends StatefulWidget {
 
 class MyFeedFormCreateState extends State<MyFeedFormCreate> {
   final _formKey = GlobalKey<FormState>();
-  String _feedUrl;
-  int _categoryId;
-  String _username;
-  String _password;
-  bool _crawler;
-  String _userAgent;
-  String _scraperRules;
-  String _rewriteRules;
+  String? _feedUrl;
+  int? _categoryId;
+  String? _username;
+  String? _password;
+  bool? _crawler;
+  String? _userAgent;
+  String? _scraperRules;
+  String? _rewriteRules;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
                   setState(() => _feedUrl = val);
                 },
                 validator: (val) {
-                  if (val.isEmpty) {
+                  if (val!.isEmpty) {
                     return 'The feed URL is mandatory';
                   } else if (!val
                       .toLowerCase()
@@ -55,18 +55,18 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
                 value: _categoryId,
                 items: dataAll.categories
                     .map((category) => DropdownMenuItem(
-                          child: Text(category.title),
+                          child: Text(category!.title!),
                           value: category.id,
                         ))
                     .toList(),
                 decoration: InputDecoration(labelText: 'Category *'),
-                validator: (val) {
+                validator: (dynamic val) {
                   if (val == null) {
                     return 'The category is mandatory';
                   }
                   return null;
                 },
-                onChanged: (value) {
+                onChanged: (dynamic value) {
                   setState(() => _categoryId = value);
                 },
               ),
@@ -110,7 +110,7 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
                 ],
                 decoration:
                     InputDecoration(labelText: 'Fetch original content'),
-                onChanged: (value) {
+                onChanged: (dynamic value) {
                   setState(() => _crawler = value);
                 },
               ),
@@ -122,7 +122,7 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
                       ElevatedButton(
                         child: Text('Save'),
                         onPressed: () async {
-                          final FormState form = _formKey.currentState;
+                          final FormState form = _formKey.currentState!;
                           if (form.validate()) {
                             form.save();
                             Map<String, dynamic> params = {

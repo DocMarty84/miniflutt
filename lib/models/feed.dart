@@ -1,24 +1,24 @@
 import 'category.dart';
 
 class Feed {
-  final Category category;
-  final String checkedAt;
-  final bool crawler;
-  final bool disabled;
-  final String etagHeader;
-  final String feedUrl;
-  final int id;
-  final String lastModifiedHeader;
-  final int parsingErrorCount;
-  final String parsingErrorMessage;
-  final String password;
-  final String rewriteRules;
-  final String scraperRules;
-  final String siteUrl;
-  final String title;
-  final String userAgent;
-  final int userId;
-  final String userName;
+  final Category? category;
+  final String? checkedAt;
+  final bool? crawler;
+  final bool? disabled;
+  final String? etagHeader;
+  final String? feedUrl;
+  final int? id;
+  final String? lastModifiedHeader;
+  final int? parsingErrorCount;
+  final String? parsingErrorMessage;
+  final String? password;
+  final String? rewriteRules;
+  final String? scraperRules;
+  final String? siteUrl;
+  final String? title;
+  final String? userAgent;
+  final int? userId;
+  final String? userName;
 
   Feed({
     this.category,

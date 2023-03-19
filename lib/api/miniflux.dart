@@ -17,7 +17,7 @@ final Map<int, String> statusCodes = {
 
 String makeError(String msg, http.Response res, String endpoint,
     Map<String, dynamic> params) {
-  final String error = statusCodes.containsKey(res.statusCode)
+  final String? error = statusCodes.containsKey(res.statusCode)
       ? statusCodes[res.statusCode]
       : res.reasonPhrase;
   return '$msg\n'
@@ -118,7 +118,7 @@ Future<bool> createFeed(Map<String, dynamic> params) async {
   return await _post('/v1/feeds', params);
 }
 
-Future<bool> updateFeed(int feedId, Map<String, dynamic> params) async {
+Future<bool> updateFeed(int? feedId, Map<String, dynamic> params) async {
   return await _put('/v1/feeds/$feedId', params);
 }
 
@@ -127,7 +127,7 @@ Future<bool> refreshAllFeeds() async {
   return await _put('/v1/feeds/refresh', params);
 }
 
-Future<bool> removeFeed(int feedId) async {
+Future<bool> removeFeed(int? feedId) async {
   return await _delete('/v1/feeds/$feedId');
 }
 
@@ -135,7 +135,7 @@ Future<String> getEntries(Map<String, String> params) async {
   return await _get('/v1/entries', params);
 }
 
-Future<bool> updateEntries(List<int> entryIds, String status) async {
+Future<bool> updateEntries(List<int?> entryIds, String status) async {
   Map<String, dynamic> params = {
     "entry_ids": entryIds,
     "status": status,
@@ -143,7 +143,7 @@ Future<bool> updateEntries(List<int> entryIds, String status) async {
   return await _put('/v1/entries', params);
 }
 
-Future<bool> toggleEntryBookmark(int entryId) async {
+Future<bool> toggleEntryBookmark(int? entryId) async {
   Map<String, dynamic> params = {};
   return await _put('/v1/entries/$entryId/bookmark', params);
 }
@@ -156,11 +156,11 @@ Future<bool> createCategory(Map<String, dynamic> params) async {
   return await _post('/v1/categories', params);
 }
 
-Future<bool> updateCategory(int categoryId, Map<String, dynamic> params) async {
+Future<bool> updateCategory(int? categoryId, Map<String, dynamic> params) async {
   return await _put('/v1/categories/$categoryId', params);
 }
 
-Future<bool> deleteCategory(int categoryId) async {
+Future<bool> deleteCategory(int? categoryId) async {
   return await _delete('/v1/categories/$categoryId');
 }
 

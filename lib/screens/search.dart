@@ -6,7 +6,7 @@ import '../models/data.dart';
 import '../models/nav.dart';
 
 class MySearchAppBar extends StatelessWidget with PreferredSizeWidget {
-  MySearchAppBar({Key key, @required this.data, @required this.nav})
+  MySearchAppBar({Key? key, required this.data, required this.nav})
       : super(key: key);
   final Data data;
   final Nav nav;
@@ -16,7 +16,7 @@ class MySearchAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).primaryTextTheme.titleLarge.color;
+    final color = Theme.of(context).primaryTextTheme.titleLarge!.color!;
     return AppBar(
       title: TextField(
         autofocus: true,
@@ -52,7 +52,7 @@ class MySearchAppBar extends StatelessWidget with PreferredSizeWidget {
 
 // Create a Form widget.
 class MySearchHistory extends StatefulWidget {
-  MySearchHistory({Key key, @required this.data, @required this.nav})
+  MySearchHistory({Key? key, required this.data, required this.nav})
       : super(key: key);
   final Data data;
   final Nav nav;
@@ -64,7 +64,7 @@ class MySearchHistory extends StatefulWidget {
 }
 
 class MySearchHistoryState extends State<MySearchHistory> {
-  MySearchHistoryState({Key key, @required this.data, @required this.nav});
+  MySearchHistoryState({Key? key, required this.data, required this.nav});
   final Data data;
   final Nav nav;
   List<String> _history = [];

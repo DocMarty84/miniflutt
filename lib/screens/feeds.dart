@@ -5,18 +5,18 @@ import '../models/category.dart';
 import '../models/data_all.dart';
 
 class MyFeedsList extends StatelessWidget {
-  MyFeedsList({Key key, @required this.dataAll}) : super(key: key);
+  MyFeedsList({Key? key, required this.dataAll}) : super(key: key);
   final DataAll dataAll;
 
   List<Widget> _buildFeeds(BuildContext context) {
     List<Widget> categoryList = [];
 
-    for (Category category in dataAll.categories) {
+    for (Category? category in dataAll.categories) {
       // Build the category ExpansionTile
       categoryList.add(
         ListTile(
           title: Text(
-            category.title,
+            category!.title!,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           onTap: () {
@@ -31,7 +31,7 @@ class MyFeedsList extends StatelessWidget {
 
       // Build the feed ListTile, by category
       List<Widget> feedList = dataAll.feeds
-          .where((feed) => feed.category.id == category.id)
+          .where((feed) => feed.category!.id == category.id)
           .map<Widget>((feed) {
         return ListTile(
           title: Text('    ${feed.title}'),

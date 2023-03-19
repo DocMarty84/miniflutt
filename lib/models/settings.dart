@@ -6,16 +6,16 @@ import '../models/data.dart';
 import '../models/nav.dart';
 
 class Settings extends ChangeNotifier {
-  String url;
-  String apiKey;
-  String limit;
-  bool markReadOnScroll;
-  String entryOnLongPress;
-  String entrySwipeLeft;
-  String entrySwipeRight;
-  String feedOnLongPress;
-  String fontSize;
-  bool isLoad;
+  String? url;
+  String? apiKey;
+  String? limit;
+  late bool markReadOnScroll;
+  String? entryOnLongPress;
+  String? entrySwipeLeft;
+  String? entrySwipeRight;
+  String? feedOnLongPress;
+  String? fontSize;
+  late bool isLoad;
 
   Future<void> load() async {
     // First load preferences
@@ -37,9 +37,9 @@ class Settings extends ChangeNotifier {
 
   Future<void> save(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('url', url.replaceAll(RegExp(r"/+$"), ''));
-    prefs.setString('apiKey', apiKey);
-    prefs.setString('limit', limit);
+    prefs.setString('url', url!.replaceAll(RegExp(r"/+$"), ''));
+    prefs.setString('apiKey', apiKey!);
+    prefs.setString('limit', limit!);
 
     // Refresh to populate the interface
     final data = Provider.of<Data>(context, listen: false);

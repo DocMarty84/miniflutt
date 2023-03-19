@@ -3,7 +3,7 @@ import 'package:flutter_html/style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EntryStyle extends ChangeNotifier {
-  FontSize fontSize;
+  FontSize? fontSize;
 
   // The constructor allows refreshing at startup
   EntryStyle() {

@@ -23,10 +23,10 @@ class MyDrawerHeader extends StatelessWidget {
               title: Text('Settings',
                   style: TextStyle(
                       color:
-                          Theme.of(context).primaryTextTheme.headline6.color)),
+                          Theme.of(context).primaryTextTheme.titleLarge.color)),
               trailing: Icon(
                 Icons.settings,
-                color: Theme.of(context).primaryTextTheme.headline6.color,
+                color: Theme.of(context).primaryTextTheme.titleLarge.color,
               ),
               onTap: () {
                 final settings = Provider.of<Settings>(context, listen: false);
@@ -38,15 +38,17 @@ class MyDrawerHeader extends StatelessWidget {
               title: Text('Refresh',
                   style: TextStyle(
                       color:
-                          Theme.of(context).primaryTextTheme.headline6.color)),
+                          Theme.of(context).primaryTextTheme.titleLarge.color)),
               trailing: (!data.isRefresh
                   ? Icon(
                       Icons.refresh,
-                      color: Theme.of(context).primaryTextTheme.headline6.color,
+                      color:
+                          Theme.of(context).primaryTextTheme.titleLarge.color,
                     )
                   : Icon(
                       Icons.file_download,
-                      color: Theme.of(context).primaryTextTheme.headline6.color,
+                      color:
+                          Theme.of(context).primaryTextTheme.titleLarge.color,
                     )),
               onTap: () {
                 data.refresh();
@@ -92,7 +94,8 @@ class MyDrawer extends StatelessWidget {
       await data.read(entryIds);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
     }
   }
 

@@ -26,19 +26,19 @@ class MyEntryHeader extends StatelessWidget {
             entry.title,
             textScaleFactor: 1.25,
             style: TextStyle(
-              color: Theme.of(context).textTheme.headline6.color,
-              fontWeight: Theme.of(context).textTheme.headline6.fontWeight,
+              color: Theme.of(context).textTheme.titleLarge.color,
+              fontWeight: Theme.of(context).textTheme.titleLarge.fontWeight,
             ),
           ),
           Divider(
             thickness: 1.0,
-            color: Theme.of(context).textTheme.headline6.color,
+            color: Theme.of(context).textTheme.titleLarge.color,
           ),
           RichText(
             textScaleFactor: 0.75,
             text: TextSpan(
-              style:
-                  TextStyle(color: Theme.of(context).textTheme.subtitle2.color),
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.titleSmall.color),
               children: <TextSpan>[
                 TextSpan(text: 'by '),
                 TextSpan(

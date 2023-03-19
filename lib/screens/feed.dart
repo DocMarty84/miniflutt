@@ -220,14 +220,14 @@ class MyFeedFormState extends State<MyFeedForm> {
                       new ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).errorColor),
+                              Theme.of(context).colorScheme.error),
                         ),
                         child: Text(
                           'Delete',
                           style: TextStyle(
                               color: Theme.of(context)
                                   .primaryTextTheme
-                                  .headline6
+                                  .titleLarge
                                   .color),
                         ),
                         onPressed: () async {

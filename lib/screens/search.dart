@@ -16,7 +16,7 @@ class MySearchAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).primaryTextTheme.headline6.color;
+    final color = Theme.of(context).primaryTextTheme.titleLarge.color;
     return AppBar(
       title: TextField(
         autofocus: true,

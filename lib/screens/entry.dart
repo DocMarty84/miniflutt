@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html_video/flutter_html_video.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -126,6 +127,7 @@ class MyEntryBody extends StatelessWidget {
                     await _handleURL(src, context);
                   },
                 ),
+                VideoHtmlExtension(),
               ],
               onLinkTap: (url, linkAttributes, element) async {
                 // Suggest to download most common files

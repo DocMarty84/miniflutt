@@ -22,6 +22,7 @@ dependencies:
 
   http: ^1.1.0
   flutter_html: ^3.0.0-beta.2
+  flutter_html_video: ^3.0.0-beta.2
   intl: ^0.18.1
   path_provider: ^2.0.15
   permission_handler: ^10.4.1

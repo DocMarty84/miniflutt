@@ -25,6 +25,7 @@ class DataAll extends ChangeNotifier {
       jsonFeeds = json.decode(await jsonFeedsFut);
       jsonCategories = json.decode(await jsonCategoriesFut);
     } catch (e) {
+      debugPrint('error: $e');
       jsonFeeds = [];
       jsonCategories = [];
     }
@@ -35,7 +36,7 @@ class DataAll extends ChangeNotifier {
 
     // Fill all feeds and categories
     categoryIds.clear();
-    for (Map<String, dynamic> elem in (jsonFeeds as Iterable<Map<String, dynamic>>? ?? [])) {
+    for (Map<String, dynamic> elem in (jsonFeeds ?? [])) {
       final Feed feed = Feed.fromJson(elem);
       feeds.add(feed);
       if (!categoryIds.contains(feed.category!.id)) {
@@ -44,7 +45,7 @@ class DataAll extends ChangeNotifier {
       }
     }
 
-    for (Map<String, dynamic> elem in (jsonCategories as Iterable<Map<String, dynamic>>? ?? [])) {
+    for (Map<String, dynamic> elem in (jsonCategories ?? [])) {
       final Category category = Category.fromJson(elem);
       if (!categoryIds.contains(category.id)) {
         categories.add(category);

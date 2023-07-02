@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/data.dart';
 import '../models/nav.dart';
 
-class MySearchAppBar extends StatelessWidget with PreferredSizeWidget {
+class MySearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   MySearchAppBar({Key? key, required this.data, required this.nav})
       : super(key: key);
   final Data data;

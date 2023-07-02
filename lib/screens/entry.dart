@@ -119,7 +119,15 @@ class MyEntryBody extends StatelessWidget {
                   fontSize: entryStyle.fontSize,
                 ),
               },
-              onLinkTap: (url, renderContext, attributes, element) async {
+              extensions: [
+                OnImageTapExtension(
+                  onImageTap: (src, imgAttributes, element) async {
+                    // Handle an image being tapped
+                    await _handleURL(src, context);
+                  },
+                ),
+              ],
+              onLinkTap: (url, linkAttributes, element) async {
                 // Suggest to download most common files
                 final re = RegExp(r'\.('
                     r'7z|apk|avi|csv|doc|docx|flv|gif|h264|jpeg|jpg|mkv|mov|'
@@ -127,14 +135,10 @@ class MyEntryBody extends StatelessWidget {
                     r'psd|rtf|svg|tex|txt|webm|webp|xls|xlsx|zip'
                     r')$');
                 if (re.hasMatch(url!.toLowerCase())) {
-                  return _handleURL(url, context);
+                  _handleURL(url, context);
                 } else {
                   launchURL(url);
                 }
-              },
-              onImageTap: (url, renderContext, attributes, element) async {
-                // Suggest to download images
-                return _handleURL(url, context);
               },
             ),
           ],

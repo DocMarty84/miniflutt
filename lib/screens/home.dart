@@ -19,7 +19,7 @@ List<Entry?> filterEntries(Data data, Nav nav) {
   } else if (nav.currentFeedId != null) {
     entries = data.entries.where((i) => i!.feedId == nav.currentFeedId).toList();
   } else {
-    entries = data.entries;
+    entries = data.entries.where((i) => i!.feed!.hideGlobally == false).toList();
   }
   return entries;
 }

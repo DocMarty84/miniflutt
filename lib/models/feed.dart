@@ -19,6 +19,7 @@ class Feed {
   final String? userAgent;
   final int? userId;
   final String? userName;
+  final bool? hideGlobally;
 
   Feed({
     this.category,
@@ -39,6 +40,7 @@ class Feed {
     this.userAgent,
     this.userId,
     this.userName,
+    this.hideGlobally,
   });
 
   factory Feed.fromJson(Map<String, dynamic> json) {
@@ -61,6 +63,7 @@ class Feed {
       userAgent: json['user_agent'],
       userId: json['user_id'],
       userName: json['user_name'],
+      hideGlobally: json['hide_globally'],
     );
   }
 }

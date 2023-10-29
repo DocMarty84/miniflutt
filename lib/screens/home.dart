@@ -17,9 +17,14 @@ List<Entry?> filterEntries(Data data, Nav nav) {
         .where((i) => i!.feed!.category!.id == nav.currentCategoryId)
         .toList();
   } else if (nav.currentFeedId != null) {
-    entries = data.entries.where((i) => i!.feedId == nav.currentFeedId).toList();
+    entries =
+        data.entries.where((i) => i!.feedId == nav.currentFeedId).toList();
   } else {
-    entries = data.entries;
+    entries = data.entries
+        .where((i) =>
+            i!.feed!.hideGlobally == false &&
+            i.feed!.category!.hideGlobally == false)
+        .toList();
   }
   return entries;
 }
@@ -211,10 +216,11 @@ class MyHomeEntryList extends StatelessWidget {
                 ),
               ),
               subtitle: Row(children: <Widget>[
-                Text(
-                    (nav.currentFeedId == null ? entry.feed!.title! + '\n' : '') +
-                        DateFormat('yyy-MM-dd HH:mm')
-                            .format(DateTime.parse(entry.publishedAt!))),
+                Text((nav.currentFeedId == null
+                        ? entry.feed!.title! + '\n'
+                        : '') +
+                    DateFormat('yyy-MM-dd HH:mm')
+                        .format(DateTime.parse(entry.publishedAt!))),
                 Spacer(),
                 entry.starred!
                     ? Icon(

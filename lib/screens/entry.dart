@@ -181,13 +181,14 @@ class MyEntryBottom extends StatelessWidget {
                     sharePositionOrigin:
                         box.localToGlobal(Offset.zero) & box.size);
               }),
-          IconButton(
-              icon: Icon(Icons.save),
-              onPressed: () {
-                // The box is necessary for iPads
-                final RenderBox box = context.findRenderObject() as RenderBox;
-                saveEntry(entry.id)
-              }),
+          Consumer<Data>(
+            builder: (context, data, child) {
+              return IconButton(
+                icon: Icon(Icons.save),
+                onPressed: () => data.saveEntry(entry.id),
+              );
+            },
+          ),
           Consumer<Data>(
             builder: (context, data, child) {
               return IconButton(

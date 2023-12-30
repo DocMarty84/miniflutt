@@ -149,8 +149,8 @@ Future<bool> toggleEntryBookmark(int? entryId) async {
   return await _put('/v1/entries/$entryId/bookmark', params);
 }
 
-Future<bool> saveEntry(int? entryId) async {
-  return await _post('v1/entries/$entryId/save', null)
+Future<bool> triggerSaveEntry(int? entryId) async {
+  return await _post('/v1/entries/$entryId/save', <String, String>{})
 }
 
 Future<String> getCategories() async {

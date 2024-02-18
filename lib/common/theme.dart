@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 final appTheme = ThemeData(
-  primarySwatch: Colors.indigo,
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: Colors.indigo,
+  ),
 );
 
 final appThemeDark = ThemeData(
-  colorScheme: ColorScheme.fromSwatch(
+  colorScheme: ColorScheme.fromSeed(
     brightness: Brightness.dark,
-    primarySwatch: Colors.indigo,
-  ).copyWith(
-    secondary: Colors.indigo,
+    seedColor: Colors.indigo,
   ),
 );

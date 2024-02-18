@@ -30,7 +30,7 @@ class MyEntryHeader extends StatelessWidget {
         children: <Widget>[
           Text(
             entry.title!,
-            textScaleFactor: 1.25,
+            textScaler: TextScaler.linear(1.25),
             style: TextStyle(
               color: Theme.of(context).textTheme.titleLarge!.color,
               fontWeight: Theme.of(context).textTheme.titleLarge!.fontWeight,
@@ -41,7 +41,7 @@ class MyEntryHeader extends StatelessWidget {
             color: Theme.of(context).textTheme.titleLarge!.color,
           ),
           RichText(
-            textScaleFactor: 0.75,
+            textScaler: TextScaler.linear(0.75),
             text: TextSpan(
               style: TextStyle(
                   color: Theme.of(context).textTheme.titleSmall!.color),
@@ -57,7 +57,7 @@ class MyEntryHeader extends StatelessWidget {
           Text(
             DateFormat('yyy-MM-dd HH:mm')
                 .format(DateTime.parse(entry.publishedAt!)),
-            textScaleFactor: 0.75,
+            textScaler: TextScaler.linear(0.75),
           ),
         ],
       ),
@@ -245,6 +245,7 @@ class MyEntry extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.open_in_browser),
             onPressed: () => launchURL(entry.url!),
+            // shape: CircleBorder(),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         );

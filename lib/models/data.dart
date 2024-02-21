@@ -57,6 +57,10 @@ class Data extends ChangeNotifier {
     return await toggleEntryBookmark(entryId);
   }
 
+  Future<bool> saveEntry(int? entryId) async {
+    return await triggerSaveEntry(entryId);
+  }
+
   Future<void> refresh({String? search}) async {
     final Set<int?> feedIds = {};
     final Set<int?> categoryIds = {};

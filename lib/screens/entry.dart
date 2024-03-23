@@ -75,7 +75,7 @@ class MyEntryBody extends StatelessWidget {
       builder: (BuildContext dialogContext) {
         // The dialogContext allows using a SnackBar without the 'Scaffold.of()
         // called with a context that does not contain a Scaffold.' error.
-        final String fileName = url!.split('/').last;
+        final String fileName = url!.split('/').last.split('?').first;
         return AlertDialog(
           content: SingleChildScrollView(
             child:

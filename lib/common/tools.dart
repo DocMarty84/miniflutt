@@ -29,7 +29,7 @@ Future<bool> _checkPermission() async {
 }
 
 Future<String> downloadURL(String url) async {
-  String fileName = url.split('/').last;
+  String fileName = url.split('/').last.split('?').first;
   String downloadPath = '/storage/emulated/0/Download';
 
   // Get permission and download file

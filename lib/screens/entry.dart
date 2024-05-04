@@ -183,6 +183,14 @@ class MyEntryBottom extends StatelessWidget {
           Consumer<Data>(
             builder: (context, data, child) {
               return IconButton(
+                icon: Icon(Icons.save),
+                onPressed: () => data.saveEntry(entry.id),
+              );
+            },
+          ),
+          Consumer<Data>(
+            builder: (context, data, child) {
+              return IconButton(
                 icon: entry.starred!
                     ? Icon(
                         Icons.star,

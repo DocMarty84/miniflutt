@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 final Map<int, String> statusCodes = {
   200: 'Everything is OK',
   201: 'Resource created/modified',
+  202: 'Action initiated',
   204: 'Resource removed/modified',
   400: 'Bad request',
   401: 'Unauthorized (bad username/password)',
@@ -148,6 +149,10 @@ Future<bool> toggleEntryBookmark(int? entryId) async {
   return await _put('/v1/entries/$entryId/bookmark', params);
 }
 
+Future<bool> triggerSaveEntry(int? entryId) async {
+  return await _post('/v1/entries/$entryId/save', <String, String>{});
+}
+
 Future<String> getCategories() async {
   return await _get('/v1/categories', <String, String>{});
 }
@@ -156,7 +161,8 @@ Future<bool> createCategory(Map<String, dynamic> params) async {
   return await _post('/v1/categories', params);
 }
 
-Future<bool> updateCategory(int? categoryId, Map<String, dynamic> params) async {
+Future<bool> updateCategory(
+    int? categoryId, Map<String, dynamic> params) async {
   return await _put('/v1/categories/$categoryId', params);
 }
 

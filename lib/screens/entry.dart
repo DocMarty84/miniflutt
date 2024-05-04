@@ -118,8 +118,7 @@ class MyEntryBody extends StatelessWidget {
           children: <Widget>[
             MyEntryHeader(entry: entry),
             Html(
-              // Workaround since http images are not displayed
-              data: entry.content!.replaceAll("http://", "https://"),
+              data: entry.content,
               style: {
                 'html': Style(
                   fontSize: entryStyle.fontSize,

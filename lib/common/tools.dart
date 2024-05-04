@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 void launchURL(String url) async {
@@ -16,33 +15,12 @@ void launchURL(String url) async {
   }
 }
 
-Future<bool> _checkPermission() async {
-  var status = await Permission.storage.status;
-  if (status.isDenied) {
-    await Permission.storage.request();
-    status = await Permission.storage.status;
-  }
-  if (status.isGranted) {
-    return true;
-  }
-  return false;
-}
-
 Future<String> downloadURL(String url) async {
   String fileName = url.split('/').last.split('?').first;
-  String downloadPath = '/storage/emulated/0/Download';
+  String downloadPath = (await getExternalStorageDirectory())!.path;
 
   // Get permission and download file
-  final Future<bool> permissionReadyFut = _checkPermission();
   final Future<http.Response> responseFut = http.get(Uri.parse(url));
-
-  // Get download path
-  final bool permissionReady = await permissionReadyFut;
-  if (!permissionReady ||
-      FileSystemEntity.typeSync(downloadPath) ==
-          FileSystemEntityType.notFound) {
-    downloadPath = (await getExternalStorageDirectory())!.path;
-  }
 
   // Get absolute file path. If a file with the same name exists, prepend the date.
   String filePath = '$downloadPath${Platform.pathSeparator}$fileName';

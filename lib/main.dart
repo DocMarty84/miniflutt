@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => Data()),
         ChangeNotifierProvider(create: (context) => DataAll()),
-        ChangeNotifierProvider(create: (context) => EntryStyle()),
+        ChangeNotifierProvider(create: (context) => EntryStyle(), lazy: false),
         ChangeNotifierProvider(create: (context) => Nav()),
         ChangeNotifierProvider(create: (context) => Settings()),
       ],

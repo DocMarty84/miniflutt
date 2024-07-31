@@ -59,6 +59,14 @@ class MyEntryHeader extends StatelessWidget {
                 .format(DateTime.parse(entry.publishedAt!)),
             textScaler: TextScaler.linear(0.75),
           ),
+          Text(
+            entry.readingTime!.toString() + " min read",
+            textScaler: TextScaler.linear(0.75),
+            style: TextStyle(
+              color: Theme.of(context).textTheme.titleSmall!.color,
+              fontWeight: FontWeight.bold,
+            )
+          )
         ],
       ),
     );

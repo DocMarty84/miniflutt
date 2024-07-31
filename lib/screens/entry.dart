@@ -190,6 +190,19 @@ class MyEntryBottom extends StatelessWidget {
               );
             },
           ),
+          IconButton(
+            icon: Icon(Icons.download),
+            onPressed: () => getEntryOriginalContent(entry.id)
+              .then((res) {
+                this.content_update(res);
+                ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('Downloaded!')));
+              })
+              .catchError((e) {
+                ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
+              }),
+          ),
           Consumer<Data>(
             builder: (context, data, child) {
               return IconButton(
@@ -211,13 +224,6 @@ class MyEntryBottom extends StatelessWidget {
                     : Icons.visibility_off),
                 onPressed: () => data.toggleRead(entry.id),
               );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.download),
-            onPressed: () {
-              getEntryOriginalContent(entry.id)
-                .then((res) => this.content_update(res));
             },
           ),
           if (entry.commentsUrl != null && entry.commentsUrl != "")

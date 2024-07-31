@@ -3,7 +3,7 @@ import 'feed.dart';
 class Entry {
   final String? author;
   final String? commentsUrl;
-  final String? content;
+  String? content;
   final Feed? feed;
   final int? feedId;
   final String? hash;

@@ -15,6 +15,7 @@ import '../models/data.dart';
 import '../models/entry.dart';
 import '../models/entry_style.dart';
 import '../models/nav.dart';
+import '../api/miniflux.dart';
 import 'home.dart';
 
 class MyEntryHeader extends StatelessWidget {
@@ -160,8 +161,9 @@ class MyEntryBody extends StatelessWidget {
 }
 
 class MyEntryBottom extends StatelessWidget {
-  MyEntryBottom({Key? key, required this.entry}) : super(key: key);
+  MyEntryBottom({Key? key, required this.entry, required this.content_update}) : super(key: key);
   final Entry entry;
+  final Function(String) content_update;
 
   @override
   Widget build(BuildContext context) {
@@ -211,6 +213,13 @@ class MyEntryBottom extends StatelessWidget {
               );
             },
           ),
+          IconButton(
+            icon: Icon(Icons.download),
+            onPressed: () {
+              getEntryOriginalContent(entry.id)
+                .then((res) => this.content_update(res));
+            },
+          ),
           if (entry.commentsUrl != null && entry.commentsUrl != "")
             Consumer<Data>(
               builder: (context, data, child) {
@@ -227,7 +236,17 @@ class MyEntryBottom extends StatelessWidget {
   }
 }
 
-class MyEntry extends StatelessWidget {
+class MyEntry extends StatefulWidget {
+  MyEntry({Key? key}) : super(key: key);
+
+  MyEntryState createState() {
+    return MyEntryState();
+  }
+}
+
+class MyEntryState extends State<MyEntry> {
+  MyEntryState({Key? key});
+
   @override
   Widget build(BuildContext context) {
     final Entry? entry = ModalRoute.of(context)!.settings.arguments as Entry?;
@@ -241,6 +260,9 @@ class MyEntry extends StatelessWidget {
       controller: controller,
       itemBuilder: (context, index) {
         final entry = entries[index]!;
+        Function(String) updater = (txt) {
+          setState(() => entry.content = txt);
+        };
         return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -248,7 +270,7 @@ class MyEntry extends StatelessWidget {
             ),
           ),
           body: MyEntryBody(entry: entry),
-          bottomNavigationBar: MyEntryBottom(entry: entry),
+          bottomNavigationBar: MyEntryBottom(entry: entry, content_update: updater),
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.open_in_browser),
             onPressed: () => launchURL(entry.url!),

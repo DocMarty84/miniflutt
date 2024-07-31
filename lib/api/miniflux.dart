@@ -183,3 +183,15 @@ Future<bool> connectCheck() async {
     return false;
   }
 }
+
+Future<String> getEntryOriginalContent(int? entryId) async {
+  Map<String, dynamic> content = json.decode(
+    await _get('/v1/entries/$entryId/fetch-content', <String, String>{})
+  );
+  String new_content = content['content'];
+    Map<String, dynamic> params = {
+      "content": new_content,
+    };
+  await _put('/v1/entries/$entryId', params);
+  return new_content;
+}

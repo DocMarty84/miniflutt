@@ -215,20 +215,32 @@ class MyHomeEntryList extends StatelessWidget {
                       : FontStyle.italic),
                 ),
               ),
-              subtitle: Row(children: <Widget>[
-                Text((nav.currentFeedId == null
-                        ? entry.feed!.title! + '\n'
-                        : '') +
-                    DateFormat('yyy-MM-dd HH:mm')
-                        .format(DateTime.parse(entry.publishedAt!))),
-                Spacer(),
-                entry.starred!
-                    ? Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      )
-                    : Text(''),
-              ]),
+              subtitle: Row(
+                children: <Widget>[
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        if (nav.currentFeedId == null) Text(entry.feed!.title!),
+                        Row(children: <Widget>[
+                          Text(DateFormat('yyy-MM-dd HH:mm')
+                              .format(DateTime.parse(entry.publishedAt!))),
+                          Text(
+                            ' · ${entry.readingTime} min read',
+                            style: TextStyle(
+                              color: Theme.of(context).disabledColor,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ]),
+                      ]),
+                  if (entry.starred!) Spacer(),
+                  if (entry.starred!)
+                    Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                ],
+              ),
               onTap: () {
                 Navigator.pushNamed(
                   context,

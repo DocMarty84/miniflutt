@@ -8,6 +8,7 @@ class Entry {
   final int? feedId;
   final String? hash;
   final int? id;
+  final int? readingTime;
   final String? publishedAt;
   final String? shareCode;
   bool? starred;
@@ -25,6 +26,7 @@ class Entry {
     this.hash,
     this.id,
     this.publishedAt,
+    this.readingTime,
     this.shareCode,
     this.starred,
     this.status,
@@ -43,6 +45,7 @@ class Entry {
       hash: json['hash'],
       id: json['id'],
       publishedAt: json['published_at'],
+      readingTime: json['reading_time'],
       shareCode: json['share_code'],
       starred: json['starred'],
       status: json['status'],

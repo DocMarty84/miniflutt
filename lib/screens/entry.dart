@@ -54,11 +54,21 @@ class MyEntryHeader extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            DateFormat('yyy-MM-dd HH:mm')
-                .format(DateTime.parse(entry.publishedAt!)),
-            textScaler: TextScaler.linear(0.75),
-          ),
+          Row(children: <Widget>[
+            Text(
+              DateFormat('yyy-MM-dd HH:mm')
+                  .format(DateTime.parse(entry.publishedAt!)),
+              textScaler: TextScaler.linear(0.75),
+            ),
+            Text(
+              ' · ${entry.readingTime} min read',
+              style: TextStyle(
+                color: Theme.of(context).disabledColor,
+                fontStyle: FontStyle.italic,
+              ),
+              textScaler: TextScaler.linear(0.75),
+            ),
+          ]),
         ],
       ),
     );

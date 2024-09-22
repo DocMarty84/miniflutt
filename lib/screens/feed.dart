@@ -219,7 +219,7 @@ class MyFeedFormState extends State<MyFeedForm> {
                       ),
                       new ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
+                          backgroundColor: WidgetStateProperty.all<Color>(
                               Theme.of(context).colorScheme.error),
                         ),
                         child: Text(

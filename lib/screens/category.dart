@@ -104,9 +104,8 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                           ? SizedBox.shrink()
                           : ElevatedButton(
                               style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.error),
+                                backgroundColor: WidgetStateProperty.all<Color>(
+                                    Theme.of(context).colorScheme.error),
                               ),
                               child: Text(
                                 'Delete',
@@ -144,7 +143,8 @@ class MyCategoryFormState extends State<MyCategoryForm> {
 class MyCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Category? category = ModalRoute.of(context)!.settings.arguments as Category?;
+    final Category? category =
+        ModalRoute.of(context)!.settings.arguments as Category?;
     return Scaffold(
       appBar: AppBar(
           title: Text(category == null ? 'New category' : category.title!)),

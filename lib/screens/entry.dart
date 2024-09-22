@@ -199,25 +199,6 @@ class MyEntryBottom extends StatelessWidget {
           Consumer<Data>(
             builder: (context, data, child) {
               return IconButton(
-                icon: Icon(Icons.save),
-                onPressed: () => data.saveEntry(entry.id),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.download),
-            onPressed: () => getEntryOriginalContent(entry.id).then((res) {
-              this.content_update(res);
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('Downloaded!')));
-            }).catchError((e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('An error occured!\n$e')));
-            }),
-          ),
-          Consumer<Data>(
-            builder: (context, data, child) {
-              return IconButton(
                 icon: entry.starred!
                     ? Icon(
                         Icons.star,
@@ -235,6 +216,25 @@ class MyEntryBottom extends StatelessWidget {
                     ? Icons.visibility
                     : Icons.visibility_off),
                 onPressed: () => data.toggleRead(entry.id),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.download),
+            onPressed: () => getEntryOriginalContent(entry.id).then((res) {
+              this.content_update(res);
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('Downloaded!')));
+            }).catchError((e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('An error occured!\n$e')));
+            }),
+          ),
+          Consumer<Data>(
+            builder: (context, data, child) {
+              return IconButton(
+                icon: Icon(Icons.save),
+                onPressed: () => data.saveEntry(entry.id),
               );
             },
           ),

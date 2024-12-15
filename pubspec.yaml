@@ -27,7 +27,7 @@ dependencies:
   flutter_html_svg:  ^3.0.0-beta.2
   flutter_html_table:  ^3.0.0-beta.2
   flutter_html_video:  ^3.0.0-beta.2
-  intl: ^0.19.0
+  intl: ^0.20.1
   path_provider: ^2.1.4
   provider: ^6.1.2
   scrollable_positioned_list: ^0.3.8

@@ -12,6 +12,7 @@ description: Another Miniflux client.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.14.0+2726753 # Commit 4b578ac7
+publish_to: none
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -22,11 +23,23 @@ dependencies:
 
   http: ^1.2.2
   flutter_html: ^3.0.0-beta.2
-  flutter_html_audio:  ^3.0.0-beta.2
-  flutter_html_iframe:  ^3.0.0-beta.2
+  flutter_html_audio:
+    git:
+      url: https://github.com/DocMarty84/flutter_html.git
+      ref: master-fix
+      path: packages/flutter_html_audio
+  flutter_html_iframe:
+    git:
+      url: https://github.com/DocMarty84/flutter_html.git
+      ref: master-fix
+      path: packages/flutter_html_iframe
   flutter_html_svg:  ^3.0.0-beta.2
   flutter_html_table:  ^3.0.0-beta.2
-  flutter_html_video:  ^3.0.0-beta.2
+  flutter_html_video:
+    git:
+      url: https://github.com/DocMarty84/flutter_html.git
+      ref: master-fix
+      path: packages/flutter_html_video
   intl: ^0.20.1
   path_provider: ^2.1.4
   provider: ^6.1.2

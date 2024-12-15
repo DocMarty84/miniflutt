@@ -153,18 +153,20 @@ packages:
   flutter_html_audio:
     dependency: "direct main"
     description:
-      name: flutter_html_audio
-      sha256: "94ae28ab56a8d556b7c5409e3eb59ca5215812bda87c67ddfa768812b76f8511"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/flutter_html_audio"
+      ref: master-fix
+      resolved-ref: "27b97c80e6a72a3ced1f82db7ff4d9ac23f5e655"
+      url: "https://github.com/DocMarty84/flutter_html.git"
+    source: git
     version: "3.0.0-beta.2"
   flutter_html_iframe:
     dependency: "direct main"
     description:
-      name: flutter_html_iframe
-      sha256: "979405fafcbd29c930bf96d9f3f0ade9d87dfd567a03180b13424a0e89a5de46"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/flutter_html_iframe"
+      ref: master-fix
+      resolved-ref: "27b97c80e6a72a3ced1f82db7ff4d9ac23f5e655"
+      url: "https://github.com/DocMarty84/flutter_html.git"
+    source: git
     version: "3.0.0-beta.2"
   flutter_html_svg:
     dependency: "direct main"
@@ -185,10 +187,11 @@ packages:
   flutter_html_video:
     dependency: "direct main"
     description:
-      name: flutter_html_video
-      sha256: ecc8bcc614dd8a8286d32ace462481817660f5a7e854c663c1fcb3424fc3be89
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/flutter_html_video"
+      ref: master-fix
+      resolved-ref: "27b97c80e6a72a3ced1f82db7ff4d9ac23f5e655"
+      url: "https://github.com/DocMarty84/flutter_html.git"
+    source: git
     version: "3.0.0-beta.2"
   flutter_layout_grid:
     dependency: transitive

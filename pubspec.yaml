@@ -22,29 +22,17 @@ dependencies:
     sdk: flutter
 
   http: ^1.2.2
-  flutter_html: ^3.0.0-beta.2
-  flutter_html_audio:
-    git:
-      url: https://github.com/DocMarty84/flutter_html.git
-      ref: master-fix
-      path: packages/flutter_html_audio
-  flutter_html_iframe:
-    git:
-      url: https://github.com/DocMarty84/flutter_html.git
-      ref: master-fix
-      path: packages/flutter_html_iframe
-  flutter_html_svg:  ^3.0.0-beta.2
-  flutter_html_table:  ^3.0.0-beta.2
-  flutter_html_video:
-    git:
-      url: https://github.com/DocMarty84/flutter_html.git
-      ref: master-fix
-      path: packages/flutter_html_video
+  flutter_html: ^3.0.0
+  flutter_html_audio: ^3.0.0
+  flutter_html_iframe: ^3.0.0
+  flutter_html_svg: ^3.0.0
+  flutter_html_table: ^3.0.0
+  flutter_html_video: ^3.0.0
   intl: ^0.20.1
   path_provider: ^2.1.4
   provider: ^6.1.2
   scrollable_positioned_list: ^0.3.8
-  share_plus: ^10.0.2
+  share_plus: ^11.0.0
   shared_preferences: ^2.3.2
   url_launcher: ^6.3.0
 

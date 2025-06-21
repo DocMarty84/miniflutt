@@ -11,20 +11,20 @@ dependencies:
   flutter:
     sdk: flutter
 
-  http: ^1.2.2
+  http: ^1.4.0
   flutter_html: ^3.0.0
   flutter_html_audio: ^3.0.0
   flutter_html_iframe: ^3.0.0
   flutter_html_svg: ^3.0.0
   flutter_html_table: ^3.0.0
   flutter_html_video: ^3.0.0
-  intl: ^0.20.1
-  path_provider: ^2.1.4
-  provider: ^6.1.2
+  intl: ^0.20.2
+  path_provider: ^2.1.5
+  provider: ^6.1.5
   scrollable_positioned_list: ^0.3.8
   share_plus: ^11.0.0
-  shared_preferences: ^2.3.2
-  url_launcher: ^6.3.0
+  shared_preferences: ^2.5.3
+  url_launcher: ^6.3.1
 
 
 # The following section is specific to Flutter.

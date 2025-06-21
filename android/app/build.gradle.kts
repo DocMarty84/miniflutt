@@ -38,7 +38,7 @@ android {
         minSdk = 26
         targetSdk = flutter.targetSdkVersion
         versionCode = 1
-        versionName = "1.15.0"
+        versionName = "1.16.0"
     }
 
     signingConfigs {

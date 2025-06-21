@@ -37,7 +37,7 @@ android {
         applicationId = "be.martinelli.miniflutt"
         minSdk = 26
         targetSdk = flutter.targetSdkVersion
-        versionCode = 1
+        versionCode = 2726755
         versionName = "1.16.0"
     }
 

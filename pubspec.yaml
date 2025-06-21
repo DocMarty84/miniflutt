@@ -1,7 +1,7 @@
 name: miniflutt
 description: Another Miniflux client.
 
-version: 1.16.0+2726755 # Commit 47b8557b
+version: 1.16.1+2726756 # Commit 9188f87
 publish_to: none
 
 environment:

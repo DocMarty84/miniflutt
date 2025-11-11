@@ -38,3 +38,9 @@ Limitations:
 
 - Being online is required (no fetching for offline reading).
 - No user management.
+
+## Contact
+
+email: nicolas[dot]martinelli
+
+email domain: pm.me

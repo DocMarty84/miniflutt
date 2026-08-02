@@ -23,6 +23,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    dependenciesInfo {
+        // Only needed in the bundle imported in Google Play
+        includeInApk = false
+        includeInBundle = true
+    }
+
     defaultConfig {
         applicationId = "be.martinelli.miniflutt"
         minSdk = 26

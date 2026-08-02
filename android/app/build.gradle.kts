@@ -27,8 +27,8 @@ android {
         applicationId = "be.martinelli.miniflutt"
         minSdk = 26
         targetSdk = 37
-        versionCode = 2726756
-        versionName = "1.16.1"
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
     }
 
     signingConfigs {

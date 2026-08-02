@@ -148,7 +148,7 @@ class MyFeedFormState extends State<MyFeedForm> {
                 },
               ),
               DropdownButtonFormField(
-                value: _categoryId,
+                initialValue: _categoryId,
                 items: dataAll.categories
                     .map((category) => DropdownMenuItem(
                           child: Text(category!.title!),
@@ -167,7 +167,7 @@ class MyFeedFormState extends State<MyFeedForm> {
                 },
               ),
               DropdownButtonFormField(
-                value: _crawler,
+                initialValue: _crawler,
                 items: [
                   DropdownMenuItem(child: Text('Yes'), value: true),
                   DropdownMenuItem(child: Text('No'), value: false),

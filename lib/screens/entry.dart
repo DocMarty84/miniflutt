@@ -191,10 +191,11 @@ class MyEntryBottom extends StatelessWidget {
               onPressed: () {
                 // The box is necessary for iPads
                 final RenderBox box = context.findRenderObject() as RenderBox;
-                Share.share(entry.url!,
+                SharePlus.instance.share(ShareParams(
+                    text: entry.url!,
                     subject: entry.title,
                     sharePositionOrigin:
-                        box.localToGlobal(Offset.zero) & box.size);
+                        box.localToGlobal(Offset.zero) & box.size));
               }),
           Consumer<Data>(
             builder: (context, data, child) {

@@ -230,7 +230,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                 ),
               ]),
               DropdownButtonFormField(
-                value: settings.entryOnLongPress,
+                initialValue: settings.entryOnLongPress,
                 items: _actionsEntry,
                 decoration: InputDecoration(labelText: 'Long press on article'),
                 onChanged: (dynamic val) async {
@@ -241,7 +241,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                 },
               ),
               DropdownButtonFormField(
-                value: settings.entrySwipeLeft,
+                initialValue: settings.entrySwipeLeft,
                 items: _actionsEntry,
                 decoration: InputDecoration(labelText: 'Swipe left on article'),
                 onChanged: (dynamic val) async {
@@ -252,7 +252,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                 },
               ),
               DropdownButtonFormField(
-                value: settings.entrySwipeRight,
+                initialValue: settings.entrySwipeRight,
                 items: _actionsEntry,
                 decoration:
                     InputDecoration(labelText: 'Swipe right on article'),
@@ -264,7 +264,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                 },
               ),
               DropdownButtonFormField(
-                value: settings.feedOnLongPress,
+                initialValue: settings.feedOnLongPress,
                 items: _actionsFeed,
                 decoration: InputDecoration(labelText: 'Long press on feed'),
                 onChanged: (dynamic val) async {
@@ -282,7 +282,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                 contentPadding: EdgeInsets.all(0.0),
               ),
               DropdownButtonFormField(
-                value: settings.fontSize,
+                initialValue: settings.fontSize,
                 items: _fontSize,
                 decoration: InputDecoration(labelText: 'Font size'),
                 onChanged: (dynamic val) async {

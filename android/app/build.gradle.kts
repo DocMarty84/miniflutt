@@ -3,7 +3,6 @@ import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -16,27 +15,18 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "be.martinelli.miniflutt"
-    compileSdk = flutter.compileSdkVersion
-    // ndkVersion = flutter.ndkVersion
-    ndkVersion = "27.0.12077973"
+    compileSdk = 37
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-    }
-
-    //sourceSets {
-    //    getByName("main").java.srcDirs("src/main/kotlin")
-    //}
 
     defaultConfig {
         applicationId = "be.martinelli.miniflutt"
         minSdk = 26
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 37
         versionCode = 2726756
         versionName = "1.16.1"
     }
@@ -65,6 +55,12 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
+
 flutter {
     source = "../.."
-} 
+}

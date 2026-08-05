@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class EntryStyle extends ChangeNotifier {
   FontSize? fontSize;
+  bool scaleImages;
 
   // The constructor allows refreshing at startup
   EntryStyle() {
@@ -25,5 +26,7 @@ class EntryStyle extends ChangeNotifier {
     } else {
       fontSize = FontSize.medium;
     }
+
+    scaleImages = prefs.getBool("scaleImages") ?? false;
   }
 }

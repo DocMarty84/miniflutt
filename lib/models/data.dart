@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -61,7 +62,10 @@ class Data extends ChangeNotifier {
     return await triggerSaveEntry(entryId);
   }
 
+  static const int _maxPageSize = 1000;
+
   Future<void> refresh({String? search}) async {
+    final Set<int?> entryIds = {};
     final Set<int?> feedIds = {};
     final Set<int?> categoryIds = {};
 
@@ -72,12 +76,11 @@ class Data extends ChangeNotifier {
     // Get preferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final read = (prefs.getBool('read') ?? false);
-    final limit = (prefs.getString('limit') ?? '500');
+    final maxEntries = int.tryParse(prefs.getString('limit') ?? '500') ?? 500;
     final asc = (prefs.getBool('asc') ?? false);
     final starred = (prefs.getBool('starred') ?? false);
     Map<String, String> params = {
       'status': read ? '' : 'unread',
-      'limit': limit,
       'order': 'published_at',
       'direction': asc ? 'asc' : 'desc',
     };
@@ -89,30 +92,52 @@ class Data extends ChangeNotifier {
       params['search'] = search;
     }
 
-    Map<String, dynamic>? jsonEntries = {};
-    try {
-      jsonEntries = json.decode(await getEntries(params));
-    } catch (e) {
-      jsonEntries = {};
-    }
-
     // Clear the existing data
     entries.clear();
     feeds.clear();
     categories.clear();
 
-    // Fill in entries, feeds and categories
-    for (Map<String, dynamic> elem in (jsonEntries!['entries'] ?? [])) {
-      final Entry entry = Entry.fromJson(elem);
-      entries.add(entry);
-      if (!feedIds.contains(entry.feedId)) {
-        feeds.add(entry.feed);
-        feedIds.add(entry.feedId);
-        if (!categoryIds.contains(entry.feed!.category!.id)) {
-          categories.add(entry.feed!.category);
-          categoryIds.add(entry.feed!.category!.id);
+    // Fetch page by page until the total reported by the server is reached.
+    int offset = 0;
+    int total = maxEntries > 0 ? maxEntries : _maxPageSize;
+    while (offset < total) {
+      params['limit'] = min(_maxPageSize, total - offset).toString();
+      params['offset'] = offset.toString();
+
+      Map<String, dynamic>? jsonEntries = {};
+      try {
+        jsonEntries = json.decode(await getEntries(params));
+      } catch (e) {
+        break;
+      }
+
+      final List pageEntries = (jsonEntries!['entries'] ?? []);
+      if (pageEntries.isEmpty) {
+        break;
+      }
+
+      // Fill in entries, feeds and categories
+      for (Map<String, dynamic> elem in pageEntries) {
+        final Entry entry = Entry.fromJson(elem);
+        if (entryIds.contains(entry.id)) {
+          continue;
+        }
+        entries.add(entry);
+        entryIds.add(entry.id);
+        if (!feedIds.contains(entry.feedId)) {
+          feeds.add(entry.feed);
+          feedIds.add(entry.feedId);
+          if (!categoryIds.contains(entry.feed!.category!.id)) {
+            categories.add(entry.feed!.category);
+            categoryIds.add(entry.feed!.category!.id);
+          }
         }
       }
+
+      // Advance by the rows the server returned.
+      offset += pageEntries.length;
+      final serverTotal = (jsonEntries['total'] as int?) ?? 0;
+      total = maxEntries > 0 ? min(maxEntries, serverTotal) : serverTotal;
     }
 
     // Sort feeds and categories

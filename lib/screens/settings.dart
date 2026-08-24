@@ -248,7 +248,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   prefs.setString('entrySwipeLeft', val);
-                  setState(() => settings.entrySwipeRight = val);
+                  setState(() => settings.entrySwipeLeft = val);
                 },
               ),
               DropdownButtonFormField(
@@ -295,6 +295,23 @@ class MySettingsFormState extends State<MySettingsForm> {
                   setState(() => settings.fontSize = val);
                 },
               ),
+              Row(children: <Widget>[
+                Expanded(
+                    child: Text('Scale images to screen',
+                        textAlign: TextAlign.left)),
+                Switch(
+                  value: settings.scaleImages,
+                  onChanged: (val) async {
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setBool("scaleImages", val);
+                    final entryStyle =
+                        Provider.of<EntryStyle>(context, listen: false);
+                    await entryStyle.refresh();
+                    setState(() => settings.scaleImages = val);
+                  },
+                ),
+              ]),
               ListTile(
                 title: Text(
                   'Categories and feeds',

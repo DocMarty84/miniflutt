@@ -31,6 +31,7 @@ class Settings extends ChangeNotifier {
     entrySwipeRight = (prefs.getString('entrySwipeRight') ?? 'no');
     feedOnLongPress = (prefs.getString('feedOnLongPress') ?? 'no');
     fontSize = (prefs.getString('fontSize') ?? 'medium');
+    scaleImages = (prefs.getBool('scaleImages') ?? false);
     isLoad = false;
     notifyListeners();
   }

@@ -46,6 +46,7 @@ class MyHomeMarkRead extends StatelessWidget {
             .toList();
         final snackBar = SnackBar(
           content: Text('${entryIds.length} item(s) mark read'),
+          persist: false,
           action: SnackBarAction(
             label: 'Undo',
             onPressed: () {

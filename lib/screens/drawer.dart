@@ -83,6 +83,7 @@ class MyDrawer extends StatelessWidget {
       List<int?> entryIds, Data data, BuildContext context) async {
     final snackBar = SnackBar(
       content: Text('${entryIds.length} item(s) mark read'),
+      persist: false,
       action: SnackBarAction(
         label: 'Undo',
         onPressed: () {

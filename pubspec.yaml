@@ -27,6 +27,10 @@ dependencies:
   shared_preferences: ^2.5.5
   url_launcher: ^6.3.2
 
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
 
 # The following section is specific to Flutter.
 flutter:

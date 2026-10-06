@@ -14,6 +14,10 @@ class Data extends ChangeNotifier {
   final List<Category?> categories = [];
   bool isRefresh = false;
 
+  // Identifies the latest refresh. An older refresh still waiting for the
+  // server stops instead of overwriting the data.
+  int _refreshId = 0;
+
   // The constructor allows refreshing at startup
   Data() {
     refresh();
@@ -65,6 +69,7 @@ class Data extends ChangeNotifier {
   static const int _maxPageSize = 1000;
 
   Future<void> refresh({String? search}) async {
+    final int refreshId = ++_refreshId;
     final Set<int?> entryIds = {};
     final Set<int?> feedIds = {};
     final Set<int?> categoryIds = {};
@@ -75,6 +80,9 @@ class Data extends ChangeNotifier {
 
     // Get preferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (refreshId != _refreshId) {
+      return;
+    }
     final read = (prefs.getBool('read') ?? false);
     final maxEntries = int.tryParse(prefs.getString('limit') ?? '500') ?? 500;
     final asc = (prefs.getBool('asc') ?? false);
@@ -108,10 +116,16 @@ class Data extends ChangeNotifier {
       try {
         jsonEntries = json.decode(await getEntries(params));
       } catch (e) {
+        jsonEntries = null;
+      }
+      if (refreshId != _refreshId) {
+        return;
+      }
+      if (jsonEntries == null) {
         break;
       }
 
-      final List pageEntries = (jsonEntries!['entries'] ?? []);
+      final List pageEntries = (jsonEntries['entries'] ?? []);
       if (pageEntries.isEmpty) {
         break;
       }

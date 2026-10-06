@@ -5,6 +5,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'drawer.dart';
+import '../common/local_network.dart';
 import '../models/data.dart';
 import '../models/entry.dart';
 import '../models/nav.dart';
@@ -293,7 +294,32 @@ class MyHomeEntryList extends StatelessWidget {
   }
 }
 
-class MyHome extends StatelessWidget {
+class MyHome extends StatefulWidget {
+  @override
+  MyHomeState createState() {
+    return MyHomeState();
+  }
+}
+
+class MyHomeState extends State<MyHome> {
+  @override
+  void initState() {
+    super.initState();
+    _checkLocalNetwork();
+  }
+
+  // Ask for the permission if the server is on the local network
+  void _checkLocalNetwork() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String url = (prefs.getString('url') ?? '');
+    if (url != '' &&
+        mounted &&
+        await askLocalNetworkOnStartup(context, url) &&
+        mounted) {
+      Provider.of<Data>(context, listen: false).refresh();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

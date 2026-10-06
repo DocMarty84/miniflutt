@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/miniflux.dart';
+import '../common/local_network.dart';
 import '../models/entry_style.dart';
 import '../models/data_all.dart';
 import '../models/settings.dart';
@@ -176,9 +177,29 @@ class MySettingsFormState extends State<MySettingsForm> {
                           final FormState form = _formKey.currentState!;
                           if (form.validate()) {
                             form.save();
+                            await resetLocalNetworkNeverAsk();
+                            // Whether the failure happened before reaching
+                            // the server (e.g. local network access denied)
+                            bool unreachable = false;
                             try {
-                              final res = await _connectCheck(
-                                  settings.url!, settings.apiKey!);
+                              http.Response res;
+                              try {
+                                res = await _connectCheck(
+                                    settings.url!, settings.apiKey!);
+                              } catch (e) {
+                                unreachable = true;
+                                // Retry once if the local network permission
+                                // was missing and has just been granted
+                                if (!await needsLocalNetworkPermission(
+                                        settings.url!) ||
+                                    !await ensureLocalNetworkAccess(
+                                        context, settings.url!)) {
+                                  rethrow;
+                                }
+                                res = await _connectCheck(
+                                    settings.url!, settings.apiKey!);
+                                unreachable = false;
+                              }
                               if (res.statusCode == 200) {
                                 settings.save(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -190,9 +211,25 @@ class MySettingsFormState extends State<MySettingsForm> {
                                     res, '/v1/me', <String, dynamic>{}));
                               }
                             } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text('Failed to connect!')));
+                              if (unreachable &&
+                                  await needsLocalNetworkPermission(
+                                      settings.url!)) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                  content: Text('Failed to connect! '
+                                      'Allow \'Nearby devices\' to reach '
+                                      'servers on your local network.'),
+                                  persist: false,
+                                  action: SnackBarAction(
+                                    label: 'Settings',
+                                    onPressed: openAppSettings,
+                                  ),
+                                ));
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text('Failed to connect!')));
+                              }
                             }
                           }
                         },

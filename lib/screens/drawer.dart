@@ -14,65 +14,67 @@ class MyDrawerHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Sized to its content, so the rows fit any status bar height or font size
     return Container(
-      height: 180.0,
-      child: DrawerHeader(
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              title: Text('Settings',
-                  style: TextStyle(
-                      color:
-                          Theme.of(context).primaryTextTheme.titleLarge!.color)),
-              trailing: Icon(
-                Icons.settings,
-                color: Theme.of(context).primaryTextTheme.titleLarge!.color,
-              ),
-              onTap: () {
-                final settings = Provider.of<Settings>(context, listen: false);
-                settings.load();
-                Navigator.pushNamed(context, '/settings');
-              },
+      margin: EdgeInsets.only(bottom: 8.0),
+      padding: EdgeInsets.fromLTRB(
+          16.0, MediaQuery.paddingOf(context).top + 16.0, 16.0, 8.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        border: Border(bottom: Divider.createBorderSide(context)),
+      ),
+      child: Column(
+        children: <Widget>[
+          ListTile(
+            title: Text('Settings',
+                style: TextStyle(
+                    color:
+                        Theme.of(context).primaryTextTheme.titleLarge!.color)),
+            trailing: Icon(
+              Icons.settings,
+              color: Theme.of(context).primaryTextTheme.titleLarge!.color,
             ),
-            ListTile(
-              title: Text('Refresh',
-                  style: TextStyle(
-                      color:
-                          Theme.of(context).primaryTextTheme.titleLarge!.color)),
-              trailing: (!data.isRefresh
-                  ? Icon(
-                      Icons.refresh,
-                      color:
-                          Theme.of(context).primaryTextTheme.titleLarge!.color,
-                    )
-                  : Icon(
-                      Icons.file_download,
-                      color:
-                          Theme.of(context).primaryTextTheme.titleLarge!.color,
-                    )),
-              onTap: () {
-                data.refresh();
-              },
-              onLongPress: () async {
-                final snackBar = SnackBar(
-                  content: Text('All feeds are updated in the background. '
-                      'Refresh in a few seconds.'),
-                );
-                try {
-                  await refreshAllFeeds();
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('An error occured!\n$e')));
-                }
-              },
-            ),
-          ],
-        ),
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-        ),
+            onTap: () {
+              final settings = Provider.of<Settings>(context, listen: false);
+              settings.load();
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+          ListTile(
+            title: Text('Refresh',
+                style: TextStyle(
+                    color:
+                        Theme.of(context).primaryTextTheme.titleLarge!.color)),
+            trailing: (!data.isRefresh
+                ? Icon(
+                    Icons.refresh,
+                    color:
+                        Theme.of(context).primaryTextTheme.titleLarge!.color,
+                  )
+                : Icon(
+                    Icons.file_download,
+                    color:
+                        Theme.of(context).primaryTextTheme.titleLarge!.color,
+                  )),
+            onTap: () {
+              data.refresh();
+            },
+            onLongPress: () async {
+              final snackBar = SnackBar(
+                content: Text('All feeds are updated in the background. '
+                    'Refresh in a few seconds.'),
+              );
+              try {
+                await refreshAllFeeds();
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('An error occured!\n$e')));
+              }
+            },
+          ),
+        ],
       ),
     );
   }

@@ -62,6 +62,9 @@ class MyFeedFormState extends State<MyFeedForm> {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0),
         child: SingleChildScrollView(
+          // Keep the last fields above the navigation bar
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.paddingOf(context).bottom),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

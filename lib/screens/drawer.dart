@@ -192,8 +192,10 @@ class MyDrawer extends StatelessWidget {
       child: Consumer<Data>(
         builder: (context, data, child) {
           return ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
+            // The header handles the status bar. Keep the last categories
+            // above the navigation bar.
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.paddingOf(context).bottom),
             children: <Widget>[
                   MyDrawerHeader(data: data),
                 ] +

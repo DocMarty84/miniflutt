@@ -195,7 +195,9 @@ class MySettingsFormState extends State<MySettingsForm> {
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                      content: Text('Failed to connect!')));
+                                      content: Text('Failed to connect!\n'
+                                          'Local server? Allow \'Nearby '
+                                          'devices\' in Android settings.')));
                             }
                           }
                         },

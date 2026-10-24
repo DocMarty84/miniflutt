@@ -18,8 +18,12 @@ final Map<int, String> statusCodes = {
   500: 'Internal server error',
 };
 
-String makeError(String msg, http.Response res, String endpoint,
-    Map<String, dynamic> params) {
+String makeError(
+  String msg,
+  http.Response res,
+  String endpoint,
+  Map<String, dynamic> params,
+) {
   final String? error = statusCodes.containsKey(res.statusCode)
       ? statusCodes[res.statusCode]
       : res.reasonPhrase;
@@ -45,33 +49,55 @@ Future<bool> _delete(String endpoint) async {
   final apiKey = account.apiKey;
 
   final query = new Uri.http('', endpoint).toString().replaceFirst('http:', '');
-  final response = await http
-      .delete(Uri.parse(url + query), headers: {'X-Auth-Token': apiKey});
+  final response = await http.delete(
+    Uri.parse(url + query),
+    headers: {'X-Auth-Token': apiKey},
+  );
 
   if (response.statusCode <= 204) {
     return true;
   } else {
-    throw Exception(makeError('Failed to delete data.', response,
-        url + endpoint, <String, dynamic>{}));
+    throw Exception(
+      makeError(
+        'Failed to delete data.',
+        response,
+        url + endpoint,
+        <String, dynamic>{},
+      ),
+    );
   }
 }
 
-Future<String> _get(String endpoint, Map<String, String> params,
-    {Account? account}) async {
+Future<String> _get(
+  String endpoint,
+  Map<String, String> params, {
+  Account? account,
+}) async {
   account ??= await _activeAccount();
   final url = account.url;
   final apiKey = account.apiKey;
 
-  final query =
-      new Uri.http('', endpoint, params).toString().replaceFirst('http:', '');
-  final response =
-      await http.get(Uri.parse(url + query), headers: {'X-Auth-Token': apiKey});
+  final query = new Uri.http(
+    '',
+    endpoint,
+    params,
+  ).toString().replaceFirst('http:', '');
+  final response = await http.get(
+    Uri.parse(url + query),
+    headers: {'X-Auth-Token': apiKey},
+  );
 
   if (response.statusCode == 200) {
     return utf8.decode(response.bodyBytes);
   } else {
-    throw Exception(makeError(
-        'Failed to load URL.', response, url + endpoint, <String, dynamic>{}));
+    throw Exception(
+      makeError(
+        'Failed to load URL.',
+        response,
+        url + endpoint,
+        <String, dynamic>{},
+      ),
+    );
   }
 }
 
@@ -81,15 +107,18 @@ Future<bool> _post(String endpoint, Map<String, dynamic> body) async {
   final apiKey = account.apiKey;
 
   String bodyStr = jsonEncode(body);
-  final response = await http.post(Uri.parse(url + endpoint),
-      body: bodyStr,
-      headers: {'X-Auth-Token': apiKey, 'Content-Type': 'application/json'});
+  final response = await http.post(
+    Uri.parse(url + endpoint),
+    body: bodyStr,
+    headers: {'X-Auth-Token': apiKey, 'Content-Type': 'application/json'},
+  );
 
   if (response.statusCode <= 204) {
     return true;
   } else {
     throw Exception(
-        makeError('Failed to update data.', response, url + endpoint, body));
+      makeError('Failed to update data.', response, url + endpoint, body),
+    );
   }
 }
 
@@ -99,15 +128,18 @@ Future<bool> _put(String endpoint, Map<String, dynamic> body) async {
   final apiKey = account.apiKey;
 
   String bodyStr = jsonEncode(body);
-  final response = await http.put(Uri.parse(url + endpoint),
-      body: bodyStr,
-      headers: {'X-Auth-Token': apiKey, 'Content-Type': 'application/json'});
+  final response = await http.put(
+    Uri.parse(url + endpoint),
+    body: bodyStr,
+    headers: {'X-Auth-Token': apiKey, 'Content-Type': 'application/json'},
+  );
 
   if (response.statusCode <= 204) {
     return true;
   } else {
     throw Exception(
-        makeError('Failed to update data.', response, url + endpoint, body));
+      makeError('Failed to update data.', response, url + endpoint, body),
+    );
   }
 }
 
@@ -137,10 +169,7 @@ Future<String> getEntries(Map<String, String> params) async {
 }
 
 Future<bool> updateEntries(List<int?> entryIds, String status) async {
-  Map<String, dynamic> params = {
-    "entry_ids": entryIds,
-    "status": status,
-  };
+  Map<String, dynamic> params = {"entry_ids": entryIds, "status": status};
   return await _put('/v1/entries', params);
 }
 
@@ -162,7 +191,9 @@ Future<bool> createCategory(Map<String, dynamic> params) async {
 }
 
 Future<bool> updateCategory(
-    int? categoryId, Map<String, dynamic> params) async {
+  int? categoryId,
+  Map<String, dynamic> params,
+) async {
   return await _put('/v1/categories/$categoryId', params);
 }
 
@@ -187,12 +218,10 @@ Future<bool> connectCheck() async {
 
 Future<String> getEntryOriginalContent(int? entryId) async {
   Map<String, dynamic> content = json.decode(
-    await _get('/v1/entries/$entryId/fetch-content', <String, String>{})
+    await _get('/v1/entries/$entryId/fetch-content', <String, String>{}),
   );
   String new_content = content['content'];
-    Map<String, dynamic> params = {
-      "content": new_content,
-    };
+  Map<String, dynamic> params = {"content": new_content};
   await _put('/v1/entries/$entryId', params);
   return new_content;
 }

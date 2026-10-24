@@ -7,7 +7,7 @@ import '../models/nav.dart';
 
 class MySearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   MySearchAppBar({Key? key, required this.data, required this.nav})
-      : super(key: key);
+    : super(key: key);
   final Data data;
   final Nav nav;
 
@@ -30,9 +30,7 @@ class MySearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: color),
           ),
-          border: UnderlineInputBorder(
-            borderSide: BorderSide(color: color),
-          ),
+          border: UnderlineInputBorder(borderSide: BorderSide(color: color)),
         ),
         onSubmitted: (value) async {
           data.refresh(search: value);
@@ -53,7 +51,7 @@ class MySearchAppBar extends StatelessWidget implements PreferredSizeWidget {
 // Create a Form widget.
 class MySearchHistory extends StatefulWidget {
   MySearchHistory({Key? key, required this.data, required this.nav})
-      : super(key: key);
+    : super(key: key);
   final Data data;
   final Nav nav;
 
@@ -100,7 +98,8 @@ class MySearchHistoryState extends State<MySearchHistory> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: <Widget>[
+      children:
+          <Widget>[
             ListTile(
               title: Text('Clear history'),
               leading: Icon(Icons.delete),

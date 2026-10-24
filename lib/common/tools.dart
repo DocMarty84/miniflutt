@@ -6,10 +6,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 void launchURL(String url) async {
   if (await canLaunchUrlString(url)) {
-    await launchUrlString(
-      url,
-      mode: LaunchMode.externalApplication,
-    );
+    await launchUrlString(url, mode: LaunchMode.externalApplication);
   } else {
     throw Exception('Could not launch $url');
   }

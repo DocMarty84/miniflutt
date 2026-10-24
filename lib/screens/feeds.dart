@@ -20,11 +20,7 @@ class MyFeedsList extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           onTap: () {
-            Navigator.pushNamed(
-              context,
-              '/category',
-              arguments: category,
-            );
+            Navigator.pushNamed(context, '/category', arguments: category);
           },
         ),
       );
@@ -33,17 +29,14 @@ class MyFeedsList extends StatelessWidget {
       List<Widget> feedList = dataAll.feeds
           .where((feed) => feed.category!.id == category.id)
           .map<Widget>((feed) {
-        return ListTile(
-          title: Text('    ${feed.title}'),
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              '/feed',
-              arguments: feed,
+            return ListTile(
+              title: Text('    ${feed.title}'),
+              onTap: () {
+                Navigator.pushNamed(context, '/feed', arguments: feed);
+              },
             );
-          },
-        );
-      }).toList();
+          })
+          .toList();
 
       categoryList += feedList;
     }
@@ -51,9 +44,7 @@ class MyFeedsList extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
-    return ListView(
-      children: _buildFeeds(context),
-    );
+    return ListView(children: _buildFeeds(context));
   }
 }
 

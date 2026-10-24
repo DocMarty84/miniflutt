@@ -46,7 +46,8 @@ class MyCategoryFormState extends State<MyCategoryForm> {
         child: SingleChildScrollView(
           // Keep the last fields above the navigation bar
           padding: EdgeInsets.only(
-              bottom: MediaQuery.paddingOf(context).bottom),
+            bottom: MediaQuery.paddingOf(context).bottom,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -74,49 +75,50 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                           final FormState form = _formKey.currentState!;
                           if (form.validate()) {
                             form.save();
-                            Map<String, dynamic> params = {
-                              'title': _title,
-                            };
+                            Map<String, dynamic> params = {'title': _title};
                             try {
                               if (category != null) {
                                 await updateCategory(category!.id, params);
                                 dataAll.refresh();
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Changes saved!')));
+                                  SnackBar(content: Text('Changes saved!')),
+                                );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Saving...')));
+                                  SnackBar(content: Text('Saving...')),
+                                );
                                 await createCategory(params);
                                 dataAll.refresh();
                                 Navigator.pop(context);
                               }
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text('An error occured!\n$e')));
+                                SnackBar(
+                                  content: Text('An error occured!\n$e'),
+                                ),
+                              );
                             }
                           }
                         },
                       ),
                       category == null
                           ? SizedBox.shrink()
-                          : SizedBox(
-                              width: 10,
-                            ),
+                          : SizedBox(width: 10),
                       category == null
                           ? SizedBox.shrink()
                           : ElevatedButton(
                               style: ButtonStyle(
                                 backgroundColor: WidgetStateProperty.all<Color>(
-                                    Theme.of(context).colorScheme.error),
+                                  Theme.of(context).colorScheme.error,
+                                ),
                               ),
                               child: Text(
                                 'Delete',
                                 style: TextStyle(
-                                    color: Theme.of(context)
-                                        .primaryTextTheme
-                                        .titleLarge!
-                                        .color),
+                                  color: Theme.of(
+                                    context,
+                                  ).primaryTextTheme.titleLarge!.color,
+                                ),
                               ),
                               onPressed: () async {
                                 try {
@@ -125,9 +127,10 @@ class MyCategoryFormState extends State<MyCategoryForm> {
                                   Navigator.pop(context);
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text('An error occured!\n$e')));
+                                    SnackBar(
+                                      content: Text('An error occured!\n$e'),
+                                    ),
+                                  );
                                 }
                               },
                             ),
@@ -150,7 +153,8 @@ class MyCategory extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as Category?;
     return Scaffold(
       appBar: AppBar(
-          title: Text(category == null ? 'New category' : category.title!)),
+        title: Text(category == null ? 'New category' : category.title!),
+      ),
       body: MyCategoryForm(category: category),
     );
   }

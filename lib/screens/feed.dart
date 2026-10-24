@@ -64,7 +64,8 @@ class MyFeedFormState extends State<MyFeedForm> {
         child: SingleChildScrollView(
           // Keep the last fields above the navigation bar
           padding: EdgeInsets.only(
-              bottom: MediaQuery.paddingOf(context).bottom),
+            bottom: MediaQuery.paddingOf(context).bottom,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -105,9 +106,9 @@ class MyFeedFormState extends State<MyFeedForm> {
                 validator: (val) {
                   if (val!.isEmpty) {
                     return 'The feed URL is mandatory';
-                  } else if (!val
-                      .toLowerCase()
-                      .startsWith(new RegExp(r'^https?://'))) {
+                  } else if (!val.toLowerCase().startsWith(
+                    new RegExp(r'^https?://'),
+                  )) {
                     return 'The URL must start with \'http(s)://\'';
                   }
                   return null;
@@ -130,8 +131,9 @@ class MyFeedFormState extends State<MyFeedForm> {
               ),
               TextFormField(
                 initialValue: _userAgent,
-                decoration:
-                    InputDecoration(labelText: 'Override Default User Agent'),
+                decoration: InputDecoration(
+                  labelText: 'Override Default User Agent',
+                ),
                 onSaved: (val) {
                   setState(() => _userAgent = val);
                 },
@@ -153,10 +155,12 @@ class MyFeedFormState extends State<MyFeedForm> {
               DropdownButtonFormField(
                 initialValue: _categoryId,
                 items: dataAll.categories
-                    .map((category) => DropdownMenuItem(
-                          child: Text(category!.title!),
-                          value: category.id,
-                        ))
+                    .map(
+                      (category) => DropdownMenuItem(
+                        child: Text(category!.title!),
+                        value: category.id,
+                      ),
+                    )
                     .toList(),
                 decoration: InputDecoration(labelText: 'Category *'),
                 validator: (dynamic val) {
@@ -175,8 +179,9 @@ class MyFeedFormState extends State<MyFeedForm> {
                   DropdownMenuItem(child: Text('Yes'), value: true),
                   DropdownMenuItem(child: Text('No'), value: false),
                 ],
-                decoration:
-                    InputDecoration(labelText: 'Fetch original content'),
+                decoration: InputDecoration(
+                  labelText: 'Fetch original content',
+                ),
                 onChanged: (dynamic value) {
                   setState(() => _crawler = value);
                 },
@@ -208,30 +213,32 @@ class MyFeedFormState extends State<MyFeedForm> {
                               await updateFeed(feed.id, params);
                               dataAll.refresh();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Changes saved!')));
+                                SnackBar(content: Text('Changes saved!')),
+                              );
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text('An error occured!\n$e')));
+                                SnackBar(
+                                  content: Text('An error occured!\n$e'),
+                                ),
+                              );
                             }
                           }
                         },
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
+                      SizedBox(width: 10),
                       new ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
-                              Theme.of(context).colorScheme.error),
+                            Theme.of(context).colorScheme.error,
+                          ),
                         ),
                         child: Text(
                           'Delete',
                           style: TextStyle(
-                              color: Theme.of(context)
-                                  .primaryTextTheme
-                                  .titleLarge!
-                                  .color),
+                            color: Theme.of(
+                              context,
+                            ).primaryTextTheme.titleLarge!.color,
+                          ),
                         ),
                         onPressed: () async {
                           try {
@@ -239,8 +246,9 @@ class MyFeedFormState extends State<MyFeedForm> {
                             dataAll.refresh();
                             Navigator.pop(context);
                           } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text('An error occured!\n$e')));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('An error occured!\n$e')),
+                            );
                           }
                         },
                       ),

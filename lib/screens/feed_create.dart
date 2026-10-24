@@ -33,7 +33,8 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
         child: SingleChildScrollView(
           // Keep the last fields above the navigation bar
           padding: EdgeInsets.only(
-              bottom: MediaQuery.paddingOf(context).bottom),
+            bottom: MediaQuery.paddingOf(context).bottom,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -46,9 +47,9 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
                 validator: (val) {
                   if (val!.isEmpty) {
                     return 'The feed URL is mandatory';
-                  } else if (!val
-                      .toLowerCase()
-                      .startsWith(new RegExp(r'^https?://'))) {
+                  } else if (!val.toLowerCase().startsWith(
+                    new RegExp(r'^https?://'),
+                  )) {
                     return 'The URL must start with \'http(s)://\'';
                   }
                   return null;
@@ -57,10 +58,12 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
               DropdownButtonFormField(
                 initialValue: _categoryId,
                 items: dataAll.categories
-                    .map((category) => DropdownMenuItem(
-                          child: Text(category!.title!),
-                          value: category.id,
-                        ))
+                    .map(
+                      (category) => DropdownMenuItem(
+                        child: Text(category!.title!),
+                        value: category.id,
+                      ),
+                    )
                     .toList(),
                 decoration: InputDecoration(labelText: 'Category *'),
                 validator: (dynamic val) {
@@ -87,8 +90,9 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
                 },
               ),
               TextFormField(
-                decoration:
-                    InputDecoration(labelText: 'Override Default User Agent'),
+                decoration: InputDecoration(
+                  labelText: 'Override Default User Agent',
+                ),
                 onSaved: (val) {
                   setState(() => _userAgent = val);
                 },
@@ -111,8 +115,9 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
                   DropdownMenuItem(child: Text('Yes'), value: true),
                   DropdownMenuItem(child: Text('No'), value: false),
                 ],
-                decoration:
-                    InputDecoration(labelText: 'Fetch original content'),
+                decoration: InputDecoration(
+                  labelText: 'Fetch original content',
+                ),
                 onChanged: (dynamic value) {
                   setState(() => _crawler = value);
                 },
@@ -140,14 +145,17 @@ class MyFeedFormCreateState extends State<MyFeedFormCreate> {
                             };
                             try {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Saving...')));
+                                SnackBar(content: Text('Saving...')),
+                              );
                               await createFeed(params);
                               dataAll.refresh();
                               Navigator.pop(context);
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text('An error occured!\n$e')));
+                                SnackBar(
+                                  content: Text('An error occured!\n$e'),
+                                ),
+                              );
                             }
                           }
                         },

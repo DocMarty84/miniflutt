@@ -17,13 +17,16 @@ List<Entry?> filterEntries(Data data, Nav nav) {
         .where((i) => i!.feed!.category!.id == nav.currentCategoryId)
         .toList();
   } else if (nav.currentFeedId != null) {
-    entries =
-        data.entries.where((i) => i!.feedId == nav.currentFeedId).toList();
+    entries = data.entries
+        .where((i) => i!.feedId == nav.currentFeedId)
+        .toList();
   } else {
     entries = data.entries
-        .where((i) =>
-            i!.feed!.hideGlobally == false &&
-            i.feed!.category!.hideGlobally == false)
+        .where(
+          (i) =>
+              i!.feed!.hideGlobally == false &&
+              i.feed!.category!.hideGlobally == false,
+        )
         .toList();
   }
   return entries;
@@ -58,8 +61,9 @@ class MyHomeMarkRead extends StatelessWidget {
           await data.read(entryIds);
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } catch (e) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
         }
       },
     );
@@ -121,27 +125,21 @@ class MyHomePopupMenuState extends State<MyHomePopupMenu> {
         List<PopupMenuEntry<String>> list = [];
         list.add(
           CheckedPopupMenuItem(
-            child: Text(
-              'Get read articles',
-            ),
+            child: Text('Get read articles'),
             value: 'read',
             checked: _read,
           ),
         );
         list.add(
           CheckedPopupMenuItem(
-            child: Text(
-              'Oldest first',
-            ),
+            child: Text('Oldest first'),
             value: 'asc',
             checked: _asc,
           ),
         );
         list.add(
           CheckedPopupMenuItem(
-            child: Text(
-              'Favorites',
-            ),
+            child: Text('Favorites'),
             value: 'star',
             checked: _starred,
           ),
@@ -154,7 +152,7 @@ class MyHomePopupMenuState extends State<MyHomePopupMenu> {
 
 class MyHomeEntryList extends StatelessWidget {
   MyHomeEntryList({Key? key, required this.data, required this.nav})
-      : super(key: key);
+    : super(key: key);
   final Data data;
   final Nav nav;
   final ItemPositionsListener itemPositionsListener =
@@ -184,7 +182,7 @@ class MyHomeEntryList extends StatelessWidget {
   void _entryAction(BuildContext context, String? action, Entry entry) async {
     if (action == 'read') {
       final List<int?> entryIds = [entry.id];
-      entry.status == 'unread'? data.read(entryIds) : data.unread(entryIds);
+      entry.status == 'unread' ? data.read(entryIds) : data.unread(entryIds);
     } else if (action == 'favorite') {
       data.toggleStar(entry.id);
     } else if (action == 'save') {
@@ -194,8 +192,9 @@ class MyHomeEntryList extends StatelessWidget {
         await data.saveEntry(entry.id);
         messenger.showSnackBar(SnackBar(content: Text('Article saved')));
       } catch (e) {
-        messenger
-            .showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
+        messenger.showSnackBar(
+          SnackBar(content: Text('An error occured!\n$e')),
+        );
       }
     }
   }
@@ -241,12 +240,16 @@ class MyHomeEntryList extends StatelessWidget {
               subtitle: Row(
                 children: <Widget>[
                   Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        if (nav.currentFeedId == null) Text(entry.feed!.title!),
-                        Row(children: <Widget>[
-                          Text(DateFormat('yyy-MM-dd HH:mm')
-                              .format(DateTime.parse(entry.publishedAt!))),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      if (nav.currentFeedId == null) Text(entry.feed!.title!),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            DateFormat(
+                              'yyy-MM-dd HH:mm',
+                            ).format(DateTime.parse(entry.publishedAt!)),
+                          ),
                           Text(
                             ' · ${entry.readingTime} min read',
                             style: TextStyle(
@@ -254,22 +257,16 @@ class MyHomeEntryList extends StatelessWidget {
                               fontStyle: FontStyle.italic,
                             ),
                           ),
-                        ]),
-                      ]),
+                        ],
+                      ),
+                    ],
+                  ),
                   if (entry.starred!) Spacer(),
-                  if (entry.starred!)
-                    Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
+                  if (entry.starred!) Icon(Icons.star, color: Colors.amber),
                 ],
               ),
               onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  '/entry',
-                  arguments: entry,
-                );
+                Navigator.pushNamed(context, '/entry', arguments: entry);
                 final List<int?> entryIds = [entry.id];
                 data.read(entryIds);
               },
@@ -311,9 +308,7 @@ class MyHome extends StatelessWidget {
           },
         ),
         // action button
-        actions: <Widget>[
-          MyHomePopupMenu(),
-        ],
+        actions: <Widget>[MyHomePopupMenu()],
       ),
       body: Center(
         child: Consumer2<Data, Nav>(

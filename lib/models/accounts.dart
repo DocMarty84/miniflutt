@@ -79,8 +79,10 @@ class Accounts extends ChangeNotifier {
 
   Future<void> _write() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('accounts',
-        json.encode(accounts.map((account) => account.toJson()).toList()));
+    await prefs.setString(
+      'accounts',
+      json.encode(accounts.map((account) => account.toJson()).toList()),
+    );
     if (activeId == null) {
       await prefs.remove('activeAccount');
     } else {
@@ -89,8 +91,9 @@ class Accounts extends ChangeNotifier {
   }
 
   static List<Account> _read(SharedPreferences prefs) {
-    final List<dynamic> jsonAccounts =
-        json.decode(prefs.getString('accounts') ?? '[]');
+    final List<dynamic> jsonAccounts = json.decode(
+      prefs.getString('accounts') ?? '[]',
+    );
     return jsonAccounts.map((elem) => Account.fromJson(elem)).toList();
   }
 
@@ -119,8 +122,10 @@ class Accounts extends ChangeNotifier {
       limit: (prefs.getString('limit') ?? '500'),
     );
     final List<Account> accounts = _read(prefs)..add(account);
-    await prefs.setString('accounts',
-        json.encode(accounts.map((account) => account.toJson()).toList()));
+    await prefs.setString(
+      'accounts',
+      json.encode(accounts.map((account) => account.toJson()).toList()),
+    );
     await prefs.setString('activeAccount', account.id);
     await prefs.remove('url');
     await prefs.remove('apiKey');

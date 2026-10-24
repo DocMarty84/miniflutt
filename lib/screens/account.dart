@@ -51,7 +51,8 @@ class MyAccountFormState extends State<MyAccountForm> {
         child: SingleChildScrollView(
           // Keep the last fields above the navigation bar
           padding: EdgeInsets.only(
-              bottom: MediaQuery.paddingOf(context).bottom),
+            bottom: MediaQuery.paddingOf(context).bottom,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -65,9 +66,9 @@ class MyAccountFormState extends State<MyAccountForm> {
                 validator: (val) {
                   if (val!.isEmpty) {
                     return 'Please enter the URL';
-                  } else if (!val
-                      .toLowerCase()
-                      .startsWith(new RegExp(r'^https?://'))) {
+                  } else if (!val.toLowerCase().startsWith(
+                    new RegExp(r'^https?://'),
+                  )) {
                     return 'The URL must start with \'http(s)://\'';
                   }
                   return null;
@@ -90,7 +91,8 @@ class MyAccountFormState extends State<MyAccountForm> {
               TextFormField(
                 initialValue: _limit,
                 decoration: InputDecoration(
-                    labelText: 'Max Number Of Entries (0: Unlimited)'),
+                  labelText: 'Max Number Of Entries (0: Unlimited)',
+                ),
                 keyboardType: TextInputType.number,
                 onSaved: (val) {
                   setState(() => _limit = val);
@@ -128,43 +130,46 @@ class MyAccountFormState extends State<MyAccountForm> {
                               // Check the connection before saving, and get
                               // the username to tell the accounts apart
                               final Map<String, dynamic> user = json.decode(
-                                  await getCurrentUser(account: newAccount));
+                                await getCurrentUser(account: newAccount),
+                              );
                               newAccount.username = user['username'];
                               await accounts.save(newAccount, context);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text('Connection successful!')));
+                                SnackBar(
+                                  content: Text('Connection successful!'),
+                                ),
+                              );
                               Navigator.pop(context);
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text('Failed to connect!\n'
-                                          'Local server? Allow \'Nearby '
-                                          'devices\' in Android settings.')));
+                                SnackBar(
+                                  content: Text(
+                                    'Failed to connect!\n'
+                                    'Local server? Allow \'Nearby '
+                                    'devices\' in Android settings.',
+                                  ),
+                                ),
+                              );
                             }
                           }
                         },
                       ),
-                      account == null
-                          ? SizedBox.shrink()
-                          : SizedBox(
-                              width: 10,
-                            ),
+                      account == null ? SizedBox.shrink() : SizedBox(width: 10),
                       account == null
                           ? SizedBox.shrink()
                           : ElevatedButton(
                               style: ButtonStyle(
                                 backgroundColor: WidgetStateProperty.all<Color>(
-                                    Theme.of(context).colorScheme.error),
+                                  Theme.of(context).colorScheme.error,
+                                ),
                               ),
                               child: Text(
                                 'Remove',
                                 style: TextStyle(
-                                    color: Theme.of(context)
-                                        .primaryTextTheme
-                                        .titleLarge!
-                                        .color),
+                                  color: Theme.of(
+                                    context,
+                                  ).primaryTextTheme.titleLarge!.color,
+                                ),
                               ),
                               onPressed: () async {
                                 await accounts.remove(account!.id, context);
@@ -190,7 +195,8 @@ class MyAccount extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as Account?;
     return Scaffold(
       appBar: AppBar(
-          title: Text(account == null ? 'New account' : account.label)),
+        title: Text(account == null ? 'New account' : account.label),
+      ),
       body: MyAccountForm(account: account),
     );
   }

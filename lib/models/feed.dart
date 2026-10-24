@@ -63,8 +63,9 @@ class Feed {
       userAgent: json['user_agent'],
       userId: json['user_id'],
       userName: json['user_name'],
-      hideGlobally:
-          (json.containsKey('hide_globally') ? json['hide_globally'] : false),
+      hideGlobally: (json.containsKey('hide_globally')
+          ? json['hide_globally']
+          : false),
     );
   }
 }

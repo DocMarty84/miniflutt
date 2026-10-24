@@ -44,8 +44,9 @@ class Data extends ChangeNotifier {
   }
 
   Future<bool> toggleRead(int? entryId) async {
-    final Entry currentEntry =
-        entries.firstWhere((entry) => entry!.id == entryId)!;
+    final Entry currentEntry = entries.firstWhere(
+      (entry) => entry!.id == entryId,
+    )!;
     final String newStatus = currentEntry.status == 'read' ? 'unread' : 'read';
     currentEntry.status = newStatus;
     notifyListeners();

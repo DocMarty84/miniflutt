@@ -21,7 +21,11 @@ class MyDrawerHeader extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 8.0),
       padding: EdgeInsets.fromLTRB(
-          16.0, MediaQuery.paddingOf(context).top + 16.0, 16.0, 8.0),
+        16.0,
+        MediaQuery.paddingOf(context).top + 16.0,
+        16.0,
+        8.0,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         border: Border(bottom: Divider.createBorderSide(context)),
@@ -60,14 +64,14 @@ class MyDrawerHeader extends StatelessWidget {
                 return list;
               },
               child: ListTile(
-                title: Text(accounts.active?.label ?? 'No account',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Theme.of(context)
-                            .primaryTextTheme
-                            .titleLarge!
-                            .color)),
+                title: Text(
+                  accounts.active?.label ?? 'No account',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Theme.of(context).primaryTextTheme.titleLarge!.color,
+                  ),
+                ),
                 trailing: Icon(
                   Icons.arrow_drop_down,
                   color: Theme.of(context).primaryTextTheme.titleLarge!.color,
@@ -75,10 +79,12 @@ class MyDrawerHeader extends StatelessWidget {
               ),
             ),
           ListTile(
-            title: Text('Settings',
-                style: TextStyle(
-                    color:
-                        Theme.of(context).primaryTextTheme.titleLarge!.color)),
+            title: Text(
+              'Settings',
+              style: TextStyle(
+                color: Theme.of(context).primaryTextTheme.titleLarge!.color,
+              ),
+            ),
             trailing: Icon(
               Icons.settings,
               color: Theme.of(context).primaryTextTheme.titleLarge!.color,
@@ -90,28 +96,30 @@ class MyDrawerHeader extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text('Refresh',
-                style: TextStyle(
-                    color:
-                        Theme.of(context).primaryTextTheme.titleLarge!.color)),
+            title: Text(
+              'Refresh',
+              style: TextStyle(
+                color: Theme.of(context).primaryTextTheme.titleLarge!.color,
+              ),
+            ),
             trailing: (!data.isRefresh
                 ? Icon(
                     Icons.refresh,
-                    color:
-                        Theme.of(context).primaryTextTheme.titleLarge!.color,
+                    color: Theme.of(context).primaryTextTheme.titleLarge!.color,
                   )
                 : Icon(
                     Icons.file_download,
-                    color:
-                        Theme.of(context).primaryTextTheme.titleLarge!.color,
+                    color: Theme.of(context).primaryTextTheme.titleLarge!.color,
                   )),
             onTap: () {
               data.refresh();
             },
             onLongPress: () async {
               final snackBar = SnackBar(
-                content: Text('All feeds are updated in the background. '
-                    'Refresh in a few seconds.'),
+                content: Text(
+                  'All feeds are updated in the background. '
+                  'Refresh in a few seconds.',
+                ),
               );
               try {
                 await refreshAllFeeds();
@@ -119,7 +127,8 @@ class MyDrawerHeader extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('An error occured!\n$e')));
+                  SnackBar(content: Text('An error occured!\n$e')),
+                );
               }
             },
           ),
@@ -131,7 +140,10 @@ class MyDrawerHeader extends StatelessWidget {
 
 class MyDrawer extends StatelessWidget {
   Future<void> _actionRead(
-      List<int?> entryIds, Data data, BuildContext context) async {
+    List<int?> entryIds,
+    Data data,
+    BuildContext context,
+  ) async {
     final snackBar = SnackBar(
       content: Text('${entryIds.length} item(s) mark read'),
       persist: false,
@@ -146,8 +158,9 @@ class MyDrawer extends StatelessWidget {
       await data.read(entryIds);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
     }
   }
 
@@ -177,7 +190,7 @@ class MyDrawer extends StatelessWidget {
             _actionRead(entryIds, data, context);
           }
         },
-      )
+      ),
     ];
 
     for (Category? category in data.categories) {
@@ -185,40 +198,46 @@ class MyDrawer extends StatelessWidget {
       List<Widget> feedList = data.feeds
           .where((feed) => feed!.category!.id == category!.id)
           .map<Widget>((feed) {
-        final int count =
-            unreadEntries.where((i) => i!.feedId == feed!.id).length;
-        return ListTile(
-          title: Text('    ${feed!.title} ($count)'),
-          onTap: () {
-            if (nav.currentFeedId != feed.id) {
-              nav.set(feed.id, null, feed.title);
-            }
-            // Close the drawer
-            Navigator.pop(context);
-          },
-          onLongPress: () async {
-            final SharedPreferences prefs =
-                await SharedPreferences.getInstance();
-            final String feedOnLongPress =
-                (prefs.getString('feedOnLongPress') ?? 'no');
-            if (feedOnLongPress == 'read') {
-              final List<int?> entryIds = data.entries
-                  .where((i) => i!.feedId == feed.id && i.status == 'unread')
-                  .map((entry) => entry!.id)
-                  .toList();
-              _actionRead(entryIds, data, context);
-            }
-          },
-        );
-      }).toList();
+            final int count = unreadEntries
+                .where((i) => i!.feedId == feed!.id)
+                .length;
+            return ListTile(
+              title: Text('    ${feed!.title} ($count)'),
+              onTap: () {
+                if (nav.currentFeedId != feed.id) {
+                  nav.set(feed.id, null, feed.title);
+                }
+                // Close the drawer
+                Navigator.pop(context);
+              },
+              onLongPress: () async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                final String feedOnLongPress =
+                    (prefs.getString('feedOnLongPress') ?? 'no');
+                if (feedOnLongPress == 'read') {
+                  final List<int?> entryIds = data.entries
+                      .where(
+                        (i) => i!.feedId == feed.id && i.status == 'unread',
+                      )
+                      .map((entry) => entry!.id)
+                      .toList();
+                  _actionRead(entryIds, data, context);
+                }
+              },
+            );
+          })
+          .toList();
 
       // Build the category ExpansionTile
-      final int count =
-          unreadEntries.where((i) => i!.feed!.category!.id == category!.id).length;
+      final int count = unreadEntries
+          .where((i) => i!.feed!.category!.id == category!.id)
+          .length;
       categoryList.add(
         ExpansionTile(
           title: Text('${category!.title} ($count)'),
-          initiallyExpanded: nav.currentCategoryId == category.id ||
+          initiallyExpanded:
+              nav.currentCategoryId == category.id ||
               data.feeds
                   .where((feed) => feed!.category!.id == category.id)
                   .map((feed) => feed!.id)
@@ -244,10 +263,10 @@ class MyDrawer extends StatelessWidget {
             // The header handles the status bar. Keep the last categories
             // above the navigation bar.
             padding: EdgeInsets.only(
-                bottom: MediaQuery.paddingOf(context).bottom),
-            children: <Widget>[
-                  MyDrawerHeader(data: data),
-                ] +
+              bottom: MediaQuery.paddingOf(context).bottom,
+            ),
+            children:
+                <Widget>[MyDrawerHeader(data: data)] +
                 _buildCategoryList(data, context),
           );
         },

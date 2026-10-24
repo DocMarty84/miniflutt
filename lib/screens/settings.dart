@@ -11,11 +11,7 @@ class MySettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Settings',
-        ),
-      ),
+      appBar: AppBar(title: Text('Settings')),
       body: Consumer<Settings>(
         builder: (context, settings, child) {
           if (settings.isLoad) {
@@ -47,50 +43,23 @@ class MySettingsFormState extends State<MySettingsForm> {
 
   final _formKey = GlobalKey<FormState>();
   final _actionsEntry = <DropdownMenuItem>[
-    DropdownMenuItem(
-      child: Text('Do nothing'),
-      value: 'no',
-    ),
-    DropdownMenuItem(
-      child: Text('Mark as read/unread'),
-      value: 'read',
-    ),
-    DropdownMenuItem(
-      child: Text('Mark as favorite'),
-      value: 'favorite',
-    ),
+    DropdownMenuItem(child: Text('Do nothing'), value: 'no'),
+    DropdownMenuItem(child: Text('Mark as read/unread'), value: 'read'),
+    DropdownMenuItem(child: Text('Mark as favorite'), value: 'favorite'),
     DropdownMenuItem(
       child: Text('Save to third-party services'),
       value: 'save',
     ),
   ];
   final _actionsFeed = <DropdownMenuItem>[
-    DropdownMenuItem(
-      child: Text('Do nothing'),
-      value: 'no',
-    ),
-    DropdownMenuItem(
-      child: Text('Mark as read/unread'),
-      value: 'read',
-    ),
+    DropdownMenuItem(child: Text('Do nothing'), value: 'no'),
+    DropdownMenuItem(child: Text('Mark as read/unread'), value: 'read'),
   ];
   final _fontSize = <DropdownMenuItem>[
-    DropdownMenuItem(
-      child: Text('Small'),
-      value: 'small',
-    ),
-    DropdownMenuItem(
-      child: Text('Medium'),
-      value: 'medium',
-    ),
-    DropdownMenuItem(
-      child: Text('Large'),
-      value: 'large',
-    ),
-    DropdownMenuItem(
-      child: Text('XLarge'),
-      value: 'xlarge',
-    ),
+    DropdownMenuItem(child: Text('Small'), value: 'small'),
+    DropdownMenuItem(child: Text('Medium'), value: 'medium'),
+    DropdownMenuItem(child: Text('Large'), value: 'large'),
+    DropdownMenuItem(child: Text('XLarge'), value: 'xlarge'),
   ];
 
   @override
@@ -103,7 +72,8 @@ class MySettingsFormState extends State<MySettingsForm> {
         child: SingleChildScrollView(
           // Keep the last fields above the navigation bar
           padding: EdgeInsets.only(
-              bottom: MediaQuery.paddingOf(context).bottom),
+            bottom: MediaQuery.paddingOf(context).bottom,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -117,7 +87,8 @@ class MySettingsFormState extends State<MySettingsForm> {
               Consumer<Accounts>(
                 builder: (context, accounts, child) {
                   return Column(
-                    children: accounts.accounts.map<Widget>((account) {
+                    children:
+                        accounts.accounts.map<Widget>((account) {
                           return ListTile(
                             title: Text(account.label),
                             trailing: account.id == accounts.activeId
@@ -153,20 +124,25 @@ class MySettingsFormState extends State<MySettingsForm> {
                 ),
                 contentPadding: EdgeInsets.all(0.0),
               ),
-              Row(children: <Widget>[
-                Expanded(
-                    child: Text('Mark entries read on scroll',
-                        textAlign: TextAlign.left)),
-                Switch(
-                  value: settings.markReadOnScroll,
-                  onChanged: (val) async {
-                    final SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    prefs.setBool("markReadOnScroll", val);
-                    setState(() => settings.markReadOnScroll = val);
-                  },
-                ),
-              ]),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      'Mark entries read on scroll',
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  Switch(
+                    value: settings.markReadOnScroll,
+                    onChanged: (val) async {
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.setBool("markReadOnScroll", val);
+                      setState(() => settings.markReadOnScroll = val);
+                    },
+                  ),
+                ],
+              ),
               DropdownButtonFormField(
                 initialValue: settings.entryOnLongPress,
                 items: _actionsEntry,
@@ -192,8 +168,9 @@ class MySettingsFormState extends State<MySettingsForm> {
               DropdownButtonFormField(
                 initialValue: settings.entrySwipeRight,
                 items: _actionsEntry,
-                decoration:
-                    InputDecoration(labelText: 'Swipe right on article'),
+                decoration: InputDecoration(
+                  labelText: 'Swipe right on article',
+                ),
                 onChanged: (dynamic val) async {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
@@ -227,8 +204,10 @@ class MySettingsFormState extends State<MySettingsForm> {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   prefs.setString('fontSize', val);
-                  final entryStyle =
-                      Provider.of<EntryStyle>(context, listen: false);
+                  final entryStyle = Provider.of<EntryStyle>(
+                    context,
+                    listen: false,
+                  );
                   entryStyle.refresh();
                   setState(() => settings.fontSize = val);
                 },

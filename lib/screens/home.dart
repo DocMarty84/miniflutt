@@ -180,6 +180,26 @@ class MyHomeEntryList extends StatelessWidget {
     }
   }
 
+  // Apply the action set in the settings for a long press or a swipe
+  void _entryAction(BuildContext context, String? action, Entry entry) async {
+    if (action == 'read') {
+      final List<int?> entryIds = [entry.id];
+      entry.status == 'unread'? data.read(entryIds) : data.unread(entryIds);
+    } else if (action == 'favorite') {
+      data.toggleStar(entry.id);
+    } else if (action == 'save') {
+      // Saving has no effect on the list, so give feedback
+      final messenger = ScaffoldMessenger.of(context);
+      try {
+        await data.saveEntry(entry.id);
+        messenger.showSnackBar(SnackBar(content: Text('Article saved')));
+      } catch (e) {
+        messenger
+            .showSnackBar(SnackBar(content: Text('An error occured!\n$e')));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Entry?> entries = filterEntries(data, nav);
@@ -258,14 +278,7 @@ class MyHomeEntryList extends StatelessWidget {
                     await SharedPreferences.getInstance();
                 final String entryOnLongPress =
                     (prefs.getString('entryOnLongPress') ?? 'read');
-                if (entryOnLongPress == 'read') {
-                  final List<int?> entryIds = [entry.id];
-                  entry.status == 'unread'
-                      ? data.read(entryIds)
-                      : data.unread(entryIds);
-                } else if (entryOnLongPress == 'favorite') {
-                  data.toggleStar(entry.id);
-                }
+                _entryAction(context, entryOnLongPress, entry);
               },
             ),
             onHorizontalDragEnd: (details) async {
@@ -278,15 +291,7 @@ class MyHomeEntryList extends StatelessWidget {
               } else if (details.velocity.pixelsPerSecond.dx > 0) {
                 entrySwipe = (prefs.getString('entrySwipeRight') ?? 'no');
               }
-
-              if (entrySwipe == 'read') {
-                final List<int?> entryIds = [entry.id];
-                entry.status == 'unread'
-                    ? data.read(entryIds)
-                    : data.unread(entryIds);
-              } else if (entrySwipe == 'favorite') {
-                data.toggleStar(entry.id);
-              }
+              _entryAction(context, entrySwipe, entry);
             },
           );
         },

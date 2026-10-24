@@ -198,6 +198,8 @@ class MyHomeEntryList extends StatelessWidget {
         data.refresh();
       },
       child: ScrollablePositionedList.builder(
+        // Allow pulling to refresh when the entries don't fill the screen
+        physics: AlwaysScrollableScrollPhysics(),
         itemCount: entries.length * 2,
         itemPositionsListener: itemPositionsListener,
         itemBuilder: (context, i) {

@@ -59,6 +59,10 @@ class MySettingsFormState extends State<MySettingsForm> {
       child: Text('Mark as favorite'),
       value: 'favorite',
     ),
+    DropdownMenuItem(
+      child: Text('Save to third-party services'),
+      value: 'save',
+    ),
   ];
   final _actionsFeed = <DropdownMenuItem>[
     DropdownMenuItem(
@@ -182,7 +186,7 @@ class MySettingsFormState extends State<MySettingsForm> {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   prefs.setString('entrySwipeLeft', val);
-                  setState(() => settings.entrySwipeRight = val);
+                  setState(() => settings.entrySwipeLeft = val);
                 },
               ),
               DropdownButtonFormField(

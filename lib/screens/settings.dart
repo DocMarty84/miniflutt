@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../api/miniflux.dart';
+import '../models/accounts.dart';
 import '../models/entry_style.dart';
 import '../models/data_all.dart';
 import '../models/settings.dart';
@@ -90,11 +89,6 @@ class MySettingsFormState extends State<MySettingsForm> {
     ),
   ];
 
-  Future<http.Response> _connectCheck(String url, String apiKey) async {
-    return await http
-        .get(Uri.parse(url + '/v1/me'), headers: {'X-Auth-Token': apiKey});
-  }
-
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -111,107 +105,42 @@ class MySettingsFormState extends State<MySettingsForm> {
             children: <Widget>[
               ListTile(
                 title: Text(
-                  'Server',
+                  'Accounts',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 contentPadding: EdgeInsets.all(0.0),
               ),
-              TextFormField(
-                initialValue: settings.url,
-                decoration: InputDecoration(labelText: 'Server URL'),
-                keyboardType: TextInputType.url,
-                onSaved: (val) {
-                  setState(() => settings.url = val);
+              Consumer<Accounts>(
+                builder: (context, accounts, child) {
+                  return Column(
+                    children: accounts.accounts.map<Widget>((account) {
+                          return ListTile(
+                            title: Text(account.label),
+                            trailing: account.id == accounts.activeId
+                                ? Icon(Icons.check)
+                                : null,
+                            contentPadding: EdgeInsets.all(0.0),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/account',
+                                arguments: account,
+                              );
+                            },
+                          );
+                        }).toList() +
+                        <Widget>[
+                          ListTile(
+                            title: Text('Add account'),
+                            trailing: Icon(Icons.add),
+                            contentPadding: EdgeInsets.all(0.0),
+                            onTap: () {
+                              Navigator.pushNamed(context, '/account');
+                            },
+                          ),
+                        ],
+                  );
                 },
-                validator: (val) {
-                  if (val!.isEmpty) {
-                    return 'Please enter the URL';
-                  } else if (!val
-                      .toLowerCase()
-                      .startsWith(new RegExp(r'^https?://'))) {
-                    return 'The URL must start with \'http(s)://\'';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                initialValue: settings.apiKey,
-                decoration: InputDecoration(labelText: 'API Key'),
-                obscureText: true,
-                onSaved: (val) {
-                  setState(() => settings.apiKey = val);
-                },
-                validator: (val) {
-                  if (val!.isEmpty) {
-                    return 'Please enter an API key';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                initialValue: settings.limit,
-                decoration: InputDecoration(
-                    labelText: 'Max Number Of Entries (0: Unlimited)'),
-                keyboardType: TextInputType.number,
-                onSaved: (val) {
-                  setState(() => settings.limit = val);
-                },
-                validator: (val) {
-                  if (val!.isEmpty) {
-                    return 'Please enter a number';
-                  }
-                  try {
-                    int.parse(val);
-                  } catch (e) {
-                    return 'Please enter a number';
-                  }
-                  return null;
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Container(
-                  child: Row(
-                    children: <Widget>[
-                      ElevatedButton(
-                        child: Text('Save'),
-                        onPressed: () async {
-                          final FormState form = _formKey.currentState!;
-                          if (form.validate()) {
-                            form.save();
-                            try {
-                              final res = await _connectCheck(
-                                  settings.url!, settings.apiKey!);
-                              if (res.statusCode == 200) {
-                                settings.save(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content:
-                                            Text('Connection successful!')));
-                              } else {
-                                throw Exception(makeError('Failed to connect!',
-                                    res, '/v1/me', <String, dynamic>{}));
-                              }
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text('Failed to connect!\n'
-                                          'Local server? Allow \'Nearby '
-                                          'devices\' in Android settings.')));
-                            }
-                          }
-                        },
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      new ElevatedButton(
-                        child: Text("Log Out"),
-                        onPressed: () => settings.clear(context),
-                      ),
-                    ],
-                  ),
-                ),
               ),
               ListTile(
                 title: Text(

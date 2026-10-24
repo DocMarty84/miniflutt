@@ -3,7 +3,9 @@ import 'dart:convert';
 //import 'dart:developer';
 
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/account.dart';
+import '../models/accounts.dart';
 
 final Map<int, String> statusCodes = {
   200: 'Everything is OK',
@@ -28,13 +30,19 @@ String makeError(String msg, http.Response res, String endpoint,
       'Body: $params';
 }
 
-Future<bool> _delete(String endpoint) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final url = (prefs.getString('url') ?? '');
-  final apiKey = (prefs.getString('apiKey') ?? '');
-  if (url == '') {
+// The server URL and API key used by the requests
+Future<Account> _activeAccount() async {
+  final Account? account = await Accounts.readActive();
+  if (account == null) {
     throw Exception('The server URL is not set.');
   }
+  return account;
+}
+
+Future<bool> _delete(String endpoint) async {
+  final Account account = await _activeAccount();
+  final url = account.url;
+  final apiKey = account.apiKey;
 
   final query = new Uri.http('', endpoint).toString().replaceFirst('http:', '');
   final response = await http
@@ -48,13 +56,11 @@ Future<bool> _delete(String endpoint) async {
   }
 }
 
-Future<String> _get(String endpoint, Map<String, String> params) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final url = (prefs.getString('url') ?? '');
-  final apiKey = (prefs.getString('apiKey') ?? '');
-  if (url == '') {
-    throw Exception('The server URL is not set.');
-  }
+Future<String> _get(String endpoint, Map<String, String> params,
+    {Account? account}) async {
+  account ??= await _activeAccount();
+  final url = account.url;
+  final apiKey = account.apiKey;
 
   final query =
       new Uri.http('', endpoint, params).toString().replaceFirst('http:', '');
@@ -70,12 +76,9 @@ Future<String> _get(String endpoint, Map<String, String> params) async {
 }
 
 Future<bool> _post(String endpoint, Map<String, dynamic> body) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final url = (prefs.getString('url') ?? '');
-  final apiKey = (prefs.getString('apiKey') ?? '');
-  if (url == '') {
-    throw Exception('The server URL is not set.');
-  }
+  final Account account = await _activeAccount();
+  final url = account.url;
+  final apiKey = account.apiKey;
 
   String bodyStr = jsonEncode(body);
   final response = await http.post(Uri.parse(url + endpoint),
@@ -91,12 +94,9 @@ Future<bool> _post(String endpoint, Map<String, dynamic> body) async {
 }
 
 Future<bool> _put(String endpoint, Map<String, dynamic> body) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final url = (prefs.getString('url') ?? '');
-  final apiKey = (prefs.getString('apiKey') ?? '');
-  if (url == '') {
-    throw Exception('The server URL is not set.');
-  }
+  final Account account = await _activeAccount();
+  final url = account.url;
+  final apiKey = account.apiKey;
 
   String bodyStr = jsonEncode(body);
   final response = await http.put(Uri.parse(url + endpoint),
@@ -170,9 +170,10 @@ Future<bool> deleteCategory(int? categoryId) async {
   return await _delete('/v1/categories/$categoryId');
 }
 
-Future<String> getCurrentUser() async {
+// Without an account, the active one is used
+Future<String> getCurrentUser({Account? account}) async {
   final Map<String, String> params = {};
-  return await _get('/v1/me', params);
+  return await _get('/v1/me', params, account: account);
 }
 
 Future<bool> connectCheck() async {

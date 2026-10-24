@@ -123,7 +123,7 @@ class MyEntryBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final entryStyle = Provider.of<EntryStyle>(context, listen: false);
+    final entryStyle = Provider.of<EntryStyle>(context);
     return GestureDetector(
       child: SingleChildScrollView(
         child: Column(

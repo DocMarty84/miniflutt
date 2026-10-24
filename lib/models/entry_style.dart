@@ -25,5 +25,6 @@ class EntryStyle extends ChangeNotifier {
     } else {
       fontSize = FontSize.medium;
     }
+    notifyListeners();
   }
 }

@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/miniflux.dart';
+import '../models/account.dart';
+import '../models/accounts.dart';
 import '../models/category.dart';
 import '../models/data.dart';
 import '../models/nav.dart';
@@ -14,6 +16,7 @@ class MyDrawerHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accounts = Provider.of<Accounts>(context);
     // Sized to its content, so the rows fit any status bar height or font size
     return Container(
       margin: EdgeInsets.only(bottom: 8.0),
@@ -25,6 +28,52 @@ class MyDrawerHeader extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
+          // Switch to another account, or add one. With a single account,
+          // there is nothing to switch to.
+          if (accounts.accounts.length > 1)
+            PopupMenuButton<String>(
+              onSelected: (id) {
+                if (id != accounts.activeId) {
+                  accounts.activate(id, context);
+                }
+                // Close the drawer
+                Navigator.pop(context);
+              },
+              itemBuilder: (BuildContext context) {
+                List<PopupMenuEntry<String>> list = [];
+                for (Account account in accounts.accounts) {
+                  list.add(
+                    CheckedPopupMenuItem(
+                      child: Text(account.label),
+                      value: account.id,
+                      checked: account.id == accounts.activeId,
+                    ),
+                  );
+                }
+                list.add(PopupMenuDivider());
+                list.add(
+                  PopupMenuItem(
+                    child: Text('Add account'),
+                    onTap: () => Navigator.pushNamed(context, '/account'),
+                  ),
+                );
+                return list;
+              },
+              child: ListTile(
+                title: Text(accounts.active?.label ?? 'No account',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Theme.of(context)
+                            .primaryTextTheme
+                            .titleLarge!
+                            .color)),
+                trailing: Icon(
+                  Icons.arrow_drop_down,
+                  color: Theme.of(context).primaryTextTheme.titleLarge!.color,
+                ),
+              ),
+            ),
           ListTile(
             title: Text('Settings',
                 style: TextStyle(

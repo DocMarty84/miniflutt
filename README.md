@@ -10,9 +10,12 @@ Miniflutt requires Miniflux version >= [2.0.21](https://miniflux.app/releases/2.
 1. Install the latest APK from the
    [releases page](https://github.com/DocMarty84/miniflutt/releases).
 2. In Miniflux, create an API key in Settings / API Keys.
-3. Open the app, go to the Settings page
+3. Open the app, go to the Settings page and tap "Add account"
 4. Add the server URL and the token (do **not** include the `/v1` part of the URL endpoint)
 5. Save and refresh!
+
+More accounts can be added the same way, on the same or another server. Switch between them from
+the top of the drawer.
 
 The unread articles should appear in the app.
 

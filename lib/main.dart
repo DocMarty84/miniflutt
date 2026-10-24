@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'common/theme.dart';
+import 'models/accounts.dart';
 import 'models/data.dart';
 import 'models/data_all.dart';
 import 'models/entry_style.dart';
 import 'models/nav.dart';
 import 'models/settings.dart';
 import 'screens/home.dart';
+import 'screens/account.dart';
 import 'screens/category.dart';
 import 'screens/entry.dart';
 import 'screens/feed.dart';
@@ -16,7 +18,10 @@ import 'screens/feeds.dart';
 import 'screens/search.dart';
 import 'screens/settings.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Move the server of older versions to an account, before the first request
+  await Accounts.migrate();
   runApp(MyApp());
 }
 
@@ -25,6 +30,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        // Not lazy, so the drawer shows the active account when first opened
+        ChangeNotifierProvider(create: (context) => Accounts(), lazy: false),
         ChangeNotifierProvider(create: (context) => Data()),
         ChangeNotifierProvider(create: (context) => DataAll()),
         ChangeNotifierProvider(create: (context) => EntryStyle()),
@@ -38,6 +45,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => MyHome(),
+          '/account': (context) => MyAccount(),
           '/category': (context) => MyCategory(),
           '/entry': (context) => MyEntry(),
           '/feed': (context) => MyFeed(),

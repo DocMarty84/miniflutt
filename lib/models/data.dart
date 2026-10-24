@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'account.dart';
+import 'accounts.dart';
 import 'category.dart';
 import 'entry.dart';
 import 'feed.dart';
@@ -62,6 +64,15 @@ class Data extends ChangeNotifier {
     return await triggerSaveEntry(entryId);
   }
 
+  // Empty the lists at once, e.g. when switching accounts, so the entries of
+  // the previous account can't be opened or marked read while refreshing
+  void clear() {
+    entries.clear();
+    feeds.clear();
+    categories.clear();
+    notifyListeners();
+  }
+
   static const int _maxPageSize = 1000;
 
   Future<void> refresh({String? search}) async {
@@ -76,7 +87,8 @@ class Data extends ChangeNotifier {
     // Get preferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final read = (prefs.getBool('read') ?? false);
-    final maxEntries = int.tryParse(prefs.getString('limit') ?? '500') ?? 500;
+    final Account? account = await Accounts.readActive();
+    final maxEntries = int.tryParse(account?.limit ?? '500') ?? 500;
     final asc = (prefs.getBool('asc') ?? false);
     final starred = (prefs.getBool('starred') ?? false);
     Map<String, String> params = {

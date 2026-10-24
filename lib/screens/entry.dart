@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../common/html_image.dart';
 import '../common/tools.dart';
 import '../models/data.dart';
 import '../models/entry.dart';
@@ -142,6 +143,7 @@ class MyEntryBody extends StatelessWidget {
                     await _handleURL(src, context);
                   },
                 ),
+                fittedImageExtension(),
                 AudioHtmlExtension(),
                 IframeHtmlExtension(),
                 // MathHtmlExtension(),

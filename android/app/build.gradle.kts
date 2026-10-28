@@ -13,6 +13,8 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+val isBundleBuild = gradle.startParameter.taskNames.any { it.contains("bundle", ignoreCase = true) }
+
 android {
     namespace = "be.martinelli.miniflutt"
     compileSdk = 37
@@ -27,6 +29,11 @@ android {
         // Only needed in the bundle imported in Google Play
         includeInApk = false
         includeInBundle = true
+    }
+
+    packaging {
+        dex.useLegacyPackaging = !isBundleBuild
+        jniLibs.useLegacyPackaging = !isBundleBuild
     }
 
     defaultConfig {

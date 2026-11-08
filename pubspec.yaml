@@ -5,8 +5,8 @@ version: 1.17.3+3000003 # Commit 65f4811
 publish_to: none
 
 environment:
-  sdk: ^3.12.2
-  flutter: ^3.44.8
+  sdk: ^3.13.7
+  flutter: ^3.47.9
 
 dependencies:
   flutter:
@@ -23,9 +23,13 @@ dependencies:
   path_provider: ^2.1.6
   provider: ^6.1.5
   scrollable_positioned_list: ^0.3.8
-  share_plus: ^13.3.0
-  shared_preferences: ^2.5.5
-  url_launcher: ^6.3.2
+  share_plus: ^13.3.1
+  shared_preferences: ^2.5.6
+  url_launcher: ^6.3.3
+
+  # Pinned: flutter_html 3.0.0 uses html's private matches(), removed in 0.15.7.
+  # Remove once fixed upstream: https://github.com/Sub6Resources/flutter_html/issues/1522
+  html: ">=0.15.6 <0.15.7"
 
 
 # The following section is specific to Flutter.
